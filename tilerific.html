@@ -1,0 +1,582 @@
+
+<div id=BH>B"H</div>
+<style>
+    body{
+        font-family: helvetica;
+    }
+    .face {
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        border:1px solid black;
+        width:64;height:64;
+    }
+    
+    .eye{
+        position:relative;
+        left:50%;
+        transform:translate(-100%,50%);
+        border-radius:50%;
+        border: 0.5px solid black;
+        background: white;
+        display:inline-block;
+        width:16px;height:16px;
+    }
+</style>
+<meta charset="UTF-8">
+    <title>AWTSMOOS</title>
+<script src="atzmus2.js"></script>
+<script>
+makeFace()
+    function makeFace() {
+        var a = document.createElement("div")
+        document.body.appendChild(a)
+        a.className="face"
+        
+        var i1 = document.createElement("div")
+        i1.className="eye"
+        a.appendChild(i1)
+        
+        
+        var i2 = document.createElement("div")
+        i2.className="eye"
+        a.appendChild(i2)
+    }
+    BH.onclick=()=>{
+        
+    }
+    var curThings = []
+    var curLiveMap;
+    var keysD = []
+    var curMapNum = 0
+    ATZMUS.Tzimtzoom({
+        dawfeem: [
+            "three.min"    
+        ]
+    }).then(wrld=>{
+        st(wrld)
+    })
+    var maps = [
+        [
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttt   r                     r                                     ttttttttt",
+            "tttttttt   r p t       t             t                                 ttttttttt",
+            "tttttttt       t                                                   t   ttttttttt",
+            "tttttttt       t                     t                                 ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt               rrrrrrrrrrr                                     ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt   t                                                           ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt   r   r                                                       ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt        t                                                      ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt    t                                                          ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt   t                                                           ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt             r                                                 ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttt                                                               ttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+        ]    
+    ]
+    
+    var th = {
+        t: tree,
+        r: rock,
+        p: player
+    }
+    
+    var ts = 64
+    function player(opts) {
+        thing.call(this, ...arguments)
+        this.type = "player"
+        this.color = "blue"
+        this.addWall("solid")
+        var mr = false
+        var ml = false
+        var mt = false
+        var md = false
+        
+        var rocks = []
+        this.movingRocks=false
+        pl=this
+        var t = this
+        this.rocks=rocks
+        wrld.on("hissHavoos", () => {
+            
+            
+            if(rocks)
+            rocks.forEach(r=>{
+                if(r.isMoving) {
+                    r.doMove()
+                } else {
+                    rocks.splice(rocks.indexOf(r),1)
+                }
+            })
+            
+            if(!t.isMoving
+            ) {
+            
+            if(keysD[39]) {
+                mr = true
+            }
+            
+            if(keysD[37]) {
+                ml = true   
+            }
+            
+            if(keysD[40]) {
+                md = true
+            }
+            
+            if(keysD[38]) {
+                mt = true
+            }
+            
+            if(mr) {
+                this.moveSlot(1, 0)
+                mr = false
+            }
+            
+            
+            if(ml) {
+                this.moveSlot(-1, 0)
+                ml = false
+            }
+            
+            
+            if(mt) {
+                this.moveSlot(0, -1)
+                mt = false
+            }
+            
+            
+            if(md) {
+                this.moveSlot(0, 1)
+                md = false
+            }
+            }
+            
+            if(t.isMoving) {
+                t.doMove()
+                
+            } 
+            
+            wrld.camera.position.x = this.x/ts
+            wrld.camera.position.y = this.y/ts
+            
+            
+            
+        })
+    }
+    function tree(opts) {
+        thing.call(this, ...arguments)
+        this.type = "tree"
+        this.color = "green"
+        this.wallType = "solid"
+    }
+    
+    function rock(opts) {
+        thing.call(this, ...arguments)
+        this.type = "rock"
+        this.color = "gray"
+        this.wallType = "solid"
+        this.addWall("solid")
+        this.action = (os, nsx, nsy, ths) => {
+            
+            if(os.thing)
+            if(os.thing.type == "player") {
+                if(!os.thing.movingRocks) {
+                    alert("howdy there!")
+                    keyD = []
+                    os.thing.movingRocks=true
+                }
+                this.moveSlot(nsx,nsy)
+                
+                os.thing.rocks.push(this)
+            }
+        }
+        
+        
+    }
+    function thing(opts) {
+        var x = opts.x || 0
+        var y = opts.y || 0
+        var z = opts.z || 0
+        
+        x = x * ts
+        y = y * ts
+        z = z * ts
+        
+        
+        var width = ts
+        var height = ts
+        var color = opts.color || "black"
+        
+        var tilesX = opts.tilesX || 1
+        var tilesY = opts.tilesY || 1
+        
+        var walls = opts.walls = []
+        var self = this
+        var t = self
+        
+        var speed = 4
+        function doMove() {
+            if(t.x < t.isMoving.x) {
+                t.x += speed
+            } else
+            if(t.x > t.isMoving.x) {
+                t.x -= speed
+                
+               // t.atz.rotation.y += Math.PI / 180 * speed
+            } else
+            if(t.y > t.isMoving.y) {
+                t.y -= speed
+            } else
+            if(t.y < t.isMoving.y) {
+                t.y += speed
+            } else {
+                
+                t.isMoving = null
+            }
+            
+        }
+        function moveSlot(nsx=0, nsy=0, an = true) {
+            var sl = getSlot()
+            var cls = getLiveSlot(sl.tileX, sl.tileY)
+            var newSlx = sl.tileX + nsx
+            var newSly = sl.tileY + nsy
+            
+            var nls = getLiveSlot(newSlx, newSly)
+            
+            if(nls) {
+            
+                var canMove = true
+                if(nls.thing)
+                if(walls.includes(nls.thing.wallType)) {
+                    canMove = false
+                    if(typeof(nls.thing.action)=="function") {
+                        nls.thing.action(cls, nsx, nsy, nls)
+                    }
+                }
+                if(canMove) {
+                    if(cls) {
+                        cls.thing = null
+                    }
+                    nls.thing = self
+                    var npx = nls.tileX * ts * self.tilesX
+                    var npy = nls.tileY * ts * self.tilesY
+                    if(!an) {
+                        self.x = npx
+                        self.y = npy
+                    } else {
+                        this.isMoving = {
+                            x: npx, y: npy
+                        }
+                    }
+                }
+            }
+        }
+        
+        function getSlot() {
+            return ({
+                tileX: Math.floor(self.x / (ts *self.tilesX)),
+                tileY: Math.floor(self.y / (ts *self.tilesY))
+            })
+        }
+        
+        
+        
+        function addWall(nm) {
+            if(typeof(nm) == "string") {
+                if(!walls.includes[nm])
+                    return walls.push(nm)
+                else return false
+            } else return false
+        }
+        
+        var atz = new ATZMUS.Nawees({
+        })
+        wrld.hoyseef(atz)
+        
+        this.atz=atz
+        
+        this.walls = walls
+        Object.defineProperties(this, {
+            doMove: {
+                get: () => doMove  
+            },
+            getWalls: {
+                get: () => walls  
+            },
+            addWall: {
+                get: () => addWall  
+            },
+            moveSlot: {
+                get: () => moveSlot  
+            },
+            getSlot: {
+                get: () => getSlot  
+            },
+            color: {
+                get: () => color,
+                set: v  => {
+                    color = v
+                    
+                    
+                    atz.color  = v
+                }
+            },
+            speed: {
+                get: () => speed,
+                set: v  => {
+                    speed=v
+                }
+            },
+            x: {
+                get: () => x,
+                set: v  => {
+                    x = v
+                    self.atz.position.x = v/ts
+                }
+            },
+            
+            y: {
+                get: () => y,
+                set: v  => {
+                    y = v
+                    self.atz.position.y = v/ts
+                }
+            },
+            
+            z: {
+                get: () => z,
+                set: v  => {
+                    z = v
+                    self.atz.position.z = v/ts
+                }
+            },
+            width: {
+                get: () => width,
+                set: v  => {
+                    width = v
+                    atz.scale.x=v/ts
+                }
+            },
+            height: {
+                get: () => height,
+                set: v  => {
+                    height = v
+                    atz.scale.y = v/ts
+                    atz.scale.z=v/ts
+                }
+            },
+            tilesX: {
+                get: () => tilesX,
+                set: v  => {
+                    tilesX = v
+                    self.width = ts * tilesX
+                }
+            },
+            
+            tilesY: {
+                get: () => tilesY,
+                set: v  => {
+                    tilesY = v
+                    self.height = ts * tilesY
+                }
+            }
+        })
+        
+        //
+        this.color = color
+        this.tilesX = tilesX
+        this.tilesY = tilesY
+        this.x=x
+        this.y=y
+        this.z=z
+        /*
+        atz.position = {
+            x: self.x, y:self.y
+        }
+        atz.scale = {
+            x: ts * self.tilesX,
+            y: ts * self.tilesY
+        }*/      
+        
+        
+    }
+    
+    function liveMap(mapData) {
+        var slots = []
+        mapData.forEach((y, i) => {
+            y.split("")
+            .forEach((x, k) => {
+                slots.push({
+                    tileX: k,
+                    tileY: i,
+                    type: x
+                })
+            })
+        })
+        
+        this.slots = slots
+    }
+    
+    function getLiveSlot(x,y) {
+        if(x < 0 || y < 0)
+            return null;
+            
+        return curLiveMap.slots
+        .find(sl => (
+            sl.tileX == x &&
+            sl.tileY == y
+        ))
+    }
+    
+    function getTile(x, y, tsX, tsY, map) {
+        var xv = Math.floor(x / tsX)
+        var yv = Math.floor(y / tsY)
+        
+    }
+    
+    
+    function makeMap(mapNum) {
+        var map = maps[mapNum]
+        if(!map) return alert ("LOL NO map " + mapNum + "?!")
+        
+        curLiveMap = new liveMap(map)
+        curThings = []
+        map.forEach((y,i)=>{
+            y.split("")
+            .forEach((x,k)=>{
+                var en = th[x]
+                if(!en) return
+                
+                var thing = new en({
+                    x: k, y: i
+                })
+                curThings.push(thing)
+                
+                var cursl = getLiveSlot(k, i)
+                
+                if(!cursl) return;
+                
+                cursl.thing = 
+                thing
+                
+            })
+        })
+    }
+    
+    
+    function keyListeners() {
+        addEventListener("keydown", e=> {
+            keysD[e.keyCode] = true
+        })
+        
+        
+        addEventListener("keyup", e => {
+            if(keysD[e.keyCode])
+                delete keysD[e.keyCode]
+        })
+    }
+    
+    function setupCamera() {
+        wrld.camera.position.z = -7
+        
+        wrld.camera.position.x = 800
+        wrld.camera.position.y = 800
+        
+        
+        wrld.camera.rotation.y = 
+        wrld.camera.rotation.z = Math.PI
+    }
+    
+    function st(wrld) {
+        window.wrld=wrld
+        keyListeners()
+        makeMap(curMapNum)
+        setupCamera()
+        livethings = curThings.filter(t=>t.hissHavoos)
+       /* setInterval(function() {
+            livethings.forEach(t=>{
+                if(typeof(t.hissHavoos) == "function") {
+                    t.hissHavoos(t)
+                }
+            })
+        }, 1000/60)*/
+    }
+    isDone = true
+   
+    
+</script>
+
