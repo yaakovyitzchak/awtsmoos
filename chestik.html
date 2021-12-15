@@ -1,0 +1,580 @@
+<h1>B"H</h1>
+<meta name="viewport" 
+content="width=device-width,user-scalable=no">
+<style>
+body,html{
+font-family:helvetica;
+cursor:default;
+overflow:hidden;
+resize:both
+}
+h1,br {
+	user-select:none;
+}
+#rap{
+	resize:both;
+	padding:20px;
+	background: cyan;
+	height:700px;
+	position:relative;
+}
+#tzeemtzoom{
+	
+}
+
+</style>
+
+<div id="tzeemtzoom"></div>
+
+<script>
+var outerStroke = (
+	"-1px -1px 0 #000,"+
+	"1px -1px 0 #000,"+
+	" -1px 1px 0 #000, "
+	+"1px 1px 0 #000;"
+)
+
+var white = "tan"
+var black = "brown"
+var kawm = 64;
+
+function Shtikle(ob) {
+	if(!ob) ob = {}
+	this.shaym = ob.shaym
+	this.team = ob.team
+	
+	this.moves = 0
+	if(pictureBlobits[this.shaym]) {
+		this.back = pictureBlobits[this.shaym]
+	}
+}
+function Board(el) {
+	var that = this
+	this.rows = Array.from({length:8})
+				.map(x=>
+					Array.from({length:8})
+					.fill(0)
+				)
+	var rows = that.rows
+	this.el = el
+	setupBoard()
+	this.deef = function() {
+		var t = "CHRKQRHC".split("")
+		var a = "PPPPPPPP".split("")
+		rows[0] = rows[0].map(
+			(_,i)=>
+			new Shtikle({shaym:t[i],team:"shachoyr"})
+		)
+		rows[1] = rows[1].map(
+			(_,i)=>
+			new Shtikle({shaym:a[i],team:"shachoyr"})
+		)
+		
+		rows[7] = rows[0].map(
+			(_,i)=>
+			new Shtikle({shaym:t[i],team:"lavan"})
+		)
+		rows[6] = rows[1].map(
+			(_,i)=>
+			new Shtikle({shaym:a[i],team:"lavan"})
+		)
+		
+		that.updatePhysicalBoardWithPlaces(
+			that.el
+		)
+	}
+	var cur = [-1,-1]
+	this.currentSelected = cur
+	this.findNearPlaces = findNearPlaces
+	function findNearPlaces(x, y) {
+		var chrt = {
+			P: [
+				pc => pc.moves < 1 ? [0, -2] : [0,0],
+				[0, -1]
+			],
+			H: [
+				[2, -1],
+				[-2, -1],
+				[2, 1],
+				[-2, 1],
+				[-1, -2],
+				[1, -2],
+				[1, 2],
+				[-1,2]
+				
+			],
+			K: [
+				[1,0],
+				[1,1],
+				[0,1],
+				[-1, 1],
+				[-1, 0],
+				[-1, -1],
+				[0, -1],
+				[1, -1]
+			],
+			C: [
+				[0, 1],
+				[0, 7],
+				[0, 6],
+				[0, 5],
+				[0, 4],
+				[0, 3],
+				[0, 2],
+				[-7, 0],
+				[-6, 0],
+				[-5, 0],
+				[-4, 0],
+				[-3, 0],
+				[-2, 0],
+				[-1, 0],
+				[7, 0],
+				[6, 0],
+				[5, 0],
+				[4, 0],
+				[3, 0],
+				[2, 0],
+				[1, 0],
+				[0, -7],
+				[0, -6],
+				[0, -5],
+				[0, -4],
+				[0, -3],
+				[0, -2],
+				[0, -1]
+			],
+			R: [
+				[-1,1],
+				[-2,2],
+				[-3,3],
+				[-4,4],
+				[-5,5],
+				[-6,6],
+				[-7,7],
+				[1,-1],
+				[2,-2],
+				[3,-3],
+				[4,-4],
+				[5,-5],
+				[6,-6],
+				[7,-7],
+				[-1,-1],
+				[-2,-2],
+				[-3,-3],
+				[-4,-4],
+				[-5,-5],
+				[-6,-6],
+				[-7,-7],
+				[7,7],
+				[6,6],
+				[5,5],
+				[4,4],
+				[3,3],
+				[2,2],
+				[1,1]
+			]
+		}
+		
+		chrt.Q = chrt.R.concat(
+					chrt.C
+				)
+		
+		var spots = []
+		var pc = rows[y][x]
+		if(pc != 0) {
+			
+			var roolz = chrt[pc.shaym]
+			if(roolz) 
+			Array.from(roolz).forEach(q => {
+				
+				if(typeof(q) == "function") {
+					q = q(pc)
+				}
+				
+				if(pc.team == "shachoyr") {
+					q[1] *= -1
+				}
+				if(
+					y + q[1] > -1 && 
+					x + q[0] > -1 &&
+					
+					y + q[1] < rows[1].length &&
+					x + q[0] < rows[0].length
+				)
+				var it = rows
+					[y + q[1]]
+					[x + q[0]]
+				if(
+					
+					it == 0 ||
+					it && it.team != pc.team
+				) {
+					spots.push(
+						[
+							x + q[0],
+							y + q[1]
+						]
+					)
+				}
+			})
+		}
+		return spots
+	}
+	var avaylible = []
+	function setupBoard(el) {
+		if(!el) el = that.el
+		var ch = Array.from(el.children)
+	
+		if(ch.length == that.rows.length)
+		
+		
+		ch.forEach((x,i) => {
+			Array.from(x.children)
+			.forEach((y,k,ar) => {
+				y.addEventListener("click",
+					(e) => {
+						var needsUp = false
+						
+						if(cur[0] > -1) {
+							
+							var roy = rows[cur[1]]
+							[cur[0]]
+							console.log(
+								cur,
+								roy,
+								k,
+								i
+							)
+							var isInk = false
+							
+							avaylible.forEach(av => {
+								if(av[0] == k && av[1] == i) {
+									
+									isInk = true
+								}
+							})
+							
+							if(isInk) {
+								rows[cur[1]]
+								[cur[0]] = 0
+								
+								rows[i][k] = 
+								roy
+								
+								
+								
+								cur[0] = -1
+								cur[1] = -1
+								
+								roy.moves++
+							}	
+								avaylible = []
+								needsUp = true
+							
+							
+						}
+						
+						ch.forEach(a=>
+							Array.from(a.children)
+							.forEach((q)=>{
+								if(q.classList.contains(
+									"seld"
+								)) {	
+									q.classList.remove("seld")
+									q.classList.add("sel")
+								}
+								
+								if(
+									i == cur[1] &&
+									k == cur[0]
+								) {
+									
+								}
+							})
+						)
+						
+						
+						
+						
+						cur[0] = -1
+						cur[1] = -1
+						
+						if(needsUp) 
+							return (
+							that.updatePhysicalBoardWithPlaces()
+							)
+						
+						if(y.classList.contains(
+							"sel"
+						)) {
+							y.classList.remove("sel")
+							y.classList.add("seld")
+							cur[0] = k
+							cur[1] = i
+							
+							avaylible = findNearPlaces(k, i)
+
+		ch.forEach((x,i) => {
+			Array.from(x.children)
+			.forEach((y,k,ar) => {
+				if(y.classList.contains(
+					"sel"
+				)) {
+					y.classList.remove("sel")
+				}
+				avaylible.forEach(av => {
+					
+					if(av[0] == k && av[1] == i) {
+						var hl = document
+						.createElement("span")
+						hl.className="spott"
+						y.appendChild(hl)
+						
+						y.classList.add("selAyv")
+						
+					}
+				})
+			})
+		})
+						}
+						
+						
+						
+				})
+			})
+		})
+	}
+	
+	this.updatePhysicalBoardWithPlaces =
+	function (el) {
+		if(!el) el = that.el
+		var ch = Array.from(el.children)
+	
+		if(ch.length == that.rows.length)
+		ch.forEach((x,i) => {
+			Array.from(x.children)
+			.forEach((y,k,ar) => {
+				
+				var rw = that.rows[i][k] 
+				var r = rw.shaym || ""
+				
+				
+				
+				y.innerHTML = ""
+				if(y.classList.contains("sel"))
+					y.classList.remove("sel")
+					
+				if(y.classList.contains("shachoyr"))
+					y.classList.remove("shachoyr")
+					
+				if(y.classList.contains("selAyv"))
+					y.classList.remove("selAyv")
+					
+				if(r != 0) 
+					y.classList.add("sel")
+				
+				var pc = document
+				.createElement("div")
+				pc.className = "awdawm"
+				y.appendChild(pc)
+				
+				if(rw != 0 && rw.team) {
+					if(rw.team == "shachoyr")
+						y.classList.add("shachoyr")
+					else {
+						pc.style.filter = "invert(1)"
+					}
+				}
+				
+				if(rw.back) {
+					pc.style.background = 
+					"url("+rw.back+")"
+					pc.style.width = "100%"
+					pc.style.height = "100%"
+					
+				} else pc.innerHTML = r
+				
+			})
+		})
+	}
+	this.deef()
+}
+var pictureBlobits = {}
+var pieceCan = document.createElement("canvas")
+pieceCan.width = kawm 
+pieceCan.height = kawm 
+var ct = pieceCan.getContext("2d")
+var drawing = [
+	{
+		piece:"P",
+		draw: (ct,sz) => {
+			ct.fillRect(sz/4,sz/4,sz*3/4,sz*3/4)
+			ct.fillRect(0,sz/2,sz*2/4,sz*2/4)
+			return pieceCan.toDataURL()
+		}
+	}
+]
+function mawlowPieces() {
+	drawing.forEach(d => {
+		pictureBlobits[d.piece] =
+		d.draw(ct, kawm)
+	})
+}
+
+function oysayTawvlaw(tzeemtzoom) {
+	
+	var k,kk;
+	var ind = 0, ond = 0
+	for(k = 0; k < 8; k++) {
+		var row = document.createElement("div")
+		row.className = "yourBoawt"
+		for(kk = 0; kk < 8; kk++) {
+			ind++
+			ond++
+			var t = reebooyaw()
+			
+			row
+			.appendChild(t)
+
+			var col;
+			
+			
+			if(kk % 2 == 0) {
+				if(k % 2 == 0) {
+					col = 
+					white
+				} else col =
+					black
+			} else 
+			if(k % 2 == 0) {
+				col = black
+			} else col = white
+			
+			t.style.background = (
+				col
+			);
+			if(ond % 8 == 0) {
+				ond++
+			}
+			if(ind % 8 == 0) {
+				
+				
+			}
+		}
+		tzeemtzoom
+			.appendChild(row)
+		
+	}
+	
+	
+	
+	var circleFac = 0.7
+	
+	var bw = (kawm * 8)
+	var sty = document.createElement("style")
+	sty.innerHTML = 
+	"#" + tzeemtzoom.id +  
+	"{"+
+	"display:block;"+
+	"width:"+bw+"px;"+
+	"height:"+bw+"px;"+
+	"position:absolute;"+
+	"left: 50%;top:50%;"+
+	"transform:translate(-50%,-50%);"+
+	"transform-origin:center center"+
+	
+	"}"+
+	
+	".shachoyr .awdawm{"+
+		"color:black !important;"+
+		"text-shadow:0px 0px 3px white;"+
+	"}"+
+	
+	".chessTawv{" + 
+	"float:left;"+
+	"display:block;"+
+	"width:"+kawm+"px;"+
+	"height:"+kawm+"px;"+
+	"user-select:none"+
+	//"text-shadow:"+outerStroke
+	"}"+
+	
+	".awdawm{"+
+	"font-weight:900;"+
+	"font-size:32px;"+
+	"text-shadow:0px 0px 3px white;"+
+	//"color:white;"+
+	"display:inline-block;"+
+	"user-select:none;"+
+	"transform:translate(-50%,-50%);"+
+	"position:relative;"+
+	"top:50%;left:50%;"
+	
+	+"}"
+	+
+	".sel:hover{"+
+		//"border:1px solid black;"+
+		"box-shadow:inset 0px 0px 10px green;"+
+		"cursor:pointer"
+	+"}"+
+	".seld{"+
+		"box-shadow:inset 0px 0px 10px 4px blue;"+
+		"cursor:pointer"
+	+"}" 
+	+
+	".selAyv:hover{"+
+		"cursor:pointer"
+	+"}"
+	+
+	".spott{"+
+	"position:relative;"+
+	"transform-origin:center center;"+
+	//"top:-50%;left:5%;"+
+	"transform:translate("+ (50 - (100 - circleFac * 100)) +
+	"%," + (50 - (100 - circleFac * 100)) +"%);"+
+	"display:inline-block;"+
+	"filter:blur(7px);"+
+	"opacity:0.7;"+
+	"border-radius: 50%;"+
+	"width:"+(kawm*circleFac)+"px;"+
+	"height:"+(kawm*circleFac)+"px;"+
+	"background:purple;"
+	+"}"
+	
+	document.body.appendChild(sty)
+	
+	function reebooyaw() {
+		var el = document
+			.createElement("div")
+		el.className="chessTawv"
+		return el;
+	}
+	
+	var downFac = 0.8
+	var elRc = tzeemtzoom.getClientRects()[0]
+	addEventListener("resize", rs)
+	
+	rs(window)
+	function rs() {
+		
+		var rc = document
+		.body.getClientRects()[0]
+		var sc = Math.min(
+			window.innerWidth / elRc.width,
+			window.innerHeight / elRc.height
+		) * downFac
+		
+		
+		tzeemtzoom.style.transform = 
+		"translate(-50%,"
+		+"-50%) scale("+sc+")"
+	}
+}
+
+
+mawlowPieces()
+oysayTawvlaw(tzeemtzoom)
+var board = new Board(tzeemtzoom)
+</script>
+
+
