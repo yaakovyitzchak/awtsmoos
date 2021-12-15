@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body,html{
+            
+                font-family: helvetica;
+                transform:scale(200px);
+        }
+        #k{
+            
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+        }
+        .ok{
+            
+            display:inline-block;
+            user-select:none;
+            width:64px;
+            height:64px;
+            padding:5px;
+            font-size:32px;
+            3border:2px solid black;
+            text-align:center;
+            padding-top:2%;
+            box-shadow:0px 0px 2px 0px;
+            font-weight:bold;
+            text-shadow:0px 0px 2px white;
+        }
+    </style>
+</head>
+<body>
+B"H<BR>
+    <button id=rc>Record?</button>
+    <a id=sv display="none"></a>
+    <div id=k></div>
+<script>
+    var isRec = false
+    var lastTime
+    var frames = []
+    rc.onclick = () => {
+        if(!isRec) {
+            isRec = true
+            lastTime = Date.now()
+            frames.push([b,0,0,0])
+            rc.innerHTML = "Stop and Save?!"   
+        } else {
+            sv.href = URL.createObjectURL(
+                new Blob([
+                    "//B\"H"+
+                    "\nshnaweeyeemify(\""+
+                    JSON.stringify(frames)
+                    +"\");"
+                ])    
+            )
+            sv.download=Date.now()+".js"
+            sv.click()
+            rc.innerHTML = "Record AGAIN?!"
+            isRec = false
+        }
+    }
+    var b = Array.from({length:5})
+            .map(
+                x=>Array.from({length:5})
+                .map(y=>0)
+            )
+            
+    
+    
+            
+    onkeydown=e=>{
+        
+         console.log(e.keyCode);
+        switch(e.keyCode) {
+           
+            case 37:move(-1,0);break
+            case 38:move(0,-1);break
+            case 40:move(0,1);break
+            case 39:move(1,0)
+        }
+    }
+    
+    var colorCode = {
+        0:"",
+        2:"skyblue",
+        4:"green",
+        8:"purple",
+        16:"red",
+        32:"orange",
+        64:"green",
+        128:"yellow",
+        256:"salmon",
+        512:"cyan"
+    }
+    function start() {
+        Array.from({length:2})
+        .forEach(x=>{
+            var cor = randS()
+            b[cor[1]][cor[0]] = newNum()
+            
+        })
+        up()
+    }
+    
+    function newNum() {
+        if(Math.random() < .4) {
+            return 4            
+        } else return 2
+    }
+    
+    function move(dx,dy) {
+        console.log(dx,dy)
+        var odx = dx
+        var ody = dy
+        var royt = false
+        var flapt=false
+        
+        if(dy != 0) {
+            royt = true
+            b = rotateArray(b)
+            dx = dy
+        }
+        
+        if(dx > 0) {
+            flapt=true
+            b = flip(b)
+        }
+        
+        b.forEach((y,k)=>{
+            var last=0
+            
+            function check(x,i,a) {
+                last = a[i-1]
+                if(last==0){
+                    if(x>0){
+                        a[i]=0;
+                        a[i-1]=x
+                        if(i>0) {
+                            console.log("check",
+                            dx,x,i,k,a)
+                            check(x, i-1, a)
+                        }
+                      
+                    }
+                } else if(last==x){
+                    a[i]=0
+                    a[i -1]=x*2
+                } else if(last>0){
+                    
+                }
+            }
+            y.forEach((x,i,a)=>{
+                    check(x,i,a)
+            })
+        })
+        
+       
+        if(flapt) {
+            b = flip(b)
+        }
+        
+        if(royt) {
+            b = rotateArray(b)
+            dx = odx
+        }
+        
+        
+        
+        if(odx < 0) {
+            var row = randB(b.length)
+            if(!b[row][b.length-1])
+            b[row][b.length-1] = newNum()
+        }
+        
+        if(odx > 0) {
+            var row = randB(b.length)
+            if(!b[row][0])
+            b[row][0] = newNum()
+        }
+        
+        if(ody < 0) {
+            var row = randB(b.length)
+            if(!b[b.length-1][row])
+            b[b.length-1][row] = newNum()
+        }
+        
+        if(ody > 0) {
+            var row = randB(b.length)
+            if(! b[0][row] )
+            b[0][row] = newNum()
+        }
+        
+        if(isRec) {
+            frames.push([b,odx,ody,Date.now()-lastTime])
+            lastTime = Date.now()
+        }
+        up()
+    }
+    
+    function flip(b) {
+        var rez = Array.from({length:b.length})
+            .map(x=>Array.from({length:b[0].length}))
+            
+        for(var y = 0; y < b.length; y++) {
+            
+            
+            for(var x = 0; x < b[y].length;x++) {
+                rez[y][b[y].length - x - 1] = b[y][x]
+            }
+        }
+        return rez
+    }
+    function rotateArray(b) {
+        var rez = Array.from({length:b[0].length})
+            .map(x=>Array.from({length:b.length}))
+        for(var y = 0; y < b.length; y++) {
+            
+            
+            for(var x = 0; x < b[y].length;x++) {
+                rez[x][y] = b[y][x]
+            }
+        }
+        return rez
+    }
+    function up() {
+        k.innerHTML=""
+        b.forEach(x=>{
+            var row = document.createElement("div")
+            row.className="row"
+            k.appendChild(row)
+            x.forEach(y=>{
+                var d = document.createElement("div")
+                d.innerHTML=y
+                row.appendChild(d)
+                d.className="ok"
+                if(y) {
+                    var cl = colorCode[y+""]
+                    if(cl){
+                        d.style.background=cl
+                    }
+                }
+            })
+        })
+        
+        
+    }
+    
+    function randS() {
+        return [randB(b.length),randB(b[0].length)]
+    }
+    function randB(e) {
+        return Math.floor(
+            Math.random()*e    
+        )
+    }
+    start()
+</script>
+</body>
+</html>
