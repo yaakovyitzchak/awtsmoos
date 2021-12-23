@@ -1,6 +1,15 @@
 
 <div id=BH>B"H</div>
 <style>
+#BH{
+    text-shadow:3px 2px 2px white;
+    z-index:76869869876895674;
+}
+    .d{
+        position: absolute;
+        left:0;top:0;wsidth:100%;
+        heigsht:100%;
+    }
     body{
         font-family: helvetica;
     }
@@ -26,9 +35,9 @@
 </style>
 <meta charset="UTF-8">
     <title>AWTSMOOS</title>
-<script src="atzmus2.js"></script>
+<script src="three.min.js"></script>
 <script>
-makeFace()
+//makeFace()
     function makeFace() {
         var a = document.createElement("div")
         document.body.appendChild(a)
@@ -50,108 +59,490 @@ makeFace()
     var curLiveMap;
     var keysD = []
     var curMapNum = 0
-    ATZMUS.Tzimtzoom({
-        dawfeem: [
-            "three.min"    
-        ]
-    }).then(wrld=>{
-        st(wrld)
-    })
+    
     var maps = [
         [
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttt   r                     r                                     ttttttttt",
-            "tttttttt   r p t       t             t                                 ttttttttt",
-            "tttttttt       t                                                   t   ttttttttt",
-            "tttttttt       t                     t                                 ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt               rrrrrrrrrrr                                     ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt   t                                                           ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt   r   r                                                       ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt        t                                                      ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt    t                                                          ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt   t                                                           ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt             r                                                 ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttt                                                               ttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-        ]    
+           /* [
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                
+                
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                
+            ],*/
+            [
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                
+            ],
+            [
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttt   r        b            r                                     ttttttttt",
+                "tttttttt   r p t       t             t                                 ttttttttt",
+                "tttttttt       t                                                   t   ttttttttt",
+                "tttttttt  b    t    b                t                                 ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "ttttttttt ttt    t     rrrrrrrrrrr                                     ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt   t                                                           ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt   r   r                                                       ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt        t                                                      ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt    t                                                          ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt   t                                                           ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt             r                                                 ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttt                                                               ttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+            ],
+            [
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '       t                                                                        ',
+                '        t                                                                       ',
+                '         t                                                                      ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                
+            ],
+            
+            [
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                
+            ],
+            
+            [
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                
+            ]
+            /*
+            [
+                "",
+                "",
+                "",
+                "","",
+                "",
+                "",
+                "",
+                
+                "        t           t"
+            ]*/
+        ]
     ]
     
     var th = {
         t: tree,
         r: rock,
-        p: player
+        p: player,
+        b: booster,
+        g: ground
     }
     
     var ts = 64
@@ -164,26 +555,68 @@ makeFace()
         var ml = false
         var mt = false
         var md = false
-        
+        var mu = false
+        var isFalling=false
+        var sp
         var rocks = []
         this.movingRocks=false
         pl=this
         var t = this
         this.rocks=rocks
-        wrld.on("hissHavoos", () => {
+        this.speed=2
+        //this.depth *= 0.2
+        var moving = false
+        var mx = 0;
+        var my = 0;
+        var mz = 0;
+        this.nft=()=>t.needsToFall
+        var mv = false
+        function movement() {
+            mx = my = mz = 0;  
+            if(t.needsToFall) {
+                
+                mv = t.moveSlot(0,0,-1)
+                return;
+            }
+            
+            if(mr) {
+                mx = 1;
+                mr = false
+            }
             
             
-            if(rocks)
-            rocks.forEach(r=>{
-                if(r.isMoving) {
-                    r.doMove()
-                } else {
-                    rocks.splice(rocks.indexOf(r),1)
-                }
-            })
+            if(ml) {
+                mx = -1;
+                ml = false
+            }
             
-            if(!t.isMoving
-            ) {
+            
+            if(mt) {
+                my = -1
+                mt = false
+            }
+            
+            
+            if(md) {
+                my = 1;
+                md = false
+            }
+            
+            if(mu) {
+                mz = 1;
+                mu=false
+            }
+            if(mx != 0 || my != 0 || mz != 0)
+            t.moveSlot(mx,my,mz)
+            
+        }
+        
+        function gatherMoveInfo() {
+            
+            
+            mr = ml = md = mt = mu =
+            isFalling = false
+            
             
             if(keysD[39]) {
                 mr = true
@@ -201,48 +634,120 @@ makeFace()
                 mt = true
             }
             
-            if(mr) {
-                this.moveSlot(1, 0)
-                mr = false
+            if(keysD[32]) {
+                mu = true
             }
             
+            hasMove = mr && ml && md && mt
             
-            if(ml) {
-                this.moveSlot(-1, 0)
-                ml = false
-            }
+        }
+        
+        function groundUnder() {
+            if(t.isMoving) return true;
+            var s = t.getSlot()
+            if(s.tileZ <= 0) return true
+            var ls = getLiveSlot(
+                s.tileX,
+                s.tileY,
+                s.tileZ - 1
+            )
             
-            
-            if(mt) {
-                this.moveSlot(0, -1)
-                mt = false
-            }
-            
-            
-            if(md) {
-                this.moveSlot(0, 1)
-                md = false
-            }
-            }
-            
-            if(t.isMoving) {
-                t.doMove()
+            if(!ls) return false;
+            if(!ls.thing) return false;
+            if(ls.tileZ < s.tileZ)
+            if(ls.thing.wallType != "solid")
+                return false;
                 
-            } 
+            return true;
             
-            wrld.camera.position.x = this.x/ts
-            wrld.camera.position.y = this.y/ts
+        }
+        
+        var hasMove = false
+        var isGroundUnder = false
+        this.needsToFall = false;
+        var d = 2
+        t.distX = d
+        t.distY = d
+        
+        t.dir = 0
+        t.hissHavoos = (() => {
+            t.needsToFall = false;
             
+            gatherMoveInfo()
+            
+            isGroundUnder = groundUnder()
+            if(!isGroundUnder) {
+                t.needsToFall = true
+                
+            }
+            
+            
+            if(!t.isMoving) {
+                movement()
+            }
+            
+            moving = t.doMove()
+            
+            if(!moving) {
+                if(hasMove) {
+                    movement()
+                    moving = t.doMove()
+                }
+            }
+            
+            
+            if(rocks)
+            rocks.forEach(r=>{
+                if(r.isMoving) {
+                    r.speed=t.speed
+                    r.doMove()
+                } else {
+                    rocks.splice(rocks.indexOf(r),1)
+                }
+            })
+            if(!window.kkk) {
+            wrld.camera.position.x = this.
+                atz.pashut.position.x + (Math.sin(
+                t.dir * Math.PI/180   
+            )) * t.distX
+            wrld.camera.position.z = this.
+                atz.pashut.position.z + (Math.cos(
+                t.dir * Math.PI/180   
+            )-Math.PI
+            
+            ) * t.distY
+            
+            wrld.camera.position.y= this.atz.pashut.position.y
+            +4
+            wrld.camera.lookAt(this.atz.pashut.position)
+            
+            
+          //  wrld.camera.rotation.Y += Math.PI
+            ///    window.kkk=true
+            }
             
             
         })
     }
     function tree(opts) {
+        
+        this.static = true
         thing.call(this, ...arguments)
         this.type = "tree"
         this.color = "green"
         this.wallType = "solid"
     }
+    
+    
+    function ground(opts) {
+        
+        this.static = true
+        thing.call(this, ...arguments)
+        this.type = "ground"
+        this.color = "brown"
+        this.wallType = "solid"
+    }
+    
     
     function rock(opts) {
         thing.call(this, ...arguments)
@@ -255,7 +760,6 @@ makeFace()
             if(os.thing)
             if(os.thing.type == "player") {
                 if(!os.thing.movingRocks) {
-                    alert("howdy there!")
                     keyD = []
                     os.thing.movingRocks=true
                 }
@@ -264,7 +768,34 @@ makeFace()
                 os.thing.rocks.push(this)
             }
         }
+    } 
         
+    
+    function booster(opts) {
+        thing.call(this, ...arguments)
+        this.type = "booster"
+        this.color = "yellow"
+        this.wallType = "none"
+        this.addWall("solid")
+        var t = this
+        this.action = (os, nsx, nsy, ths) => {
+            
+            if(os.thing)
+            if(os.thing.type == "player") {
+                if(!os.thing.boosting) {
+                    os.thing.boosting=true
+                    var h=os.thing
+                    var oys = os.thing.speed
+                    h.speed*=2
+                    t.seelayk()
+                    setTimeout(function() {
+                        h.speed=oys
+                        h.boosting=false
+                    }, 5000);
+                }
+                
+            }
+        }
         
     }
     function thing(opts) {
@@ -276,55 +807,100 @@ makeFace()
         y = y * ts
         z = z * ts
         
-        
+        var rotation = {x:0,y:0,z:0}
         var width = ts
         var height = ts
+        var depth = ts
         var color = opts.color || "black"
         
         var tilesX = opts.tilesX || 1
         var tilesY = opts.tilesY || 1
+        var tilesZ = opts.tilesZ || 1
         
         var walls = opts.walls = []
         var self = this
         var t = self
         
         var speed = 4
+        
+        this.nextSlot=null
         function doMove() {
+            if(!t.isMoving) return true;
+            if(t.z < t.isMoving.z) {
+                t.z += speed
+            } else
+            if(t.z > t.isMoving.z) {
+                t.z -= speed
+            }
+            
             if(t.x < t.isMoving.x) {
                 t.x += speed
             } else
             if(t.x > t.isMoving.x) {
                 t.x -= speed
-                
-               // t.atz.rotation.y += Math.PI / 180 * speed
-            } else
+            } 
+            
             if(t.y > t.isMoving.y) {
                 t.y -= speed
             } else
             if(t.y < t.isMoving.y) {
                 t.y += speed
-            } else {
+            }
+            
+            if(
+                t.y == t.isMoving.y &&
+                t.x == t.isMoving.x &&
+                t.z == t.isMoving.z
+            ) {
                 
                 t.isMoving = null
+                return null
             }
             
         }
-        function moveSlot(nsx=0, nsy=0, an = true) {
+        t.curSlot=null
+        function moveSlot(nsx=0, nsy=0, nsz = 0) {
+
             var sl = getSlot()
-            var cls = getLiveSlot(sl.tileX, sl.tileY)
+            var cls = getLiveSlot(
+                sl.tileX, 
+                sl.tileY,
+                sl.tileZ
+            )
             var newSlx = sl.tileX + nsx
             var newSly = sl.tileY + nsy
-            
-            var nls = getLiveSlot(newSlx, newSly)
+            var newSlz = sl.tileZ + nsz
+            var nls = getLiveSlot(
+                newSlx, 
+                newSly,
+                newSlz
+            )
             
             if(nls) {
-            
+                
                 var canMove = true
-                if(nls.thing)
-                if(walls.includes(nls.thing.wallType)) {
-                    canMove = false
-                    if(typeof(nls.thing.action)=="function") {
-                        nls.thing.action(cls, nsx, nsy, nls)
+                if(nls.thing) {
+                    if(
+                        walls.includes(
+                            nls.thing.wallType
+                        )
+                    ) {
+                        canMove = false
+                    }
+                    if(
+                        typeof(
+                            nls.thing.action
+                        ) == "function"
+                    ) {
+                        nls
+                        .thing
+                        .action(
+                            cls, 
+                            nsx, 
+                            nsy, 
+                            nls,
+                            t
+                        )
                     }
                 }
                 if(canMove) {
@@ -334,22 +910,23 @@ makeFace()
                     nls.thing = self
                     var npx = nls.tileX * ts * self.tilesX
                     var npy = nls.tileY * ts * self.tilesY
-                    if(!an) {
-                        self.x = npx
-                        self.y = npy
-                    } else {
-                        this.isMoving = {
-                            x: npx, y: npy
-                        }
+                    var npz = nls.tileZ * ts * self.tilesZ
+                    
+                    this.isMoving = {
+                        x: npx, y: npy, z:npz
                     }
-                }
-            }
+                    return true
+                
+                } else return false
+            } else return false
         }
         
         function getSlot() {
             return ({
                 tileX: Math.floor(self.x / (ts *self.tilesX)),
-                tileY: Math.floor(self.y / (ts *self.tilesY))
+                tileY: Math.floor(self.y / (ts *self.tilesY)),
+                
+                tileZ: Math.floor(self.z / (ts *self.tilesZ))
             })
         }
         
@@ -363,16 +940,43 @@ makeFace()
             } else return false
         }
         
-        var atz = new ATZMUS.Nawees({
-        })
-        wrld.hoyseef(atz)
+        function seelayk() {
+            var sl = getSlot()
+            var cls = getLiveSlot(sl.tileX, sl.tileY)
+            
+            cls.thing = null
+            
+            var cy = curThings.indexOf(this)
+            if(cy>-1) {
+                curThings.splice(cy, 1)
+            }
+            
+            var si = wrld.scene.children
+                    .indexOf(t.atz.pashut)
+            if(si < 0) return;
+            wrld.scene.remove(wrld.scene.children[si])
+            
+        }
         
+        var atz = new ATZMUS.Nawees({
+            tzurah: {
+                type:"basic"
+            },
+            buff: !t.static
+        })
+        
+        this.start = () => {
+            wrld.hoyseef(atz)
+        }
         this.atz=atz
         
         this.walls = walls
         Object.defineProperties(this, {
             doMove: {
                 get: () => doMove  
+            },
+            seelayk: {
+                get: () => seelayk
             },
             getWalls: {
                 get: () => walls  
@@ -405,7 +1009,8 @@ makeFace()
                 get: () => x,
                 set: v  => {
                     x = v
-                    self.atz.position.x = v/ts
+                    self.atz.
+                    pashut.position.x = -v/ts
                 }
             },
             
@@ -413,7 +1018,8 @@ makeFace()
                 get: () => y,
                 set: v  => {
                     y = v
-                    self.atz.position.y = v/ts
+                    self.atz.
+                    pashut.position.z = -v/ts
                 }
             },
             
@@ -421,24 +1027,33 @@ makeFace()
                 get: () => z,
                 set: v  => {
                     z = v
-                    self.atz.position.z = v/ts
+                    self.atz.
+                    pashut.position.y = v/ts
                 }
             },
             width: {
                 get: () => width,
                 set: v  => {
                     width = v
-                    atz.scale.x=v/ts
+                    atz.pashut.scale.x=v/ts
                 }
             },
             height: {
                 get: () => height,
                 set: v  => {
                     height = v
-                    atz.scale.y = v/ts
-                    atz.scale.z=v/ts
+                    atz.pashut.scale.y = v/ts
                 }
             },
+            
+            depth: {
+                get: () => depth,
+                set: v  => {
+                    depth = v
+                    atz.pashut.scale.z=v/ts
+                }
+            },
+            
             tilesX: {
                 get: () => tilesX,
                 set: v  => {
@@ -453,6 +1068,14 @@ makeFace()
                     tilesY = v
                     self.height = ts * tilesY
                 }
+            },
+            
+            tilesZ: {
+                get: () => tilesZ,
+                set: v  => {
+                    tilesZ = v
+                    self.depth = ts * tilesZ
+                }
             }
         })
         
@@ -460,6 +1083,7 @@ makeFace()
         this.color = color
         this.tilesX = tilesX
         this.tilesY = tilesY
+        this.tilesZ= tilesZ
         this.x=x
         this.y=y
         this.z=z
@@ -477,13 +1101,22 @@ makeFace()
     
     function liveMap(mapData) {
         var slots = []
-        mapData.forEach((y, i) => {
-            y.split("")
-            .forEach((x, k) => {
-                slots.push({
-                    tileX: k,
-                    tileY: i,
-                    type: x
+        
+        mapData.forEach((z,m)=> {
+            var zin = []
+            slots.push(zin)
+            z.forEach((y, i) => {
+                var cr=[]
+                zin.push(cr)
+                
+                y.split("")
+                .forEach((x, k) => {
+                    cr.push({
+                        tileX: k,
+                        tileY: i,
+                        tileZ: m,
+                        type: x
+                    })
                 })
             })
         })
@@ -491,15 +1124,28 @@ makeFace()
         this.slots = slots
     }
     
-    function getLiveSlot(x,y) {
-        if(x < 0 || y < 0)
+    function getLiveSlot(x,y,z=0) {
+        if(typeof(x) == "object") {
+            if(
+                typeof(x.tileX)=="number" &&
+                typeof(x.tileY)=="number" &&
+                typeof(x.tileZ)=="number"
+            ) {
+                var o = x;
+                x = o.tileX;
+                y = o.tileY;
+                z= o.tileZ;
+            }
+        }
+        if(x < 0 || y < 0 || z < 0)
             return null;
-            
-        return curLiveMap.slots
-        .find(sl => (
-            sl.tileX == x &&
-            sl.tileY == y
-        ))
+        var tsz = curLiveMap.slots[z]
+        if(!tsz) return null
+        
+        var tst = tsz[y]
+        if(tst)
+        return tst[x] || null
+        else return null
     }
     
     function getTile(x, y, tsX, tsY, map) {
@@ -515,25 +1161,75 @@ makeFace()
         
         curLiveMap = new liveMap(map)
         curThings = []
-        map.forEach((y,i)=>{
-            y.split("")
-            .forEach((x,k)=>{
-                var en = th[x]
-                if(!en) return
-                
-                var thing = new en({
-                    x: k, y: i
+        map.forEach((z,m)=> {
+            
+            z.forEach((y,i)=>{
+                y.split("")
+                .forEach((x,k)=>{
+                    var en = th[x]
+                    if(!en) return
+                    
+                    var thing = new en({
+                        x: k, y: i, z:m
+                    })
+                    curThings.push(thing)
+                    
+                    var cursl = getLiveSlot(k, i, m)
+                    
+                    if(!cursl) return;
+                    
+                    cursl.thing = 
+                    thing
+                    
                 })
-                curThings.push(thing)
-                
-                var cursl = getLiveSlot(k, i)
-                
-                if(!cursl) return;
-                
-                cursl.thing = 
-                thing
-                
             })
+        })
+        
+        //combine geometries of static types
+        //start by dividing static types into arrays
+        var staticTypes = {}
+        curThings.forEach(c=> {
+            if(c.static) {
+                if(!staticTypes[c.type])
+                    staticTypes[c.type] = {
+                        base:[],
+                        geometry:new THREE.
+                            Geometry(),
+                        color: c.color
+                    }
+                
+                staticTypes[c.type].base.push(c)
+            }
+        })
+        
+        
+        window.stat = staticTypes
+        Object.keys(staticTypes)
+        .forEach(s => {
+            staticTypes[s].base.forEach(b => {
+                staticTypes[s].geometry.mergeMesh(
+                    b.atz.pashut    
+                )
+            })
+            
+            staticTypes[s].geometry.mergeVertices()
+            
+            var mat = ATZMUS.Mat({
+                    color: staticTypes[s].color
+                })
+            var geom = staticTypes[s].geometry
+            staticTypes[s].merged = new THREE.Mesh(
+                geom,
+                mat
+            )
+            
+            wrld.scene.add(staticTypes[s].merged)
+        })
+        
+        
+        
+        curThings.forEach(c=> {
+            if(!c.static) c.start()
         })
     }
     
@@ -553,30 +1249,203 @@ makeFace()
     function setupCamera() {
         wrld.camera.position.z = -7
         
-        wrld.camera.position.x = 800
+        wrld.camera.position.x = 800 
         wrld.camera.position.y = 800
         
-        
+        /*
         wrld.camera.rotation.y = 
-        wrld.camera.rotation.z = Math.PI
+         wrld.camera.rotation.z = Math.PI*/
     }
     
+    function setupWorld() {
+        onresize=rs
+        var rnd = new THREE.WebGLRenderer({
+            alpha:1
+        })
+        wrld.renderer=rnd
+        var cm = new THREE.PerspectiveCamera(
+            75,
+            0,
+            0.1,
+            1000
+        )
+        wrld.camera=cm
+        
+        var sc = new THREE.Scene()
+        wrld.scene=sc
+        
+        
+        document.body.appendChild(rnd.domElement)
+        rnd.domElement.className="d"
+        
+        rs()
+        function rs() {
+            rnd.setSize(
+                innerWidth,innerHeight
+            )
+            
+            cm.aspect = (
+                rnd.domElement.clientWidth/
+                rnd.domElement.clientHeight
+            )
+            
+            cm.updateProjectionMatrix()
+        }
+        wrld.hoyseef=(awts)=> {
+           sc.add(awts.pashut)
+        }
+        wrld.render = () => {
+            rnd.render(sc, cm)
+        }
+        
+        function lights() {
+            
+            var hl = new THREE.HemisphereLight(
+                0x999999,
+                0x222222
+                
+            )
+            hl.position.set(0.2,1,0)
+            wrld.scene.add(hl)
+            var hl = new THREE.DirectionalLight(
+                0xffffff
+            )
+            hl.position.set(0.2,1,0)
+            wrld.scene.add(hl)
+        }
+        
+        lights()
+        setInterval(
+            ()=>
+            wrld
+            .renderer
+            .render(wrld.scene,wrld.camera),16
+        )
+        var mats = []
+        var geoms = []
+        
+        function newMat() {
+            
+        }
+        
+        
+        var lm=new THREE.MeshBasicMaterial({
+            color:"blue"
+        })
+        var bx = new THREE.BoxGeometry(1,1,1)
+        var bufx = new THREE.BoxBufferGeometry(1,1,1)
+        
+        var mawchs={
+            mats:[],geoms:[]
+        }
+        
+        
+        ATZMUS={
+            Mawchsawn: mawchs,
+            
+            Mat:function(opts={}) {
+                
+                if(!opts.cb)opts.cb=()=>{}
+                var cl = opts.color || "blue"
+                
+                var tc;
+                if(typeof(cl) == "string")
+                    tc= new THREE.Color(cl)
+                else tc = cl
+                var g = mawchs.mats.find(x=>
+                    objEq(x.color,tc)
+                )
+                if(!g) {
+                    var lm=new THREE.
+                    MeshLambertMaterial
+                  //  MeshBasicMaterial
+                    ({
+                        color:tc
+                    })
+                    mawchs.mats.push(lm)
+                    return lm
+                }
+                
+                return g
+                
+            },
+            Kav:function(opts={}) {
+                if(!opts.cb)opts.cb=()=>{}
+                Object.defineProperties(this,{
+                      
+                })
+            },
+            Nawees:function(opts={}) {
+                var isBuff = opts.buff
+                
+                var scale={}
+                var position = {}
+                var mat = ATZMUS.Mat({
+                    color: opts.color
+                })
+                this.pashut = new THREE.Mesh(
+                    isBuff?bufx:bx,
+                    mat
+                )
+                var t = this
+                Object.defineProperties(this,{
+                    scale: {
+                        get:()=>scale
+                    },
+                    position: {
+                        get:()=>position
+                    },
+                    color: {
+                        get:()=>t.color,
+                        set:v =>{
+                            var mat = ATZMUS.Mat({
+                                color: v
+                            })
+                            t.pashut
+                            .material=mat
+                        }
+                    }
+                })
+            }
+        }
+    }
     function st(wrld) {
-        window.wrld=wrld
+        window.wrld={}
+        setupWorld()
         keyListeners()
         makeMap(curMapNum)
         setupCamera()
         livethings = curThings.filter(t=>t.hissHavoos)
-       /* setInterval(function() {
+        setInterval(function() {
+            
             livethings.forEach(t=>{
                 if(typeof(t.hissHavoos) == "function") {
                     t.hissHavoos(t)
                 }
             })
-        }, 1000/60)*/
+            
+            
+            
+        }, 1000/60)
+        
     }
     isDone = true
-   
+   st()
     
+    
+    
+    function objEq(ob1,ob2) {
+            var eq = true
+            var props1 = Object.keys(ob1)
+            var props2 = Object.keys(ob2)
+            if(props1.length != props2.length)
+                return false
+                
+            props1.forEach(z=> {
+                if(ob1[z] !== ob2[z]) 
+                    eq = false
+            })
+            return eq
+        }
 </script>
 
