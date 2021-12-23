@@ -166,7 +166,7 @@
                 '                                                                                ',
                 '                                                                                ',
                 '                                                                                ',
-                
+                '                                                                                ',
             ],
             [
                 "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
@@ -665,12 +665,13 @@
         var hasMove = false
         var isGroundUnder = false
         this.needsToFall = false;
-        var d = 2
+        var d = 4
         t.distX = d
         t.distY = d
-        
+        t.distZ = d
         t.dir = 0
         t.hissHavoos = (() => {
+            
             t.needsToFall = false;
             
             gatherMoveInfo()
@@ -679,20 +680,6 @@
             if(!isGroundUnder) {
                 t.needsToFall = true
                 
-            }
-            
-            
-            if(!t.isMoving) {
-                movement()
-            }
-            
-            moving = t.doMove()
-            
-            if(!moving) {
-                if(hasMove) {
-                    movement()
-                    moving = t.doMove()
-                }
             }
             
             
@@ -705,20 +692,37 @@
                     rocks.splice(rocks.indexOf(r),1)
                 }
             })
+            
+            if(!t.isMoving) {
+                movement()
+            }
+            
+            moving = t.doMove()
+            
+            
+            if(!moving) {
+                if(hasMove) {
+                    movement()
+                    moving = t.doMove()
+                }
+            }
+            
+            
+            
             if(!window.kkk) {
             wrld.camera.position.x = this.
                 atz.pashut.position.x + (Math.sin(
-                t.dir * Math.PI/180   
-            )) * t.distX
+                (180 + t.dir) * Math.PI/180 
+            ))*t.distX
             wrld.camera.position.z = this.
                 atz.pashut.position.z + (Math.cos(
-                t.dir * Math.PI/180   
-            )-Math.PI
+                (180 + t.dir) * Math.PI/180   
+            )
             
             ) * t.distY
             
             wrld.camera.position.y= this.atz.pashut.position.y
-            +4
+            + t.distZ;
             wrld.camera.lookAt(this.atz.pashut.position)
             
             
@@ -736,6 +740,8 @@
         this.type = "tree"
         this.color = "green"
         this.wallType = "solid"
+        this.shape="cylinder"
+        this.tilesZ=2
     }
     
     
@@ -777,6 +783,7 @@
         this.color = "yellow"
         this.wallType = "none"
         this.addWall("solid")
+        this.shape="sphere"
         var t = this
         this.action = (os, nsx, nsy, ths) => {
             
@@ -821,30 +828,45 @@
         var self = this
         var t = self
         
-        var speed = 4
+        var speed = 4;
         
+        var curSpeed = t.speed;
+        var oneOverRoot2 = 1 / Math.sqrt(2)
+        var as = speed * oneOverRoot2;
+        var round = 2;
+        var tx=0;
+        var ty = 0;
+        var tz = 0;
         this.nextSlot=null
+        
+        tx = (t.x);
+            ty = (t.y);
+            tz = (t.z);
+            
         function doMove() {
+            
             if(!t.isMoving) return true;
+            
+            curSpeed = t.speed
             if(t.z < t.isMoving.z) {
-                t.z += speed
+                t.z += curSpeed
             } else
             if(t.z > t.isMoving.z) {
-                t.z -= speed
+                t.z -= curSpeed
             }
             
             if(t.x < t.isMoving.x) {
-                t.x += speed
+                t.x += curSpeed
             } else
             if(t.x > t.isMoving.x) {
-                t.x -= speed
+                t.x -= curSpeed
             } 
             
             if(t.y > t.isMoving.y) {
-                t.y -= speed
+                t.y -= curSpeed
             } else
             if(t.y < t.isMoving.y) {
-                t.y += speed
+                t.y += curSpeed
             }
             
             if(
@@ -854,13 +876,34 @@
             ) {
                 
                 t.isMoving = null
+                
+                /*if(curCovered.length > 0) {
+                    var gls;
+                    console.log(curCovered,99)
+                    curCovered.forEach(cc=> {
+                        if(!cc)return;
+                        gls = getLiveSlot(cc.x,cc.y,cc.z)
+                        if(!gls) return console.log(888);
+                        if(!gls.thing) {
+                            gls.thing = cc.thing;
+                        }
+                    })
+                    curCovered=[]
+                }*/
                 return null
             }
+            
+            
+            
+            
+            
+            
+            
             
         }
         t.curSlot=null
         function moveSlot(nsx=0, nsy=0, nsz = 0) {
-
+            if(nsx && nsy) nsy = 0;
             var sl = getSlot()
             var cls = getLiveSlot(
                 sl.tileX, 
@@ -875,43 +918,66 @@
                 newSly,
                 newSlz
             )
-            
+            var isj = (nsx&&nsz || nsy&&nsz)
             if(nls) {
                 
                 var canMove = true
-                if(nls.thing) {
+                var jm = false;
+                var walld = false;
+                var isThing = false;
+                var aksh = false;
+                if(nls.thing && !nls.thing.pl) {
+                    isThing = true;
                     if(
                         walls.includes(
                             nls.thing.wallType
                         )
                     ) {
+                        walld = true;
+                        if(!isj)
                         canMove = false
+                        else jm=true
                     }
                     if(
                         typeof(
                             nls.thing.action
                         ) == "function"
                     ) {
-                        nls
-                        .thing
-                        .action(
-                            cls, 
-                            nsx, 
-                            nsy, 
-                            nls,
-                            t
-                        )
+                        aksh = true
+                        
                     }
                 }
+                if(aksh) {
+                    nls.thing.action(cls, 
+                        nsx, 
+                        nsy, 
+                        nls,
+                        t
+                    )
+                }
                 if(canMove) {
+                    if(!jm){
                     if(cls) {
+                        /*if(isThing  && !walld && 
+                        nls.thing != t) {
+                            curCovered.push({th:nls.thing, nls})
+                            console.log(curCovered)
+                        }*/
+                        
                         cls.thing = null
                     }
-                    nls.thing = self
+                        nls.thing = self
+                    }
                     var npx = nls.tileX * ts * self.tilesX
                     var npy = nls.tileY * ts * self.tilesY
                     var npz = nls.tileZ * ts * self.tilesZ
                     
+                    if(jm) {
+                        npx =
+                        sl.tileX * ts * self.tilesX
+                        
+                        npy = sl.tileY * ts * self.tilesY
+                    }
                     this.isMoving = {
                         x: npx, y: npy, z:npz
                     }
@@ -931,6 +997,38 @@
         }
         
         
+        function getSlots() {
+            var sl = [];
+            var z=0;
+            var y=0;
+            var x=0;
+            
+            var tx= tilesX;
+            var ty = tilesY;
+            var tz = tilesZ;
+            
+            var ttx = t.x;
+            var tty = t.y;
+            var ttz = t.z;
+            
+            var flx = Math.floor(ttx / (ts))
+            var fly = Math.floor(tty / (ts))
+            var flz = Math.floor(ttz / (ts))
+            for(z = 0; z < tz; z++) {
+                for(y = 0; y < ty; y++) {
+                    for(x = 0; x < tx; x++) {
+                        sl.push({
+                            x: flx+x,
+                            y: fly+y,
+                            z: flz+z
+                        })
+                    }
+                }
+            }
+            return sl;
+        }
+        
+        
         
         function addWall(nm) {
             if(typeof(nm) == "string") {
@@ -942,7 +1040,8 @@
         
         function seelayk() {
             var sl = getSlot()
-            var cls = getLiveSlot(sl.tileX, sl.tileY)
+            var cls = getLiveSlot(sl.tileX, sl.tileY, 
+            sl.tileZ)
             
             cls.thing = null
             
@@ -958,10 +1057,10 @@
             
         }
         
+        var sh = opts.shape
+        
         var atz = new ATZMUS.Nawees({
-            tzurah: {
-                type:"basic"
-            },
+            shape: sh,
             buff: !t.static
         })
         
@@ -971,6 +1070,9 @@
         this.atz=atz
         
         this.walls = walls
+        var off=[0,0,0]
+        
+        
         Object.defineProperties(this, {
             doMove: {
                 get: () => doMove  
@@ -987,6 +1089,10 @@
             moveSlot: {
                 get: () => moveSlot  
             },
+            
+            getSlots: {
+                get: () => getSlots
+            },
             getSlot: {
                 get: () => getSlot  
             },
@@ -997,6 +1103,14 @@
                     
                     
                     atz.color  = v
+                }
+            },
+            
+            shape: {
+                get: () => atz.shape,
+                set: v  => {
+                    
+                    atz.shape  = v
                 }
             },
             speed: {
@@ -1010,7 +1124,7 @@
                 set: v  => {
                     x = v
                     self.atz.
-                    pashut.position.x = -v/ts
+                    pashut.position.x = -v/ts + off[0]
                 }
             },
             
@@ -1019,7 +1133,7 @@
                 set: v  => {
                     y = v
                     self.atz.
-                    pashut.position.z = -v/ts
+                    pashut.position.z = -v/ts + off[1]
                 }
             },
             
@@ -1028,7 +1142,7 @@
                 set: v  => {
                     z = v
                     self.atz.
-                    pashut.position.y = v/ts
+                    pashut.position.y = v/ts + off[2]
                 }
             },
             width: {
@@ -1036,6 +1150,8 @@
                 set: v  => {
                     width = v
                     atz.pashut.scale.x=v/ts
+                    off[0] = atz.pashut.scale.x/2;
+                    t.x=t.x;
                 }
             },
             height: {
@@ -1043,6 +1159,8 @@
                 set: v  => {
                     height = v
                     atz.pashut.scale.y = v/ts
+                    off[2] = atz.pashut.scale.y/2;
+                    t.z=t.z;
                 }
             },
             
@@ -1051,6 +1169,8 @@
                 set: v  => {
                     depth = v
                     atz.pashut.scale.z=v/ts
+                    off[1] = atz.pashut.scale.y/2;
+                    t.z=t.z;
                 }
             },
             
@@ -1065,16 +1185,24 @@
             tilesY: {
                 get: () => tilesY,
                 set: v  => {
+                    v = Math.floor(v);
                     tilesY = v
-                    self.height = ts * tilesY
+                    self.depth = ts * tilesY
+                    
                 }
             },
             
             tilesZ: {
                 get: () => tilesZ,
                 set: v  => {
+                    var slts = t.getSlots()
+                    setLiveSlots(slts,null)
+                    
                     tilesZ = v
-                    self.depth = ts * tilesZ
+                    self.height = ts * tilesZ
+                    
+                    slts = t.getSlots()
+                    setLiveSlots(slts,t);
                 }
             }
         })
@@ -1099,6 +1227,7 @@
         
     }
     
+    var curCovered = []
     function liveMap(mapData) {
         var slots = []
         
@@ -1124,6 +1253,16 @@
         this.slots = slots
     }
     
+    function setLiveSlots(ii, th) {
+        var lv;
+        ii
+        .forEach(
+            p=>{
+            lv = getLiveSlot(p.x,p.y,p.z)
+            if(lv)
+                lv.thing=th
+        })
+    }
     function getLiveSlot(x,y,z=0) {
         if(typeof(x) == "object") {
             if(
@@ -1332,8 +1471,23 @@
         var lm=new THREE.MeshBasicMaterial({
             color:"blue"
         })
-        var bx = new THREE.BoxGeometry(1,1,1)
-        var bufx = new THREE.BoxBufferGeometry(1,1,1)
+        var geoms = {
+            box: {
+                reg: "BoxGeometry",
+                buf: "BoxBufferGeometry",
+                deef: [1,1,1]
+            },
+            sphere: {
+                reg: "SphereGeometry",
+                buf: "SphereBufferGeometry",
+                deef: [0.5, 7, 7]
+            },
+            cylinder: {
+                reg: "CylinderGeometry",
+                buf: "CylinderBufferGeometry",
+                deef: [0.5, 0.5, 1,6]
+            }
+        }
         
         var mawchs={
             mats:[],geoms:[]
@@ -1342,7 +1496,53 @@
         
         ATZMUS={
             Mawchsawn: mawchs,
+            tsoor: function(opts={}) {
+                var can = document.createElement("canvas")  
+                var wd = opts.width || ts;
+                var ht = opts.height || ts;
+                can.wdith = wd;
+                can.height = ht;
+                
+                var ctx = can.getContext("2d");
+                var tx = new THREE.CanvasTexture(can);
+                this.ctx=ctx;
+                this.tx = tx;
+            },
             
+            Geo:function(opts={}) {
+                
+                if(!opts.cb)opts.cb=()=>{}
+                var cl = opts.shape || "box"
+                
+                var isBuf = !!opts.isBuff
+                var args = opts.args || null;
+                
+               
+                var geo = geoms[cl];
+                if(!geo) geo=geoms.box;
+                
+                if(!args)
+                    args=geo.deef;
+                    
+                var ty = isBuf?geo.buf:geo.reg;
+                var realG;
+                
+                var g = mawchs.geoms.find(x=> (
+                    x.type == ty &&
+                    objEq(Object.values(x.parameters)
+                    .filter(z=>z),args)
+                ))
+                
+                
+                if(!g) {
+                    var G = new THREE[ty](...args)
+                    mawchs.geoms.push(G)
+                    return G;
+                }
+                
+                return g
+                
+            },
             Mat:function(opts={}) {
                 
                 if(!opts.cb)opts.cb=()=>{}
@@ -1383,17 +1583,40 @@
                 var mat = ATZMUS.Mat({
                     color: opts.color
                 })
+                var geom = ATZMUS.Geo({
+                    isBuff,
+                    shape: opts.shape
+                })
                 this.pashut = new THREE.Mesh(
-                    isBuff?bufx:bx,
+                    geom,
                     mat
                 )
                 var t = this
+                var shape
                 Object.defineProperties(this,{
                     scale: {
                         get:()=>scale
                     },
                     position: {
                         get:()=>position
+                    },
+                    
+                    shape: {
+                        get:()=>t.pashut.geometry.type,
+                        set:v =>{
+                            var w;
+                            if(typeof(v) != "object"||!v)
+                                w={}
+                            if(typeof(v)=="string")
+                                w = {
+                                    shape:v
+                                    
+                                }
+                            var g = ATZMUS.Geo(w)
+                            
+                            t.pashut
+                            .geometry=g
+                        }
                     },
                     color: {
                         get:()=>t.color,
