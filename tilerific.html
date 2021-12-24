@@ -347,10 +347,10 @@
             
             [
                 '           o                                                                    ',
+                '                   rr                                                           ',
+                '   o     r                                                                      ',
                 '                                                                                ',
-                '   o                                                                            ',
-                '                                                                                ',
-                '                                                                                ',
+                '    r                                                                           ',
                 '                                                                                ',
                 '                                                                                ',
                 '                                                                                ',
@@ -823,9 +823,10 @@
             
         }
         
-        function groundUnder() {
-            if(t.isMoving) return true;
-            var s = t.getSlot()
+        function groundUnder(k) {
+            if(!k) k = t;
+            if(k.isMoving) return true;
+            var s = k.getSlot()
             if(s.tileZ <= 0) return true
             var ls = getLiveSlot(
                 s.tileX,
@@ -839,7 +840,7 @@
             if(ls.thing.wallType != "solid")
                 return false;
                 
-            return true;
+            return ls;
             
         }
         
@@ -867,10 +868,23 @@
             if(rocks)
             rocks.forEach(r=>{
                 if(r.isMoving) {
+                    
                     r.speed=t.speed
                     r.doMove()
                 } else {
-                    rocks.splice(rocks.indexOf(r),1)
+                    
+                    
+                    var rm = false
+                    if(!rm) {
+                    var rockNRoll = !groundUnder(r)
+                    if(rockNRoll) {
+                        rm=true
+                        console.log("rockin",r,rockNRoll)
+                        r.moveSlot(0,0,-1);
+                    } else {
+                        rocks.splice(rocks.indexOf(r),1)
+                    }
+                    }
                 }
             })
             
