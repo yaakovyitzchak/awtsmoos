@@ -1,0 +1,93 @@
+B"H
+<br>
+<title>Moshiach Now!</title>
+[recorder]
+<style>
+	#taweem {
+		position:absolute;
+		left:50%;
+		top:50%;
+		transform:
+			translate(-50%,-50%);
+		font-size:72px;
+		font-family:helvetica;
+		color:red;
+		text-shadow:1px 0px 4px black;
+		user-select:none
+	}
+</style>
+<div id=taweem></div>
+
+<button id=ats>Awtsmoos?! [record]
+</button>
+
+<a id="yolo"></a>
+<script>
+	var mr
+ats.onclick = () => {
+	if(!mr) 
+	navigator
+	.mediaDevices
+	.getDisplayMedia({
+		video:true,
+		audio:true
+	}).then(str=> {
+	    navigator.mediaDevices
+	    .getUserMedia({audio:true}).then(str2=> {
+	        var tr = str2.getAudioTracks()[0];
+	        if(tr)
+	            str.addTrack(tr)
+	        stuff()
+	    }).catch(e=>{
+	        stuff()
+	    })
+	    function stuff() {
+        mr = new MediaRecorder(
+		    str, {
+		        mimeType: "video/webm; codecs=h264"
+		    }	
+		)
+		ats.innerHTML = 
+			"DUDE like u should stop recoridng when u want?!?!?"
+		
+		
+		var times = 0
+		var maxTimes = 6
+		
+		setTimeout(function k() {
+			taweem.innerHTML =
+			(maxTimes - times)
+			if(
+				times++ < 
+				maxTimes
+			) setTimeout(k,1000)
+			else {
+				mr.start()
+				taweem.innerHTML =
+					""
+			}
+				
+		}, 1000)
+		
+		mr.ondataavailable = 
+			e=> {
+			yolo.href = URL
+				.createObjectURL(
+					e.data
+				)
+			yolo.download=
+				"awtseeloos.mp4"
+			yolo.click()
+			ats.innerHTML = 
+				"OK if you want to recrd again u might b a ball 2"
+			delete window.mr
+		} 
+	    }
+		
+	})
+	else {
+		mr.stop()	
+		
+	}
+}
+</script>
