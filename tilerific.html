@@ -786,6 +786,7 @@
                 mz = 1;
                 mu=false
             }
+            if(mx && my) my = 0
             if(mx != 0 || my != 0 || mz != 0)
             t.moveSlot(mx,my,mz)
             
@@ -793,7 +794,23 @@
         
         function gatherMoveInfo() {
             
+            if(keysD[keyShorts.A]) {
+                t.dir++;
+            }
             
+            
+            if(keysD[keyShorts.D]) {
+                t.dir --;
+            }
+            
+            
+            if(keysD[keyShorts.Q]) {
+                t.distZ += 0.1;
+            }
+            
+            if(keysD[keyShorts.E]) {
+                t.distZ -= 0.1;
+            }
             mr = ml = md = mt = mu =
             isFalling = false
             
@@ -822,26 +839,6 @@
             
         }
         
-        function groundUnder(k) {
-            if(!k) k = t;
-            if(k.isMoving) return true;
-            var s = k.getSlot()
-            if(s.tileZ <= 0) return true
-            var ls = getLiveSlot(
-                s.tileX,
-                s.tileY,
-                s.tileZ - 1
-            )
-            
-            if(!ls) return false;
-            if(!ls.thing) return false;
-            if(ls.tileZ < s.tileZ)
-            if(ls.thing.wallType != "solid")
-                return false;
-                
-            return ls;
-            
-        }
         
         var hasMove = false
         var isGroundUnder = false
@@ -857,7 +854,7 @@
             
             gatherMoveInfo()
             
-            isGroundUnder = groundUnder()
+            isGroundUnder = t.groundUnder()
             if(!isGroundUnder) {
                 t.needsToFall = true
                 
@@ -875,10 +872,9 @@
                     
                     var rm = false
                     if(!rm) {
-                    var rockNRoll = !groundUnder(r)
+                    var rockNRoll = !r.groundUnder()
                     if(rockNRoll) {
                         rm=true
-                        console.log("rockin",r,rockNRoll)
                         r.moveSlot(0,0,-1);
                     } else {
                         rocks.splice(rocks.indexOf(r),1)
@@ -1091,8 +1087,12 @@
         var t = self
         
         var speed = 4;
-        
+        var jumpSpeed = 4;
+        var fallSpeed = 1;
         var curSpeed = t.speed;
+        
+        var fallAccell = 0.4;
+        var curFallSpeed = fallAccell;
         var oneOverRoot2 = 1 / Math.sqrt(2)
         var as = speed * oneOverRoot2;
         var round = 2;
@@ -1104,19 +1104,41 @@
         tx = (t.x);
             ty = (t.y);
             tz = (t.z);
-            
+        var isfalling = false;
+        var gu;
         function doMove() {
             
             if(!t.isMoving) return true;
+            curSpeed = t.speed;
+            if(curFallSpeed > 16) curFallSpeed=16
             
-            curSpeed = t.speed
+            tz = Math.floor(t.z)
+            if(!isfalling)
             if(t.z < t.isMoving.z) {
-                t.z += curSpeed
-            } else
-            if(t.z > t.isMoving.z) {
-                t.z -= curSpeed
+                t.z += jumpSpeed
             }
             
+            if(t.z - curFallSpeed > t.isMoving.z) {
+                isfalling=true
+            }
+            if(isfalling) {
+                t.z -= curFallSpeed
+                
+                curFallSpeed += fallAccell;
+                if(t.z <= t.isMoving.z) {
+                    t.z=t.isMoving.z
+                    
+                    gu = groundUnder()
+                    if(gu) {
+                        isfalling=false
+                        curFallSpeed = fallAccell;
+                    }
+                
+                }
+                
+                
+                
+            }
             if(t.x < t.isMoving.x) {
                 t.x += curSpeed
             } else
@@ -1136,9 +1158,9 @@
                 t.x == t.isMoving.x &&
                 t.z == t.isMoving.z
             ) {
+               
                 
                 t.isMoving = null
-                
                 /*if(curCovered.length > 0) {
                     var gls;
                     console.log(curCovered,99)
@@ -1165,7 +1187,7 @@
         }
         t.curSlot=null
         function moveSlot(nsx=0, nsy=0, nsz = 0) {
-            if(nsx && nsy) nsy = 0;
+           // if(nsx && nsy) nsy = 0;
             var slts = getSlots()
             var sl = slts[0]
             var cls = getLiveSlot(
@@ -1343,6 +1365,28 @@
             
         }
         
+        function groundUnder(k) {
+            if(!k) k = t;
+            //if(k.isMoving) return true;
+            var s = k.getSlot()
+            if(s.tileZ <= 0) return true
+            var ls = getLiveSlot(
+                s.tileX,
+                s.tileY,
+                s.tileZ - 1
+            )
+            
+            if(!ls) return false;
+            if(!ls.thing) return false;
+            if(ls.tileZ < s.tileZ)
+            if(ls.thing.wallType != "solid")
+                return false;
+                
+            return ls;
+            
+        }
+        
+        
         var sh = opts.shape
         
         var atz = new ATZMUS.Nawees({
@@ -1360,6 +1404,10 @@
         
         
         Object.defineProperties(this, {
+            
+            groundUnder: {
+                get: () => groundUnder  
+            },
             doMove: {
                 get: () => doMove  
             },
@@ -1381,6 +1429,28 @@
             },
             getSlot: {
                 get: () => getSlot  
+            },
+            
+            isfalling: {
+                get: () => isfalling  
+            },
+            jumpSpeed: {
+                get: () => jumpSpeed,
+                set: v  => {
+                    jumpSpeed = v
+                }
+            },
+            fallAccell: {
+                get: () => fallAccell,
+                set: v  => {
+                    fallAccell = v
+                }
+            },
+            curFallSpeed: {
+                get: () => curFallSpeed,
+                set: v  => {
+                    curFallSpeed = v
+                }
             },
             color: {
                 get: () => color,
@@ -1658,7 +1728,14 @@
             if(!c.static) c.start()
         })
     }
-    
+    var keyShorts = {
+        W: 87,
+        S: 83,
+        A: 65,
+        D: 68,
+        E: 69,
+        Q: 81
+    }
     
     function keyListeners() {
         addEventListener("keydown", e=> {
