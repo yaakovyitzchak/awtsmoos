@@ -1235,6 +1235,8 @@
                             if(!isj)
                             canMove = false
                             else jm=true
+                        } else {
+                            nl.covered = nl.thing;
                         }
                         if(
                             typeof(
@@ -1265,10 +1267,13 @@
                             curCovered.push({th:nls.thing, nls})
                             console.log(curCovered)
                         }*/
-                        /*slts.forEach(ax=> {
-                            ax.thing = null;
-                        })*/
-                        cls.thing = null
+                        slts.forEach(ax=> {
+                            
+                            ax.thing = ax.covered || null;
+                        })
+                        if(cls.thing)
+                            cls.thing = cls.covered ||
+                                null;
                     }
                         nls.thing = self
                     }
@@ -1572,14 +1577,7 @@
         this.x=x
         this.y=y
         this.z=z
-        /*
-        atz.position = {
-            x: self.x, y:self.y
-        }
-        atz.scale = {
-            x: ts * self.tilesX,
-            y: ts * self.tilesY
-        }*/      
+        
         
         
     }
@@ -1763,7 +1761,7 @@
     function setupWorld() {
         onresize=rs
         var rnd = new THREE.WebGLRenderer({
-            alpha:1
+            alpha:1,antialiasing: true
         })
         wrld.renderer=rnd
         var cm = new THREE.PerspectiveCamera(
