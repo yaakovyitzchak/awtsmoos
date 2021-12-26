@@ -12,6 +12,8 @@
     }
     body{
         font-family: helvetica;
+        
+        
     }
     .face {
         position:absolute;
@@ -32,11 +34,110 @@
         display:inline-block;
         width:16px;height:16px;
     }
+    
+    #txt {
+        display:inline-block;
+        height:13%;
+        width:26%;
+        z-index:1000;
+        border: 2px solid black;
+        padding: 1px;
+        background: rgba(1,1,1,0.6);
+        position:absolute;
+        bottom:75px;
+        left:26px;
+        color:white;
+        font-weight:bold;
+        overflow-y:scroll;
+        
+    }
+    #log {
+        width:25.3%;
+        position:absolute; 
+        bottom: 158px;
+        left:26px;
+        border: 2px solid black;
+        z-index:770;
+        
+        height:45%;
+        overflow-y:scroll;
+        background: rgba(0.6,1,0.5,0.6);
+        color:white;
+        padding: 4px;
+        font-weight:bold;'
+    }
+    
 </style>
 <meta charset="UTF-8">
     <title>AWTSMOOS</title>
+    <div id="cmd">
+        <div id="log"></div>
+        <div id="txt"></div>
+    </div>
 <script src="three.min.js"></script>
 <script>
+    var isCmdHidden = false;
+    onkeyup = e => {
+        if(e.keyCode == 13) {
+            if(!e.shiftKey)
+                startCmd()
+        }
+        
+        if(e.keyCode == 90) {
+            if(!isCmdHidden) {
+                cmd.style.display = "none"
+                isCmdHidden = true
+            } else {
+                isCmdHidden = false;
+                cmd.style.display = ""
+            }
+        }
+    }
+    var isCmding = false;
+    function logIt(msg) {
+        log.innerText += msg;
+        log.scrollTop = 
+        log.scrollHeight - 
+        log.clientHeight - 1
+    }
+    function startCmd() {
+        if(!isCmding) {
+            isCmding = true;
+            if(!txt.contenteditable) {
+                txt.contenteditable = true;
+                txt.setAttribute("contenteditable","true")
+                txt.focus();
+            }
+        } else {
+            if(txt.contenteditable) {
+                txt.contenteditable = false;
+                txt.setAttribute("contenteditable", "false")
+                txt.blur()
+                doCmd(txt.innerText)
+                txt.innerHTML = "";
+                isCmding = false;
+            }
+        }
+    }
+    
+    function doCmd(cmd) {
+        console.log(cmd)
+        if(cmd[0] == ".") {
+            var args = cmd.split(" ")
+            if(args[0] == ".eval") {
+                var news = Array.from(args).splice(1)
+                var vald = ""
+                try {
+                    vald = eval(news.join(" "))
+                   
+                } catch(e) {
+                    logIt("ERROR in evaling! " + e)
+                }
+            }
+        }
+        logIt(cmd);
+        logIt("\n\t"+vald+"\n\n")
+    }
 //makeFace()
     function makeFace() {
         var a = document.createElement("div")
@@ -62,25 +163,6 @@
     
     var maps = [
         [
-           /* [
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                
-                
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                
-            ],*/
             [
                 '                                                                                ',
                 '                                                                                ',
@@ -699,18 +781,6 @@
                 '                                                                                ',
                 
             ]
-            /*
-            [
-                "",
-                "",
-                "",
-                "","",
-                "",
-                "",
-                "",
-                
-                "        t           t"
-            ]*/
         ]
     ]
     
@@ -743,8 +813,8 @@
         pl=this
         var t = this
         this.rocks=rocks
-        this.speed=2
-        //this.depth *= 0.2
+        
+        
         var moving = false
         var mx = 0;
         var my = 0;
@@ -759,6 +829,7 @@
                 return;
             }
             
+            if(isCmding) return;
             if(mr) {
                 mx = 1;
                 mr = false
@@ -793,7 +864,7 @@
         }
         
         function gatherMoveInfo() {
-            
+            if(isCmding) return;
             if(keysD[keyShorts.A]) {
                 t.dir++;
             }
@@ -916,8 +987,6 @@
             wrld.camera.lookAt(this.atz.pashut.position)
             
             
-          //  wrld.camera.rotation.Y += Math.PI
-            ///    window.kkk=true
             }
             
             
@@ -1161,19 +1230,7 @@
                
                 
                 t.isMoving = null
-                /*if(curCovered.length > 0) {
-                    var gls;
-                    console.log(curCovered,99)
-                    curCovered.forEach(cc=> {
-                        if(!cc)return;
-                        gls = getLiveSlot(cc.x,cc.y,cc.z)
-                        if(!gls) return console.log(888);
-                        if(!gls.thing) {
-                            gls.thing = cc.thing;
-                        }
-                    })
-                    curCovered=[]
-                }*/
+                
                 return null
             }
             
@@ -1187,7 +1244,7 @@
         }
         t.curSlot=null
         function moveSlot(nsx=0, nsy=0, nsz = 0) {
-           // if(nsx && nsy) nsy = 0;
+            
             var slts = getSlots()
             var sl = slts[0]
             var cls = getLiveSlot(
@@ -1253,7 +1310,7 @@
                         }
                         
                     }
-                //    nl.thing = self;
+                    
                     if(aksh) {
                         
                     }
@@ -1262,11 +1319,6 @@
                 if(canMove) {
                     if(!jm){
                     if(cls) {
-                        /*if(isThing  && !walld && 
-                        nls.thing != t) {
-                            curCovered.push({th:nls.thing, nls})
-                            console.log(curCovered)
-                        }*/
                         slts.forEach(ax=> {
                             
                             ax.thing = ax.covered || null;
@@ -1297,12 +1349,7 @@
         }
         
         function getSlot() {
-            return getSlots()[0]/*({
-                tileX: Math.floor(self.x / (ts *self.tilesX)),
-                tileY: Math.floor(self.y / (ts *self.tilesY)),
-                
-                tileZ: Math.floor(self.z / (ts *self.tilesZ))
-            })*/
+            return getSlots()[0]
         }
         
         
@@ -1753,9 +1800,7 @@
         wrld.camera.position.x = 800 
         wrld.camera.position.y = 800
         
-        /*
-        wrld.camera.rotation.y = 
-         wrld.camera.rotation.z = Math.PI*/
+        
     }
     
     function setupWorld() {
@@ -1995,6 +2040,23 @@
                 })
             }
         }
+        setupBackground()
+    }
+    function setupBackground() {
+        var textures = {
+            770: [
+                "770.jpeg",
+                "https://i.ibb.co/c63FNby/770.jpg"
+            ]
+        }
+        
+        var bk = textures[770]
+        if(navigator.onLine) {
+            bk = bk[1]
+        } else {
+            bk = bk[0]
+        }
+        document.body.style.background="url("+bk+")"
     }
     function st(wrld) {
         window.wrld={}
