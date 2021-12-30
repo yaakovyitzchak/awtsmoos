@@ -51,6 +51,7 @@
         overflow-y:scroll;
         
     }
+
     #log {
         width:25.3%;
         position:absolute; 
@@ -67,6 +68,27 @@
         font-weight:bold;'
     }
     
+    #BH {
+        position: fixed;
+        left:13px;
+        padding:15px;
+        top:13px;
+        user-select:none;
+    }
+    #BH:hover {
+        cursor:pointer;
+        padding:15px;
+        background:yellow;
+    }
+    
+    #BH:active {
+        background:black;
+        color:white;
+    }
+    
+    .act {
+        border:2px solid purple;
+    }
 </style>
 <meta charset="UTF-8">
     <title>AWTSMOOS</title>
@@ -75,7 +97,36 @@
         <div id="txt"></div>
     </div>
 <script src="three.min.js"></script>
+<script src="atzmusTzimtzum.js"></script>
 <script>
+	
+	ATZMUS.loadData([
+		"asdf"
+	]).then(()=>{
+		st()
+	})
+    var tseeyooreem = {
+        lines: ct=> {
+            var x=0
+            var y=0;
+            ct.fillStyle="black";
+                for(x = 0; x < ct.canvas.width;x+=18) {
+                    ct.fillRect(x,y,10,ct.canvas.height);
+                }
+        }
+    }
+    
+    function makeStaticTexture(tx) {
+        var cn = document.createElement("canvas")
+        cn.width = 256;
+        cn.height = 256;
+        var ct = cn.getContext("2d")
+        if(typeof(tx)=="function") {
+            tx(ct)
+        }
+        
+        return cn.toDataURL();
+    }
     var isCmdHidden = false;
     onkeyup = e => {
         if(e.keyCode == 13) {
@@ -153,8 +204,96 @@
         i2.className="eye"
         a.appendChild(i2)
     }
+    var clacker = document.createElement("a")
+	var audioAk = document.createElement("a")
+    var inpi = document.createElement("input")
+    var awd = document.createElement("audio")
     BH.onclick=()=>{
-        
+        if(!inpi.ok) {
+            inpi.type = "file"
+            inpi.multiple = true;
+            inpi.ok=true;
+          //  awd.controls = true;
+          //  BH.appendChild(awd)
+        }
+        if(!window.mediaR) {
+            BH.classList.toggle("act")
+            /*
+            inpi.click()
+            inpi.onchange = () => {
+                var adStr;
+                var flz = inpi.files
+                if(flz.length>0) {
+                    if(window.curIdx === undefined) {
+                        curIdx = 0;
+                    }
+                    awd.src = URL.createObjectURL(flz[curIdx])
+                    awd.play()
+                    awd.onplay=()=> {
+                        adStr = awd.captureStream()
+                        contin(adStr)
+                        awd.onplay = null
+                    }
+                } else contin(null)
+                
+            }*/
+			navigator.mediaDevices.getUserMedia({audio:true})
+			.then(astr=> {
+				contin(astr)
+			}).catch(e=>{
+				contin(null)
+			})
+            function contin(adStr) {
+                var w = 1920;
+                var h = 1080
+            dimz = {x:w,y:h}
+            wrld.rs()
+            
+            var fac = window.innerWidth / w;
+			var trns = 100 - fac * 100
+            wrld.renderer.domElement.style.transform=
+            "scale("+fac+") translate(-"+(trns)+
+				"%,-"+(trns)+"%)"
+			
+            
+            var str = 
+            wrld.renderer.domElement.captureStream(window.faster);
+            if(adStr) {
+                Array.from(adStr.getAudioTracks())
+                .forEach(tr=>str.addTrack(tr))
+            }
+            window.mediaR = new MediaRecorder(str, {
+		        mimeType: "video/webm; codecs=h264"
+            })
+            mediaR.start();
+				window.faster=248
+            mediaR.ondataavailable = e => {
+				faster=false
+                clacker.href = URL.createObjectURL(e.data)
+                clacker.download = Date.now()+"_moshiach.mp4"
+                clacker.click()
+				
+				
+                mediaR = null;
+                str.removeTrack(str.getVideoTracks()[0])
+                
+                BH.classList.toggle("act")
+                delete window.dimz;
+				
+				
+            wrld.renderer.domElement.style.transform= ""
+				
+                wrld.rs()
+                
+            
+            }
+            }
+            
+            
+            
+        } else {
+            mediaR.stop()
+        }
     }
     var curThings = []
     var curLiveMap;
@@ -357,7 +496,7 @@
                 '                                                                                ',
                 '                                                                                ',
                 '                                                                                ',
-                '                       o                                                     ',
+                '                       o                                                        ',
                 '                                                                                ',
                 '                                                                                ',
                 '             o             o                                                    ',
@@ -821,6 +960,16 @@
         var mz = 0;
         this.nft=()=>t.needsToFall
         var mv = false
+		
+		var face = new ATZMUS.Nawees({
+			color:"orange",
+			shape:"plane"
+		});
+		face.pashut.rotation.x = Math.PI
+		face.doubleSided = true;
+		face.pashut.scale.z = 0.3;
+		this.face=face;
+		wrld.hoyseef(face)
         function movement() {
             mx = my = mz = 0;  
             if(t.needsToFall) {
@@ -988,6 +1137,10 @@
             
             
             }
+			
+			
+			face.pashut.position.copy(t.atz.pashut.position)
+			face.pashut.position.z -= 1
             
             
         })
@@ -1758,6 +1911,7 @@
             var mat = ATZMUS.Mat({
                     color: staticTypes[s].color
                 })
+                
             var geom = staticTypes[s].geometry
             staticTypes[s].merged = new THREE.Mesh(
                 geom,
@@ -1805,6 +1959,7 @@
     
     function setupWorld() {
         onresize=rs
+		
         var rnd = new THREE.WebGLRenderer({
             alpha:1,antialiasing: true
         })
@@ -1821,14 +1976,21 @@
         wrld.scene=sc
         
         
+		wrld.startRendering = startRendering;
+        
         document.body.appendChild(rnd.domElement)
         rnd.domElement.className="d"
         
-        
+        wrld.rs=rs
         function rs() {
-            rnd.setSize(
-                innerWidth,innerHeight
-            )
+            if(!window.dimz) {
+                rnd.setSize(
+                    innerWidth,innerHeight
+                )
+            } else {
+                rnd.setSize(window.dimz.x,
+                window.dimz.y)
+            }
             
             cm.aspect = (
                 rnd.domElement.clientWidth/
@@ -1860,188 +2022,39 @@
             hl.position.set(0.2,1,0)
             wrld.scene.add(hl)
         }
-        
+        var fps=60
         lights()
-        setInterval(
-            ()=>
-            wrld
-            .renderer
-            .render(wrld.scene,wrld.camera),16
-        )
+		function startRendering() {
+			setTimeout(
+				function rnd(){
+					livethings.forEach(t=>{
+						if(typeof(t.hissHavoos) == "function") {
+							t.hissHavoos(t)
+						}
+					})
+					
+					wrld
+					.renderer
+					.render(wrld.scene,wrld.camera)
+
+					if(window.faster){
+						setTimeout(rnd,1000/(window.faster/2))
+					}
+					else setTimeout(rnd,1000/fps)
+				},1000/fps
+			)
+		}
+		
         var mats = []
         var geoms = []
         
-        function newMat() {
-            
-        }
+        
         
         rs()
         
-        var lm=new THREE.MeshBasicMaterial({
-            color:"blue"
-        })
-        var geoms = {
-            box: {
-                reg: "BoxGeometry",
-                buf: "BoxBufferGeometry",
-                deef: [1,1,1]
-            },
-            sphere: {
-                reg: "SphereGeometry",
-                buf: "SphereBufferGeometry",
-                deef: [0.5, 7, 7]
-            },
-            cylinder: {
-                reg: "CylinderGeometry",
-                buf: "CylinderBufferGeometry",
-                deef: [0.5, 0.5, 1,6]
-            }
-        }
-        
-        var mawchs={
-            mats:[],geoms:[]
-        }
-        
-        
-        ATZMUS={
-            Mawchsawn: mawchs,
-            tsoor: function(opts={}) {
-                var can = document.createElement("canvas")  
-                var wd = opts.width || ts;
-                var ht = opts.height || ts;
-                can.wdith = wd;
-                can.height = ht;
-                
-                var ctx = can.getContext("2d");
-                var tx = new THREE.CanvasTexture(can);
-                this.ctx=ctx;
-                this.tx = tx;
-            },
-            
-            Geo:function(opts={}) {
-                
-                if(!opts.cb)opts.cb=()=>{}
-                var cl = opts.shape || "box"
-                
-                var isBuf = !!opts.isBuff
-                var args = opts.args || null;
-                
-               
-                var geo = geoms[cl];
-                if(!geo) geo=geoms.box;
-                
-                if(!args)
-                    args=geo.deef;
-                    
-                var ty = isBuf?geo.buf:geo.reg;
-                var realG;
-                
-                var g = mawchs.geoms.find(x=> (
-                    x.type == ty &&
-                    objEq(Object.values(x.parameters)
-                    .filter(z=>z),args)
-                ))
-                
-                
-                if(!g) {
-                    var G = new THREE[ty](...args)
-                    mawchs.geoms.push(G)
-                    return G;
-                }
-                
-                return g
-                
-            },
-            Mat:function(opts={}) {
-                
-                if(!opts.cb)opts.cb=()=>{}
-                var cl = opts.color || "blue"
-                
-                var tc;
-                if(typeof(cl) == "string")
-                    tc= new THREE.Color(cl)
-                else tc = cl
-                var g = mawchs.mats.find(x=>
-                    objEq(x.color,tc)
-                )
-                if(!g) {
-                    var lm=new THREE.
-                    MeshLambertMaterial
-                  //  MeshBasicMaterial
-                    ({
-                        color:tc
-                    })
-                    mawchs.mats.push(lm)
-                    return lm
-                }
-                
-                return g
-                
-            },
-            Kav:function(opts={}) {
-                if(!opts.cb)opts.cb=()=>{}
-                Object.defineProperties(this,{
-                      
-                })
-            },
-            Nawees:function(opts={}) {
-                var isBuff = opts.buff
-                
-                var scale={}
-                var position = {}
-                var mat = ATZMUS.Mat({
-                    color: opts.color
-                })
-                var geom = ATZMUS.Geo({
-                    isBuff,
-                    shape: opts.shape
-                })
-                this.pashut = new THREE.Mesh(
-                    geom,
-                    mat
-                )
-                var t = this
-                var shape
-                Object.defineProperties(this,{
-                    scale: {
-                        get:()=>scale
-                    },
-                    position: {
-                        get:()=>position
-                    },
-                    
-                    shape: {
-                        get:()=>t.pashut.geometry.type,
-                        set:v =>{
-                            var w;
-                            if(typeof(v) != "object"||!v)
-                                w={}
-                            if(typeof(v)=="string")
-                                w = {
-                                    shape:v
-                                    
-                                }
-                            var g = ATZMUS.Geo(w)
-                            
-                            t.pashut
-                            .geometry=g
-                        }
-                    },
-                    color: {
-                        get:()=>t.color,
-                        set:v =>{
-                            var mat = ATZMUS.Mat({
-                                color: v
-                            })
-                            t.pashut
-                            .material=mat
-                        }
-                    }
-                })
-            }
-        }
         setupBackground()
     }
+	
     function setupBackground() {
         var textures = {
             770: [
@@ -2065,21 +2078,12 @@
         makeMap(curMapNum)
         setupCamera()
         livethings = curThings.filter(t=>t.hissHavoos)
-        setInterval(function() {
-            
-            livethings.forEach(t=>{
-                if(typeof(t.hissHavoos) == "function") {
-                    t.hissHavoos(t)
-                }
-            })
-            
-            
-            
-        }, 1000/60)
+	
+		setTimeout(()=>{console.log(window.wrld);window.wrld.startRendering()},1);
         
     }
     isDone = true
-   st()
+   
     
     
     
