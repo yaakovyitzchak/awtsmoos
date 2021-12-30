@@ -1,0 +1,60 @@
+
+<html lang="en">
+B"H
+<br>
+<style>
+body,html{
+	font-family:helvetica
+}
+</style>
+<input id="nm"><br>
+<input type="file" multiple id=flz><br>
+<div id="prog"></div>
+<script>
+	flz.onchange = () => {
+		var ind = 0;
+		var fr = new FileReader();
+		resultz = []
+		function getOne() {
+			fr.readAsDataURL(flz.files[ind])
+			fr.onload = () => {
+				resultz.push([flz.files[ind].name,fr.result]);
+				prog.innerHTML += "file " + ind + " out of " +
+					flz.files.length + 
+					" with name " + 
+					flz.files[ind].name+"<br>"
+				if(ind < flz.files.length-1) {
+					ind++;	
+					getOne()
+				} else {
+					prog.innerHTML = "all done"
+					var all = "//B\"H\n//<br>\n" + 
+						"//<iframe border=0 id=prv></iframe><br>"+
+						"<div id=cnt></div>"+
+						"//<script>var dt=[];function mawchsawnify(d){" +
+						"dt.push(d)" +
+						"}</" +"script>\n"+
+						"//<script>\n\n" +
+						
+						"mawchsawnify(" + 
+						JSON.stringify(resultz) + 
+						");\n//Moshiach NOW!!!\n\n" +
+						 
+						"///</" + "script>\n" + 
+						"//<script>" + 
+						"dt[0].forEach(x=>{var a = document.createElement(\"button\");"+
+						"a.innerHTML=x[0];a.onclick=()=>{prv.src=x[1];};" +
+						"cnt.appendChild(a)})" +
+						
+						"//</"+"script>"
+					var a = document.createElement("a")
+					a.href = URL.createObjectURL(new Blob([all]))
+					a.download = (nm.value || Date.now()) + ".html"
+					a.click()
+				}
+			}
+		}
+		if(flz.files.length) getOne()
+	}
+</script>
+</html>
