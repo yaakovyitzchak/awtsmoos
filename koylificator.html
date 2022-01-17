@@ -1,0 +1,273 @@
+BH
+<br>
+<input id=oo type="file" multiple>
+<br>
+<div id="binCnt"></div><br>
+<div id="bin"></div>
+
+<div id="preev">
+<div id="prevName"></div><br>
+<audio id="arP"></audio>
+<div id="prevCon"></div>
+
+</div>
+<div id="track"></div>
+<style>
+#oo {
+
+}
+
+#binCnt {
+	width:200px;
+	height:50px;
+	border:1px solid black;
+	position:relative;
+}
+
+#bin{
+
+display:block;
+width:200px;
+overflow-y:scroll;
+border:2px solid black;
+height:300px;
+float:left
+
+}
+
+#preev {
+	display:block;
+	width:400px;
+	height:100px;
+	border:2px solid black;
+	#spadding:10px;
+	float:left
+}
+
+.bin div{
+	margin-left:15px;
+}
+.prog {
+	height:26px;
+	display:inline-block;
+	background:black;
+	width:100%;
+	margin-top:-20;
+}
+.binification{
+	display:block;
+	#width:75%;
+	
+	#height:26px;
+	overflow-x:hidden;
+	padding:5px;
+	background:rgba(89,22,255,0.7);
+	border:1px solid black;
+	color:black;
+	user-select:none;
+	
+}
+
+.binification:hover{
+	background:cyan;
+	cursor:pointer;
+}
+
+.binification:active{
+	background:black;
+	color:white;
+}
+
+.act {
+	background:salmon;
+}
+
+.thng {
+	position:relative;
+	border-radius:50%;
+	border:1px solid black;
+	width:13px;
+	height:13px;
+	background:white;
+	z-index:88
+}
+
+.coybtn {
+	padding:3px;
+	user-select:none;
+	border:1px solid black;
+	background:blue;
+}
+
+.coybtn:hover {
+	cursor:pointer;
+	background: cyan;
+}
+
+.coybtn:active{
+	background:black;
+	color:white;
+}
+
+body,html{
+	font-family:helvetica
+}
+</style>
+<script>
+var awdeeyz = []
+
+
+var curSl = null
+function addToBin(a) {
+	var d = document.createElement("div")
+	d.className="binification"
+	d.innerHTML = a[0].name
+	d.fl = a;
+	bin.appendChild(d)
+	d.onclick=()=>{
+		Array.from(bin.children)
+		.forEach(q=>{
+			if(q.classList.contains("act")) {
+				q
+				.classList.remove("act")
+			}
+		})
+		
+		d.classList.add("act")
+		curSl = d;
+		arP.src = a[1]
+		prevName.innerHTML = a[0].name
+		makeCntrls(arP,prevCon)
+	}
+	
+}
+
+oo.onchange=() => {
+	getFiles(oo, p=> {
+		awdeeyz.push(p)
+		addToBin(p)
+	})
+}
+
+var inter = null;
+
+function makeCntrls(owd,divId) {
+	if(inter)
+		clearInterval(inter)
+		
+	divId.innerHTML = ""
+	var play = document.createElement("div")
+	play.className="play coybtn"
+	var prW;
+	var ct;
+	var mxt;
+	owd.onload = () => {
+		mxt = owd.buffered.end(0);
+	};
+	
+	play.onclick = () => {
+		mxt = owd.buffered.end(0);
+		if(play.isPlayer) {
+			pl()
+		} else {
+			stp()
+		}
+	}
+	
+	function pl() {
+		owd.play()
+		play.innerHTML = "Pause"
+		play.isPlayer = false
+
+		inter = setInterval(()=> {
+
+			ct = owd.currentTime
+
+			progressThing
+				.style
+				.left = ((
+				ct / mxt
+			) * (
+				prW -
+				progressThing
+				.offsetWidth
+			))+"px"
+		},20)
+	}
+	
+	function stp() {
+		
+		if(inter)
+			clearInterval(inter)
+		owd.pause()
+		play.innerHTML = "Play"
+		play.isPlayer = true
+	}
+	play.innerHTML = "Play"
+	play.isPlayer = true
+	var progressBar = document.createElement("div")
+	progressBar.className = "prog"
+	
+	progressBar.onclick=e=>{
+		var pos = e.offsetX;
+		var perSent = pos/prW
+		var taweem = mxt * perSent
+		owd.currentTime = taweem
+		if(owd.paused) {
+			pl()
+		}
+			
+	};
+	
+	var progressThing = document.createElement("div")
+	progressThing.className="thng"
+	
+	
+	var px = 0
+	
+	
+	owd.onended=()=>{
+		stp()
+	}
+	divId.appendChild(progressThing)
+	
+	divId.appendChild(progressBar)
+	divId.appendChild(play)
+	
+	prW = progressThing
+		.parentNode
+		.clientWidth
+}
+
+function getFiles(el,cb) {
+	return new Promise((rs,rj) => {
+		var cr = 0;
+		var flz  = []
+		function getO() {
+			fetch(
+				URL
+				.createObjectURL(el.files[cr])
+			)
+			.then(b=>b.blob())
+			.then(b=> {
+				flz.push(
+					[
+						el.files[cr]
+						,URL.createObjectURL(b)
+					]
+				)
+				if(cb) cb(flz[flz.length-1])
+				if(cr<oo.files.length-1) {
+					cr++;
+					getO()
+				} else {
+					rs(flz)
+				}
+
+			})
+		}
+		getO()
+	})
+}
+
+</script>
