@@ -103,6 +103,15 @@
 	ATZMUS.loadData([
 		"asdf"
 	]).then(()=>{
+		var cur = 0;
+		var max = 8
+		var i
+		for(i = cur; i < max; i++) {
+			ATZMUS.Mat(
+				{texture:"mouth0"+cur
+				+".png"}
+			)
+		}
 		st()
 	})
     var tseeyooreem = {
@@ -965,12 +974,128 @@
 			color:"orange",
 			shape:"plane"
 		});
+		face.pashut.material.color =
+		new THREE.Color()
+		face.pashut.rotation.z= Math.PI
 		face.pashut.rotation.x = Math.PI
 		face.doubleSided = true;
 		face.pashut.scale.z = 0.3;
 		this.face=face;
 		wrld.hoyseef(face)
-        function movement() {
+		this.isTalking = false;
+        
+        var framesPassed = 0;
+        var curMouthIdx = 0;
+		var maxMouthIdx = 8;
+        var hasMove = false
+        var isGroundUnder = false
+        this.needsToFall = false;
+        var d = 4
+        t.distX = d
+        t.distY = d
+        t.distZ = d
+        t.dir = 0
+        t.hissHavoos = (() => {
+            if(t.isTalking) {
+				if(framesPassed % 6 == 0) {
+					t.face.texture = 
+						"mouth0" + curMouthIdx
+						+".png"
+					if(curMouthIdx < maxMouthIdx)
+						curMouthIdx++;
+					else curMouthIdx = 0;
+				}
+				framesPassed++;
+				if(framesPassed > 30)
+					framesPassed = 0;
+			} else {
+				t.face.texture = "mouth08.png"
+			}
+            t.needsToFall = false;
+            
+            gatherMoveInfo()
+            
+            isGroundUnder = t.groundUnder()
+            if(!isGroundUnder) {
+                t.needsToFall = true
+                
+            }
+            
+            
+            if(rocks)
+            rocks.forEach(r=>{
+                if(r.isMoving) {
+                    
+                    r.speed=t.speed
+                    r.doMove()
+                } else {
+                    
+                    
+                    var rm = false
+                    if(!rm) {
+                    var rockNRoll = !r.groundUnder()
+                    if(rockNRoll) {
+                        rm=true
+                        r.moveSlot(0,0,-1);
+                    } else {
+                        rocks
+						.splice(rocks.indexOf(r),1)
+                    }
+                    }
+                }
+            })
+            
+            if(!t.isMoving) {
+                movement()
+            }
+            
+            moving = t.doMove()
+            
+            
+            if(!moving) {
+                if(hasMove) {
+                    movement()
+                    moving = t.doMove()
+                }
+            }
+            
+            
+            
+            if(!window.kkk) {
+            wrld.camera.position.x = this.
+                atz.pashut.position.x + (Math.sin(
+                (180 + t.dir) * Math.PI/180 
+            ))*t.distX
+            wrld.camera.position.z = this.
+                atz.pashut.position.z + (Math.cos(
+                (180 + t.dir) * Math.PI/180   
+            )
+            
+            ) * t.distY
+            
+            wrld.camera.position.y= this
+			.atz.pashut.position.y
+            + t.distZ;
+			
+            wrld
+			.camera
+			.lookAt(this.atz.pashut.position)
+            
+            
+            }
+			
+			
+			face
+			.pashut
+			.position
+			.copy(t.atz.pashut.position)
+			
+			face.pashut.position.z -= 0.5001
+            
+            
+        })
+		
+		function movement() {
             mx = my = mz = 0;  
             if(t.needsToFall) {
                 
@@ -1058,92 +1183,6 @@
             hasMove = mr && ml && md && mt
             
         }
-        
-        
-        var hasMove = false
-        var isGroundUnder = false
-        this.needsToFall = false;
-        var d = 4
-        t.distX = d
-        t.distY = d
-        t.distZ = d
-        t.dir = 0
-        t.hissHavoos = (() => {
-            
-            t.needsToFall = false;
-            
-            gatherMoveInfo()
-            
-            isGroundUnder = t.groundUnder()
-            if(!isGroundUnder) {
-                t.needsToFall = true
-                
-            }
-            
-            
-            if(rocks)
-            rocks.forEach(r=>{
-                if(r.isMoving) {
-                    
-                    r.speed=t.speed
-                    r.doMove()
-                } else {
-                    
-                    
-                    var rm = false
-                    if(!rm) {
-                    var rockNRoll = !r.groundUnder()
-                    if(rockNRoll) {
-                        rm=true
-                        r.moveSlot(0,0,-1);
-                    } else {
-                        rocks.splice(rocks.indexOf(r),1)
-                    }
-                    }
-                }
-            })
-            
-            if(!t.isMoving) {
-                movement()
-            }
-            
-            moving = t.doMove()
-            
-            
-            if(!moving) {
-                if(hasMove) {
-                    movement()
-                    moving = t.doMove()
-                }
-            }
-            
-            
-            
-            if(!window.kkk) {
-            wrld.camera.position.x = this.
-                atz.pashut.position.x + (Math.sin(
-                (180 + t.dir) * Math.PI/180 
-            ))*t.distX
-            wrld.camera.position.z = this.
-                atz.pashut.position.z + (Math.cos(
-                (180 + t.dir) * Math.PI/180   
-            )
-            
-            ) * t.distY
-            
-            wrld.camera.position.y= this.atz.pashut.position.y
-            + t.distZ;
-            wrld.camera.lookAt(this.atz.pashut.position)
-            
-            
-            }
-			
-			
-			face.pashut.position.copy(t.atz.pashut.position)
-			face.pashut.position.z -= 1
-            
-            
-        })
     }
     function tree(opts) {
         
@@ -2019,7 +2058,7 @@
             var hl = new THREE.DirectionalLight(
                 0xffffff
             )
-            hl.position.set(0.2,1,0)
+            hl.position.set(0,0.3,-0.2)
             wrld.scene.add(hl)
         }
         var fps=60
@@ -2087,18 +2126,5 @@
     
     
     
-    function objEq(ob1,ob2) {
-            var eq = true
-            var props1 = Object.keys(ob1)
-            var props2 = Object.keys(ob2)
-            if(props1.length != props2.length)
-                return false
-                
-            props1.forEach(z=> {
-                if(ob1[z] !== ob2[z]) 
-                    eq = false
-            })
-            return eq
-        }
 </script>
 
