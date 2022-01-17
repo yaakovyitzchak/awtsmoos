@@ -30,7 +30,7 @@ function ATZMUS() {
 	}
 
 
-
+	var madeMawchs = false;
 	ATZMUS={
 		texture: function(opts={}) {
 			var nm;
@@ -51,10 +51,19 @@ function ATZMUS() {
 			
 			var tl = new THREE.TextureLoader();
 			
-			var toyxt = tl.load(data)
+			var toyxt = tl.load(data[1],tx=>{
+				var cnv = document
+				.createElement("canvas")
+				
+				/*tx.image.width = 512;
+				tx.image.height=256;
+				tx.image.needsUpdate = true*/
+				tx.minFilter = THREE.LinearFilter;
+			})
+			
 			
 			mawchs.textures.push([
-				data, toyxt
+				data[0], toyxt
 			])
 			
 			return toyxt;
@@ -68,23 +77,34 @@ function ATZMUS() {
 				nm = opts;
 			} else if(opts.name) nm = opts.name;
 			else return null;
-
-			var dt = mawchs
-				.dataPacks.find(d => 
-					d.find(s => (
-						s[0] == nm
-					)
-				))
 			
-			return dt;
+			var fnd = null;
+			mawchs
+				.dataPacks.forEach(d => 
+					d.forEach(s => {
+							if(s[0] == nm) {
+								fnd = s;   
+							}
+						}
+					)
+				)
+			
+			return fnd;
+		},
+		prepareMaterials: function(opts={}) {
+			if(typeof(opts) == "string") {
+				
+			}
 		},
 		loadData: function(opts={}) {
 			return new Promise((rs,rj) => {
-				if(!window.mawchsawnify) {
+				if(!madeMawchs) {
+					madeMawchs = true;
 					window.mawchsawnify = function(d) {
 						mawchs.dataPacks.push(d)	
 					}
 				}
+				
 				var ar = [];
 				if(opts && typeof(opts)=="object") {
 					ar = Array.from(opts)
@@ -92,7 +112,8 @@ function ATZMUS() {
 
 				var it = 0
 				function getIt() {
-					var scr = document.createElement("script")	
+					var scr = document
+					.createElement("script")	
 					scr.src = ar[it]+".html"
 					document.head.appendChild(scr)
 					scr.onload = () => {
@@ -160,9 +181,10 @@ function ATZMUS() {
 		Mat:function(opts={}) {
 
 			if(!opts.cb)opts.cb=()=>{}
-			var cl = opts.color || "blue"
-			var txt = opts.texture||opts.tseeyooree;
-
+			var cl = opts.color || "white"
+			var txt = opts.tseeyooree;
+			
+			var realTx = opts.texture
 			var ts;
 			if(txt) {
 				ts = new ATZMUS.tsoor()
@@ -173,7 +195,17 @@ function ATZMUS() {
 			if(typeof(cl) == "string")
 				tc= new THREE.Color(cl)
 			else tc = cl
-
+			
+			if(typeof(realTx) == "string") {
+				var mtx = mawchs.textures.find(z=>
+					z[0] == realTx						   
+				);
+				if(mtx) finishedTxture = mtx[1];
+				else {
+					var ntxt = ATZMUS.texture(realTx);
+					if(ntxt) finishedTxture = ntxt;
+				}
+			} else
 			if(typeof(txt) == "string") {
 				if(typeof(tseeyooreem[txt]) == 
 				   "function") {
@@ -191,16 +223,24 @@ function ATZMUS() {
 
 			var g = mawchs.mats.find(x=> (
 				objEq(x.color,tc) &&
-				finishedTxture == x.texture
+				//(x.texture && finishedTxture) &&
+				finishedTxture == x.map
+					
 			))
-
 			if(!g) {
+			/*
+				console.log("new texture!",g,realTx,
+					finishedTxture,
+					mawchs.mats)*/
 				var lm=new THREE.
 				MeshLambertMaterial
 				//  MeshBasicMaterial
 				({
 					color:tc
 				})
+				
+				lm.transparent = true
+				lm.needsUpdate=true
 
 				lm.map = finishedTxture
 				if(lm.texture) {
@@ -214,6 +254,7 @@ function ATZMUS() {
 
 				return lm
 			}
+			
 
 			return g
 
@@ -247,6 +288,7 @@ function ATZMUS() {
 			var isDS = opts.doubleSided;
 			if(isDS) 
 				t.doubleSided = isDS;
+			var curTx = null
 			Object.defineProperties(this,{
 				scale: {
 					get:()=>scale
@@ -254,7 +296,22 @@ function ATZMUS() {
 				position: {
 					get:()=>position
 				},
+				
+				texture: {
+					get:()=>curTx,
+					set:v =>{
+						var w;
+						if(typeof(v) != "object"||!v)
+							w={}
+						if(typeof(v)=="string")
+							w = {
+								texture:v
+							}
+						var g = ATZMUS.Mat(w)
 
+						t.pashut.material=g
+					}
+				},
 				shape: {
 					get:()=>t.pashut.geometry.type,
 					set:v =>{
@@ -281,7 +338,7 @@ function ATZMUS() {
 						t.pashut.material = mt;
 						matt = {
 							mat: mt,
-							ctx: t.pashut.material.map.image.getContext("2d")
+							//ctx: t.pashut.material.map.image.getContext("2d")
 						};
 
 						if(isDS) t.doubleSided = isDS;
@@ -307,5 +364,20 @@ function ATZMUS() {
 				}
 			})
 		}
+	}
+	
+	
+    function objEq(ob1,ob2) {
+		var eq = true
+		var props1 = Object.keys(ob1)
+		var props2 = Object.keys(ob2)
+		if(props1.length != props2.length)
+			return false
+
+		props1.forEach(z=> {
+			if(ob1[z] !== ob2[z]) 
+				eq = false
+		})
+		return eq
 	}
 }
