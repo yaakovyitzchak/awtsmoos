@@ -1,10 +1,21 @@
 
 <div id=BH>B"H</div>
+<br>
+<div id="cntrls">
+<div id="rc">record movements?!</div>
+<div id="play">Select file to play</div>
+</div>
 <style>
 #BH{
     text-shadow:3px 2px 2px white;
     z-index:76869869876895674;
 }
+#cntrls {
+	position:fixed;
+	top:50px;
+	z-index:12213
+}
+
     .d{
         position: absolute;
         left:0;top:0;wsidth:100%;
@@ -96,12 +107,103 @@
         <div id="log"></div>
         <div id="txt"></div>
     </div>
+<script src="CCapture.all.min.js"></script>
 <script src="three.min.js"></script>
 <script src="atzmusTzimtzum.js"></script>
 <script>
+	var movementFrames = []
+	var isRecording = false;
+	var isPlaying = false;
 	
+	var curTimeRec = 0
+	var curTimePlay = 0;
+	var lastFrameTime = 0
+	var difTime = 0
+	
+	
+	play.onclick = () => {
+		var inp = document.createElement("input")
+		inp.type="file"
+		inp.click()
+		inp.onchange = () => {
+			fetch(
+				URL.createObjectURL(inp.files[0])
+			)
+				.then(b=>b.text())
+				.then(b => {
+					var mawchsawnify 
+					= d => {
+						console.log(
+						"Gawt It!",d)
+						if(d[0].includes("aweeyin")) {
+						
+							var daytuh = d[1]
+							var curFrame = 0;
+							fraymisaweez()
+							function fraymisaweez() {
+								var ff = daytuh[curFrame]
+								var time;
+								
+								if(curFrame == 0)
+									time = ff[2]
+								else if(curFrame < daytuh.length - 1){
+									time = daytuh[curFrame][2] -
+										daytuh[curFrame-1][2]
+								} else time = 50
+								var ak = ff[1] == "down"
+								var key = ff[0]
+
+								//if(time < 1) time = 
+								setTimeout(function() {
+									window.keysD[key] = ak
+									if(curFrame < daytuh.length -1) {
+										curFrame++
+										fraymisaweez()
+									}
+								}, time)
+							}
+						}
+					}
+					try {
+						eval(b)
+					} catch(e) {
+						alert(e.toString())
+					}
+				})
+			
+		}
+	}
+	rc.onclick = () => {
+		if(!isRecording) {
+			curTimeRec = 0
+			lastFrameTime = performance.now()
+			isRecording = true
+			rc.innerHTML = "OK stop and download data?!"
+		} else {
+			var a = document.createElement("a")
+			var nm = "aweeyin_"+Date.now()
+			a.href = URL.createObjectURL(new Blob([
+				"//B\"H"+
+				"\n"+
+				"mawchsawnify("+
+					"[\"" + nm + "\","	
+					+JSON.stringify(movementFrames)+
+					"]);\n"+
+				"//Moshiach NOW!"				
+
+			],{type:"text/html"}))
+			a.download=nm+".html"
+			a.click()
+			rc.innerHTML = " OK try again !?"
+			isRecording = false;
+			curTimeRec = 0;
+			lastFrameTime = 0;
+			difTime = 0;
+		}
+		//var time = wrld.ml * 10
+	}
 	ATZMUS.loadData([
-		"asdf"
+		"asdf","7"
 	]).then(()=>{
 		var cur = 0;
 		var max = 8
@@ -218,43 +320,22 @@
     var inpi = document.createElement("input")
     var awd = document.createElement("audio")
     BH.onclick=()=>{
-        if(!inpi.ok) {
+       /* if(!inpi.ok) {
             inpi.type = "file"
             inpi.multiple = true;
             inpi.ok=true;
           //  awd.controls = true;
           //  BH.appendChild(awd)
-        }
-        if(!window.mediaR) {
+        }*/
+        if(!window.isGoing) {
             BH.classList.toggle("act")
-            /*
-            inpi.click()
-            inpi.onchange = () => {
-                var adStr;
-                var flz = inpi.files
-                if(flz.length>0) {
-                    if(window.curIdx === undefined) {
-                        curIdx = 0;
-                    }
-                    awd.src = URL.createObjectURL(flz[curIdx])
-                    awd.play()
-                    awd.onplay=()=> {
-                        adStr = awd.captureStream()
-                        contin(adStr)
-                        awd.onplay = null
-                    }
-                } else contin(null)
-                
-            }*/
-			navigator.mediaDevices.getUserMedia({audio:true})
-			.then(astr=> {
-				contin(astr)
-			}).catch(e=>{
-				contin(null)
+			window.cap = new CCapture({
+				format:"webm"
 			})
-            function contin(adStr) {
-                var w = 1920;
-                var h = 1080
+			cap.start()
+			window.isGoing = true
+          	var w = 1920;
+            var h = 1080
             dimz = {x:w,y:h}
             wrld.rs()
             
@@ -263,47 +344,20 @@
             wrld.renderer.domElement.style.transform=
             "scale("+fac+") translate(-"+(trns)+
 				"%,-"+(trns)+"%)"
+				
+				
+		} else {
+		
+			delete window.dimz;
 			
-            
-            var str = 
-            wrld.renderer.domElement.captureStream(window.faster);
-            if(adStr) {
-                Array.from(adStr.getAudioTracks())
-                .forEach(tr=>str.addTrack(tr))
-            }
-            window.mediaR = new MediaRecorder(str, {
-		        mimeType: "video/webm; codecs=h264"
-            })
-            mediaR.start();
-				window.faster=248
-            mediaR.ondataavailable = e => {
-				faster=false
-                clacker.href = URL.createObjectURL(e.data)
-                clacker.download = Date.now()+"_moshiach.mp4"
-                clacker.click()
-				
-				
-                mediaR = null;
-                str.removeTrack(str.getVideoTracks()[0])
-                
-                BH.classList.toggle("act")
-                delete window.dimz;
-				
-				
             wrld.renderer.domElement.style.transform= ""
 				
-                wrld.rs()
-                
-            
-            }
-            }
-            
-            
-            
-        } else {
-            mediaR.stop()
-        }
-    }
+            wrld.rs()
+			window.cap.stop()
+			window.cap.save()
+			window.isGoing = false
+		}
+	}
     var curThings = []
     var curLiveMap;
     var keysD = []
@@ -1131,7 +1185,7 @@
                 mz = 1;
                 mu=false
             }
-            if(mx && my) my = 0
+         //   if(mx && my) my = 0
             if(mx != 0 || my != 0 || mz != 0)
             t.moveSlot(mx,my,mz)
             
@@ -1140,22 +1194,30 @@
         function gatherMoveInfo() {
             if(isCmding) return;
             if(keysD[keyShorts.A]) {
-                t.dir++;
+                t.dir-=1*wrld.ml;
             }
             
             
             if(keysD[keyShorts.D]) {
-                t.dir --;
+                t.dir+=1*wrld.ml;
             }
             
             
             if(keysD[keyShorts.Q]) {
-                t.distZ += 0.1;
+                t.distZ += 0.1*wrld.ml;
             }
             
             if(keysD[keyShorts.E]) {
-                t.distZ -= 0.1;
+                t.distZ -= 0.1*wrld.ml;
             }
+			
+			if(keysD[87]) {
+				t.distY -= 0.1*wrld.ml
+			}
+			
+			if(keysD[83]) {
+				t.distY += 0.1*wrld.ml
+			}
             mr = ml = md = mt = mu =
             isFalling = false
             
@@ -1242,7 +1304,7 @@
         this.atz.pashut.position.y+=0.5
         this.hissHavoos = ()=>{
             
-            this.atz.pashut.rotation.z+=Math.PI/180
+            this.atz.pashut.rotation.z+=Math.PI/180*wrld.ml
         }
         var t = this
         this.action = (os, nsx, nsy, ths) => {
@@ -1376,16 +1438,20 @@
             tz = Math.floor(t.z)
             if(!isfalling)
             if(t.z < t.isMoving.z) {
-                t.z += jumpSpeed
+                t.z += jumpSpeed*wrld.ml
+				if(t.z > t.isMoving.z)
+					t.z = t.isMoving.z
             }
             
-            if(t.z - curFallSpeed > t.isMoving.z) {
+            if(t.z - curFallSpeed *wrld.ml> t.isMoving.z) {
                 isfalling=true
             }
             if(isfalling) {
-                t.z -= curFallSpeed
-                
-                curFallSpeed += fallAccell;
+                t.z -= curFallSpeed*wrld.ml
+                /*if(t.z - curFallSpeed*wrld.ml < t.isMoving.z)
+					t.z = t.isMoving.z + curFallSpeed*wrld.ml
+				*/	
+                curFallSpeed += fallAccell*wrld.ml;
                 if(t.z <= t.isMoving.z) {
                     t.z=t.isMoving.z
                     
@@ -1400,18 +1466,36 @@
                 
                 
             }
+			
+			if(t.isMoving.isDiag) {
+				curSpeed = t.speed * oneOverRoot2
+			}
+			
             if(t.x < t.isMoving.x) {
-                t.x += curSpeed
+                t.x += curSpeed*wrld.ml
+				if(t.x  >t.isMoving.x) {
+					t.x=t.isMoving.x
+				}
             } else
             if(t.x > t.isMoving.x) {
-                t.x -= curSpeed
+				//console.log(t.x,curSpeed)
+                t.x -= curSpeed*wrld.ml
+				if(t.x < t.isMoving.x) {
+					t.x=t.isMoving.x
+				}
             } 
             
             if(t.y > t.isMoving.y) {
-                t.y -= curSpeed
+                t.y -= curSpeed*wrld.ml
+				if(t.y <t.isMoving.y) {
+					t.y=t.isMoving.y
+				}
             } else
             if(t.y < t.isMoving.y) {
-                t.y += curSpeed
+                t.y += curSpeed*wrld.ml
+				if(t.y >t.isMoving.y) {
+					t.y=t.isMoving.y
+				}
             }
             
             if(
@@ -1452,6 +1536,9 @@
                 newSly,
                 newSlz
             )
+			if(nsx&&nsy) {
+				
+			}
             var isj = (nsx&&nsz || nsy&&nsz)
             if(nls) {
                 
@@ -1532,7 +1619,8 @@
                         npy = sl.tileY * ts * self.tilesY
                     }
                     this.isMoving = {
-                        x: npx, y: npy, z:npz
+                        x: npx, y: npy, z:npz,
+						isDiag: nsx&&nsy
                     }
                     return true
                 
@@ -1887,7 +1975,16 @@
         
     }
     
-    
+    Object.defineProperties(window, {
+	/*	ml: {
+			get: () => {
+				if(window.wrld&&
+				window.wrld.ml)
+					return window.wrld.ml
+				return 1
+			}
+		}*/
+	})
     function makeMap(mapNum) {
         var map = maps[mapNum]
         if(!map) return alert ("LOL NO map " + mapNum + "?!")
@@ -1977,13 +2074,40 @@
     
     function keyListeners() {
         addEventListener("keydown", e=> {
-            keysD[e.keyCode] = true
+		
+            if(!keysD[e.keyCode])
+			if(isRecording) {
+				difTime = performance.now() -
+					lastFrameTime
+				curTimeRec += difTime
+				lastFrameTime = performance.now()
+				
+				movementFrames.push([
+					e.keyCode,
+					"down",
+					curTimeRec
+				])
+			}
+			keysD[e.keyCode] = true
         })
         
         
         addEventListener("keyup", e => {
             if(keysD[e.keyCode])
                 delete keysD[e.keyCode]
+				if(isRecording) {
+					difTime = performance.now() -
+						lastFrameTime
+					curTimeRec += difTime
+					lastFrameTime = performance.now()
+					
+					
+					movementFrames.push([
+						e.keyCode,
+						"up",
+						curTimeRec
+					])
+			}
         })
     }
     
@@ -2042,6 +2166,7 @@
         wrld.hoyseef=(awts)=> {
            sc.add(awts.pashut)
         }
+		
         wrld.render = () => {
             rnd.render(sc, cm)
         }
@@ -2064,24 +2189,35 @@
         var fps=60
         lights()
 		function startRendering() {
-			setTimeout(
-				function rnd(){
-					livethings.forEach(t=>{
-						if(typeof(t.hissHavoos) == "function") {
-							t.hissHavoos(t)
-						}
-					})
-					
-					wrld
+			wrld.lastTime = performance.now()
+			rnd()
+			
+			function rnd(){
+				wrld.lapst = performance.now() - wrld.lastTime
+				wrld.ml = wrld.lapst/10
+				
+				livethings.forEach(t=>{
+					if(typeof(t.hissHavoos) == "function") {
+						t.hissHavoos(t)
+					}
+				})
+
+				wrld
 					.renderer
 					.render(wrld.scene,wrld.camera)
-
+				
+				if(window.isGoing)
+					cap.capture(wrld.renderer.domElement)
+					/*
 					if(window.faster){
 						setTimeout(rnd,1000/(window.faster/2))
 					}
-					else setTimeout(rnd,1000/fps)
-				},1000/fps
-			)
+					else setTimeout(rnd,1000/fps)*/
+				wrld.lastTime = performance.now()
+				requestAnimationFrame(rnd)
+				
+			}
+
 		}
 		
         var mats = []
@@ -2095,19 +2231,11 @@
     }
 	
     function setupBackground() {
-        var textures = {
-            770: [
-                "770.jpeg",
-                "https://i.ibb.co/c63FNby/770.jpg"
-            ]
-        }
+		var bk = new THREE.Color()
+		bk.g = bk.b = 1;
+		bk.r = .4
+       wrld.scene.background = bk
         
-        var bk = textures[770]
-        if(navigator.onLine) {
-            bk = bk[1]
-        } else {
-            bk = bk[0]
-        }
        // document.body.style.background="url("+bk+")"
     }
     function st(wrld) {
