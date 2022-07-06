@@ -2,7 +2,13 @@
 # reebooyaw
 Video and game based engine, with tile-based movement and other editors for textures and stuff
 
-for game just arrow keys to move, A, D, Q and E to move camera [for now]
+for game just arrow keys and WASDQE to move, space to jump.
+
+Y and U rotates camera around character
+
+IOPHJKL; keys move focus point of camera
+
+M and N zoom in or out
 
 Press Z to show or hide UI
 
