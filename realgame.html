@@ -208,10 +208,14 @@
 	thr()
 	ATZMUS.loadData([
 		"asdf",
-		"yaakov"
+		"yaakov",
+		"br"
 		
 		///,"7"
 	]).then(()=>{
+		ATZMUS.Mat(
+			{texture:"br.jpg"}
+		)
 		var cur = 0;
 		var max = 8
 		var i
@@ -1806,16 +1810,21 @@
         this.wallType = "solid"
         this.shape="cylinder"
         this.tilesZ=2
+		
     }
     
     
     function ground(opts) {
         
         this.static = true
+		//this.atz.texture = "br.jpg"
+		this.texture=//AWTSMOOS.texture
+		("br.jpg")
         thing.call(this, ...arguments)
         this.type = "ground"
         this.color = "brown"
         this.wallType = "solid"
+		
     }
     
     
@@ -2616,7 +2625,8 @@
                         base:[],
                         geometry:new THREE.
                             Geometry(),
-                        color: c.color
+                        color: c.color,
+						texture: c.texture
                     }
                 
                 staticTypes[c.type].base.push(c)
@@ -2636,7 +2646,8 @@
             staticTypes[s].geometry.mergeVertices()
             
             var mat = ATZMUS.Mat({
-                    color: staticTypes[s].color
+                    color: staticTypes[s].color,
+					texture:staticTypes[s].texture
                 })
                 
             var geom = staticTypes[s].geometry
@@ -2644,6 +2655,8 @@
                 geom,
                 mat
             )
+			
+			staticTypes[s].merged.cobm = true;
             
             wrld.scene.add(staticTypes[s].merged)
         })
