@@ -24,7 +24,7 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 
 					.${ID}pan{
 						position:absolute;
-						left:156px;
+						right:156px;
 						bottom:26px;
 						box-shadow:0 0 6px black;
 						width:63px;

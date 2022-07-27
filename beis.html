@@ -223,10 +223,14 @@
 
 				// gives a bit of air control
 				const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 );
-				var up = keyStates[ 'KeyW' ] || con.roochos.top
-				var down = keyStates[ 'KeyS' ] || con.roochos.bottom
-				var right = keyStates[ 'KeyD' ] || con.roochos.right
-				var left = keyStates[ 'KeyA' ] || con.roochos.left
+				var up = keyStates[ 'KeyW' ] || keyStates["ArrowUp"]||
+						con.roochos.top
+				var down = keyStates[ 'KeyS' ]|| keyStates["ArrowDown"]
+					|| con.roochos.bottom
+				var right = keyStates[ 'KeyD' ]|| keyStates["ArrowRight"]
+					|| con.roochos.right
+				var left = keyStates[ 'KeyA' ]|| keyStates["ArrowLeft"]
+					|| con.roochos.left
 				var sideR = keyStates["KeyE"] || con.roochos.righttop
 				var sideL = keyStates["KeyQ"] || con.roochos.lefttop
 				var space = keyStates[ 'Space' ] || con.roochos.space
