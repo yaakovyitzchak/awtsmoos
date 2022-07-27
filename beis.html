@@ -30,7 +30,7 @@ BH
 			
 			
 			const clock = new THREE.Clock();
-
+			var noShadow = true;
 			const scene = new THREE.Scene();
 			scene.background = new THREE.Color( 0x88ccee );
 			scene.fog = new THREE.Fog( 0x88ccee, 0, 50 );
@@ -56,17 +56,19 @@ BH
 */
 			const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 			directionalLight.position.set( 0, 26, 0 );
-			directionalLight.castShadow = true;
-			directionalLight.shadow.camera.near = 0.01;
-			directionalLight.shadow.camera.far = 500;
-			directionalLight.shadow.camera.right = 30;
-			directionalLight.shadow.camera.left = - 30;
-			directionalLight.shadow.camera.top	= 30;
-			directionalLight.shadow.camera.bottom = - 30;
-			directionalLight.shadow.mapSize.width = 1024;
-			directionalLight.shadow.mapSize.height = 1024;
-			directionalLight.shadow.radius = 4;
-			directionalLight.shadow.bias = - 0.00006;
+			if(!noShadow) {
+				directionalLight.castShadow = true;
+				directionalLight.shadow.camera.near = 0.01;
+				directionalLight.shadow.camera.far = 500;
+				directionalLight.shadow.camera.right = 30;
+				directionalLight.shadow.camera.left = - 30;
+				directionalLight.shadow.camera.top	= 30;
+				directionalLight.shadow.camera.bottom = - 30;
+				directionalLight.shadow.mapSize.width = 1024;
+				directionalLight.shadow.mapSize.height = 1024;
+				directionalLight.shadow.radius = 4;
+				directionalLight.shadow.bias = - 0.00006;
+			}
 			scene.add( directionalLight );
 
 			const container = document.getElementById( 'container' );
@@ -75,8 +77,10 @@ BH
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			renderer.shadowMap.enabled = true;
-			renderer.shadowMap.type = THREE.VSMShadowMap;
+			if(!noShadow) {
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.VSMShadowMap;
+			}
 			renderer.outputEncoding = THREE.sRGBEncoding;
 			renderer.toneMapping = THREE.ACESFilmicToneMapping;
 			container.appendChild( renderer.domElement );
@@ -220,7 +224,7 @@ BH
 				var panUp = keyStates["KeyR"] || con.roochos.panUp
 				var panDown = keyStates["KeyF"] || con.roochos.panDown
 				
-				var rs = 0.5
+				var rs = 0.36
 				
 				if ( up ) {
 
@@ -327,8 +331,10 @@ BH
 					worldOctree.fromGraphNode(s)
 					yaak.pashut.traverse(r=>{
 						r.frustumCulled = false;
-						r.castShadow = true;
-						r.receiveShadow = true;
+						if(!noShadow) {
+							r.castShadow = true;
+							r.receiveShadow = true;
+						}
 					})
 					yaak.playChayoos("stand")
 //					yaak.scale=0.7
@@ -352,9 +358,10 @@ BH
 					gltf.scene.traverse( child => {
 			
 						if ( child.isMesh ) {
-
-							child.castShadow = true;
-							child.receiveShadow = true;
+							if(!noShadow) {
+								child.castShadow = true;
+								child.receiveShadow = true;
+							}
 							var mat = child.material
 							if(mat) {
 								var c = mat.color.getHex()
@@ -405,12 +412,12 @@ BH
 			function animate() {
 
 				const deltaTime = Math.min( 0.05, clock.getDelta() ) / STEPS_PER_FRAME;
-				con.update();
+				
 				// we look for collisions in substeps to mitigate the risk of
 				// an object traversing another too quickly for detection.
 
 				for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
-
+					con.update();
 					controls( deltaTime );
 
 					updatePlayer( deltaTime );

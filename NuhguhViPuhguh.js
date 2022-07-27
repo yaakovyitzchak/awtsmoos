@@ -22,6 +22,56 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 						width:100%;height:100%;
 					}
 
+					.${ID}pan{
+						position:absolute;
+						left:156px;
+						bottom:26px;
+						box-shadow:0 0 6px black;
+						width:63px;
+						height:100px;
+						background:tan;
+					}
+
+					.${ID}pan .top{
+						width:100%;
+						height:50%;
+						
+					}
+						
+					.${ID}pan .top:hover{
+						cursor:pointer
+					}
+					
+					.${ID}pan .top:active{
+						box-shadow:0 0 8px black inset;
+					}
+					.${ID}pan .top::after{
+						content:"${'\\'+'21fe'}";
+						transform:rotate(270deg) scale(4) translate(-20%,30%);
+						display:inline-block
+					}
+
+
+					.${ID}pan .bottom{
+						width:100%;
+						height:50%;
+						
+					}
+						
+					.${ID}pan .bottom:hover{
+						cursor:pointer
+					}
+					
+					.${ID}pan .bottom:active{
+						box-shadow:0 0 8px black inset;
+					}
+					.${ID}pan .bottom::after{
+						content:"${'\\'+'21fe'}";
+						transform:rotate(90deg) scale(4) translate(25%,-20%);
+						display:inline-block
+					}
+	
+
 					.${ID}awveeric{
 						position:absolute;
 						bottom:26px;
@@ -30,12 +80,12 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 						box-shadow:0px 0px 8px black;
 						opacity:0.6;
 						background:cyan;
-						transition: all 0.3s;
+						transition: background 0.3s;
 					}
 
 					.${ID}awveeric:hover{
 						#box-shadow:0px 0px 16px black;
-						background:white;
+						#background:white;
 						cursor:pointer;
 					}
 
@@ -88,6 +138,7 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 				`
 
 			})
+		
 		var isd = false
 		this.resetPosition=()=>{
 			Object.keys(defaultKawdoyrification)
@@ -98,18 +149,19 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 				b.style.background=""
 			})
 		}
+		
 		document.addEventListener("mouseup",()=>{
 			isd=false
-			atzmo.resetPosition()
-			atzmo.resetRoochos()
+			//atzmo.resetPosition()
+			//atzmo.resetRoochos()
 		})
 		
 		
-		document.addEventListener("touchend",()=>{
+		/*document.addEventListener("touchend",()=>{
 			isd=false
 			atzmo.resetPosition()
 			atzmo.resetRoochos()
-		})
+		})*/
 		
 		
 		document.addEventListener("mousedown",()=>{
@@ -135,9 +187,63 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 				},
 				touchstart(e){
 					atzmo.roochos.space=1
+				},
+				touchend(e){
+					atzmo.roochos.space=0	
+				},
+				mouseup(e){
+					atzmo.roochos.space=0	
 				}
 			})
 		});
+		
+		var cameraPan = AWTSMOOS.html({
+			className:ID+"pan",
+			events:t=>({
+				contextmenu(e){
+					e.preventDefault()
+				}
+			}),
+			toldos:t=>[
+				{
+					className:"top",
+					events:{
+						mousedown(e) {
+							atzmo.roochos.panUp=1
+						},
+						touchstart(e){
+							atzmo.roochos.panUp=1
+						},
+
+						touchend(e){
+							atzmo.roochos.panUp=0	
+						},
+						mouseup(e){
+							atzmo.roochos.panUp=0	
+						}
+					}
+				},
+				
+				{
+					className:"bottom",
+					events:{
+						mousedown(e) {
+							atzmo.roochos.panDown=1
+						},
+						touchstart(e){
+							atzmo.roochos.panDown=1
+						},
+
+						touchend(e){
+							atzmo.roochos.panDown=0	
+						},
+						mouseup(e){
+							atzmo.roochos.panDown=0	
+						}
+					}
+				}
+			]
+		})
 		var arrows = AWTSMOOS.html({
 			tag:"div",
 			className:ID+"roochos",
@@ -164,7 +270,17 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 						isd = true
 						touchMove(t,e)				
 					},
+					
+					mouseup(e){
+						
+						atzmo.resetPosition()
+						atzmo.resetRoochos()
+						isd=false
+					},
 					touchend(e){
+						
+						atzmo.resetPosition()
+						atzmo.resetRoochos()
 						isd=false
 					},
 					touchmove(e){
@@ -324,6 +440,20 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 			
 		})
 		
+		var map = {
+			top:"chaylickElyon",
+			bottom:"chaylickTachton",
+			right:"chaylickYawmeen",
+			left:"chaylickSmoyl",
+			
+			lefttop:"chaylickElyonSmoyl",
+			leftbottom:"chaylickTachtonSmoyl",
+			rightbottom:"chaylickYawmeenTachtoyn",
+			
+			righttop:"chaylickYawmeenElyon",
+			space:false
+		};
+		
 		function touchMove(t,e) {
 			var x1 = Math.abs(e.touches[0]
 				.clientX - fc.bounds.x)
@@ -368,13 +498,7 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 			window.jj=t;
 			
 		}
-		var map = {
-			top:"chaylickElyon",
-			bottom:"chaylickTachton",
-			right:"chaylickYawmeen",
-			left:"chaylickSmoyl",
-			space:false
-		};
+		
 		
 		var reverseMap = Object.fromEntries(
 			Object.entries(map)
@@ -406,7 +530,7 @@ Object.defineProperty(AWTSMOOS,"Nuhguh",{
 		var ind
 		var hitin;
 		function pawgeeshuh(x,y,blocks) {
-			//console.log(tt=blocks)
+			
 			atzmo.resetRoochos()
 			blocks.forEach(b=>{
 				hitin = !hitting.includes(b)

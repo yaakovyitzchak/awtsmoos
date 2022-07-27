@@ -122,8 +122,8 @@
 	var lastFrameTime = 0
 	var difTime = 0
 	
-	if(window.play)
-	play.onclick = () => {
+	//if(window.play)
+	function play() {
 		var inp = document.createElement("input")
 		inp.type="file"
 		inp.click()
@@ -175,13 +175,13 @@
 			
 		}
 	}
-	if(window.rc)
-	rc.onclick = () => {
+	
+	function record() {
 		if(!isRecording) {
 			curTimeRec = 0
 			lastFrameTime = performance.now()
 			isRecording = true
-			rc.innerHTML = "OK stop and download data?!"
+		//	rc.innerHTML = "OK stop and download data?!"
 		} else {
 			var a = document.createElement("a")
 			var nm = "aweeyin_"+Date.now()
@@ -197,7 +197,7 @@
 			],{type:"text/html"}))
 			a.download=nm+".html"
 			a.click()
-			rc.innerHTML = " OK try again !?"
+		//	rc.innerHTML = " OK try again !?"
 			isRecording = false;
 			curTimeRec = 0;
 			lastFrameTime = 0;
@@ -1606,9 +1606,13 @@
 			) {
 				
 				if(t.walls.includes(ps.thing.wallType)) {
-					if(cursl.tileX!=ps.tileX) x = 0
-					if(cursl.tileY!=ps.tileY) y = 0
+					if(cursl.tileX!=ps.tileX) x = 0; 
+					if(cursl.tileY!=ps.tileY) y = 0; 
 					if(cursl.tileZ!=ps.tileZ) z = 0
+				//	if(t.lastp&&(t.lastp.x!=ps.tileX||t.lastp.y!=ps.tileY))
+					 //  console.log(t.lastp,cursl,ps)
+					t.lastp={z:ps.tileZ,y:ps.tileY,x:ps.tileX}
+					
 					empty = false
 				} 
 				
