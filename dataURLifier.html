@@ -6,15 +6,113 @@ B"H
 body,html{
 	font-family:helvetica
 }
+	#flz{
+		display:none	
+	}
 </style>
 <input id="nm"><br>
-<input type="file" multiple id=flz><br>
+<button id="fl">Select folder to save to</button>
+<button id="fawee">Select file(s) to import</button>
+<button id="svv">Save</button>
+<input name=awtsmmosoficiyo type="file" multiple id=flz><br>
 <div id="prog"></div>
 <script>
+	var _awtsmoosName = localStorage._awtsmoosName
+	if(_awtsmoosName) {
+		nm.value = _awtsmoosName
+	}
+	var dr;
+	var resultz = []
+	fl.onclick = () => {
+		fl.disabled = true
+		fl.innerHTML = "Selecting..."
+		showDirectoryPicker()
+		.then(d=>{
+			dr = d;
+			fl.disabled = false;
+			fl.innerHTML = "Selected folder. Select a different one?"
+		}).catch(e=>{
+			fl.innerHTML = "Canceled. Again!?"
+			fl.disabled = false
+		})
+	}
+	
+	fawee.onclick = () => {
+		//flz.dispatchEvent(new Event("click"))
+		flz.click()
+		///+972546242388 Micha
+	};
+	
+	svv.onclick = () => {
+		var all = "//B\"H\n//<br>\n" + 
+			"//<iframe border=0 id=prv></iframe><br>"+
+			"<div id=cnt></div>"+
+			"//<script>var dt=[];function mawchsawnify(d){" +
+			"dt.push(d)" +
+			"}</" +"script>\n"+
+			"//<script>\n\n" +
+
+			"mawchsawnify(" + 
+			JSON.stringify(resultz) + 
+			");\n//Moshiach NOW!!!\n\n" +
+
+			"///</" + "script>\n" + 
+			"//<script>" + 
+			"dt[0].forEach(x=>{var a = document.createElement(\"button\");"+
+			"a.innerHTML=x[0];a.onclick=()=>{prv.src=x[1];};" +
+			"cnt.appendChild(a)})" +
+
+			"//</"+"script>"
+		var naym = (nm.value || Date.now())
+		var fln = naym+".html"
+		if(naym) {
+			localStorage._awtsmoosName = naym
+		}
+		if(dr) {
+			svv.disabled = true;
+			svv.innerHTML = "saving"
+			dr.getFileHandle(fln,{
+				create:true
+			}).then(fll=>{
+				svv.innerHTML = "made temp file, writing..."
+				fll.createWritable()
+				.then(wr=>{
+					svv.innerHTML = "made writable, continuing..."
+					wr.write(all)
+					.then(r=>{
+						svv.innerHTML = "wrote, closing..."
+						wr.close().then(c=>{
+							svv.innerHTML = "finished"
+							svv.disabled = false
+							flz.value=""
+							resultz=[]
+						})
+					}).catch(e=>{
+						svv.innerHTML = "problem writing [close]"
+						svv.disabled = false;
+						
+					})
+				}).catch(e=>{
+
+					svv.innerHTML = "problem writing [write]"
+					svv.disabled = false
+				})
+			}).catch(e=>{
+				svv.innerHTML = "problem writing [temp]"
+				svv.disabled = false
+			})
+		} else {
+
+			var a = document.createElement("a")
+			a.href = URL.createObjectURL(new Blob([all]))
+			a.download = fln
+			a.click()	
+		}
+	};
 	flz.onchange = () => {
 		var ind = 0;
 		var fr = new FileReader();
-		resultz = []
+		
 		function getOne() {
 			fr.readAsDataURL(flz.files[ind])
 			fr.onload = () => {
@@ -27,30 +125,8 @@ body,html{
 					ind++;	
 					getOne()
 				} else {
-					prog.innerHTML = "all done"
-					var all = "//B\"H\n//<br>\n" + 
-						"//<iframe border=0 id=prv></iframe><br>"+
-						"<div id=cnt></div>"+
-						"//<script>var dt=[];function mawchsawnify(d){" +
-						"dt.push(d)" +
-						"}</" +"script>\n"+
-						"//<script>\n\n" +
-						
-						"mawchsawnify(" + 
-						JSON.stringify(resultz) + 
-						");\n//Moshiach NOW!!!\n\n" +
-						 
-						"///</" + "script>\n" + 
-						"//<script>" + 
-						"dt[0].forEach(x=>{var a = document.createElement(\"button\");"+
-						"a.innerHTML=x[0];a.onclick=()=>{prv.src=x[1];};" +
-						"cnt.appendChild(a)})" +
-						
-						"//</"+"script>"
-					var a = document.createElement("a")
-					a.href = URL.createObjectURL(new Blob([all]))
-					a.download = (nm.value || Date.now()) + ".html"
-					a.click()
+					prog.innerHTML += "<br>all done with list of files. Click button to save"
+					
 				}
 			}
 		}

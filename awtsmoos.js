@@ -4,9 +4,9 @@ AWTSMUS = ATZMOOS = ATSMOOS =
 AWTSMUS = ATSMUS = 
 OTSMOOS = OTZMOOS = 
 OTZMUS = OTSMUS = O =
-OT = AW = AT = 
+OT = AW = AT = AWTS = 
 ATZMUS;
-console.log(99);
+
 (function() {
 	function metafyrical() {
 	var met = Array.from(document.getElementsByTagName("meta"))
@@ -644,28 +644,80 @@ console.log(99);
 		},
 		HtmlNode: {
 			get: () => function(opts) {
+				if(!opts || !typeof(opts) == "object") {
+					if(typeof(opts) == "string") {
+						opts = {innerHTML:opts}	
+					} else
+						opts = {}	
+				}
 				var tag = opts.tag || "div",
 					el = document.createElement(tag),
 					parent = opts.parent || document.body,
-					exclusions = "tag events attributes children",
+					exclusions = "tag events attributes children style",
+					toyldoys = [],
+					listenerFunctions = {},
+					t = (n) => toyldoys.find(q=>
+						q.shaym == n
+					),
 					map = {
 						events: (obj) => {
+							if(typeof(obj) == "function") {
+								obj = obj(t)	
+							}
+							var k;
+							for(k in obj) {
+								var eventName = k
+								var fnc = obj[k]
+								console.log("doing",k,fnc,obj)
+								if(typeof(fnc) == "function") {
+									el.addEventListener(eventName, fnc)
+									if(!listenerFunctions[k]) {
+										listenerFunctions[k] = []
+									}
+									listenerFunctions[k].push(fnc)
+								}
+							}
 							
-							el.addEventListener(event, fnc)
+						},
+						style(st) {
+							if(typeof(st) == "string"){
+								el.style.cssText=st;return;
+							}
+							if(!st || typeof(st) != "object")
+								return;
+							
+							var k;
+							for(k in st) {
+								el.style[k] = st[k]	
+							}
 						},
 						attributes: (name, value) => {
 							el.setAttribute(name, value)
 						},
+						toldos: (a)=>map.children(a),
 						children(otherArray) {
-							otherArray.forEach(x => {
-								new ATZMUS.HtmlNode({
+							var oa;
+							if(typeof(otherArray) == "function") {
+								oa = otherArray(t)
+							} else 
+							if(typeof(otherArray.forEach)=="function") {
+								oa = otherArray	
+							} else {
+								oa = [otherArray]
+							}
+								
+							
+							oa.forEach(x => {
+								var ch = new ATZMUS.HtmlNode({
 									...x,
 									parent: el
 									
 								})
+								toyldoys.push(ch)
 							})
 						}
 					}
+				
 				
 				parent.appendChild(el)
 				Object.entries(opts).forEach(x => {
@@ -680,11 +732,17 @@ console.log(99);
 					}
 				})
 				
-				if(typeof(opts.heesCheel) == "function") {
-					opts.heesCheel(el)
+				var hees = opts.heesCheel||opts.start;
+				if(typeof(hees) == "function") {
+					hees(el,t)
 				}
 				
+				return el;
+				
 			}
+		},
+		html: {
+			get: () => AWTSMOOS.HtmlNode	
 		}
 	})
 	
