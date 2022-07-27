@@ -1,4 +1,4 @@
-BH
+<span class=BH onselectstart="return false">BH</span>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -8,7 +8,16 @@ BH
 			  content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="awts.css">
 		<style>
-			
+			.BH{
+				user-select:none;
+				pointer-events:none;
+				-moz-user-select: none;
+				-khtml-user-select: none;
+				-webkit-user-select: none;
+				-o-user-select: none;
+				-webkit-touch-callout: none;
+				-ms-user-select: none;
+			}
 		</style>
 	</head>
 	<body>
@@ -224,7 +233,7 @@ BH
 				var panUp = keyStates["KeyR"] || con.roochos.panUp
 				var panDown = keyStates["KeyF"] || con.roochos.panDown
 				
-				var rs = 0.36
+				var rs = 0.30
 				
 				if ( up ) {
 
@@ -271,7 +280,7 @@ BH
 				if ( right ) {
 					ang-=rs
 ///					if(ang<-360) ang+=360
-//					playerVelocity.add( getSideVector().multiplyScalar( speedDelta ) );
+//				
 //
 				}
 
@@ -286,7 +295,6 @@ BH
 				}
 				
 				
-	//			camera.rotation.x=Math.cos(ang)
 				
 				camera.rotation.x=(angx)*Math.PI/180
 				camera.rotation.y=(ang)*Math.PI/180
