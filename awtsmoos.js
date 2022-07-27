@@ -496,6 +496,29 @@ ATZMUS;
 				
         },
 		
+		getData: {
+			get:()=>function(opts={}) {
+				var nm;
+
+				if(typeof(opts) == "string") {
+					nm = opts;
+				} else if(opts.name) nm = opts.name;
+				else return null;
+
+				var fnd = null;
+				mawchs
+					.dataPacks.forEach(d => 
+						d.forEach(s => {
+								if(s[0] == nm) {
+									fnd = s;   
+								}
+							}
+						)
+					)
+
+				return fnd;
+			}
+		},
 		loadData: {
 			get:()=>function(opts={}) {
 				return new Promise((rs,rj) => {
@@ -668,7 +691,7 @@ ATZMUS;
 							for(k in obj) {
 								var eventName = k
 								var fnc = obj[k]
-								console.log("doing",k,fnc,obj)
+								//console.log("doing",k,fnc,obj)
 								if(typeof(fnc) == "function") {
 									el.addEventListener(eventName, fnc)
 									if(!listenerFunctions[k]) {
@@ -738,7 +761,7 @@ ATZMUS;
 				}
 				
 				return el;
-				
+				   
 			}
 		},
 		html: {
@@ -1466,7 +1489,9 @@ function threeify() {
 									obj
 								)
 							kav.on("set", props => {
+								
 								self.ayshPeula("set", {
+									
 									property: kp,
 									subProperty: (
 										props.property
@@ -1493,6 +1518,10 @@ function threeify() {
 									kav[k] = v[k]
 								})
 							}
+							
+							self.ayshPeula("finishedSet",{
+								property:kp
+							})
 						}
 					})
 					var that = typeof(it) 
@@ -1866,29 +1895,6 @@ function threeify() {
 
 			}
 		},
-		getData: {
-			get:()=>function(opts={}) {
-				var nm;
-
-				if(typeof(opts) == "string") {
-					nm = opts;
-				} else if(opts.name) nm = opts.name;
-				else return null;
-
-				var fnd = null;
-				mawchs
-					.dataPacks.forEach(d => 
-						d.forEach(s => {
-								if(s[0] == nm) {
-									fnd = s;   
-								}
-							}
-						)
-					)
-
-				return fnd;
-			}
-		},
 		tsoor: {
 			get:()=>function(opts={}) {
 				var can = document.createElement("canvas")  
@@ -1989,7 +1995,7 @@ function threeify() {
 			}
 		},
 		
-		Nawees:{
+		Etsem:{
 			get:()=>function(opts={}) {
 				
 				var isBuff = opts.buff
@@ -2134,7 +2140,7 @@ function threeify() {
 						nivra.ayshPeula("boray", this)
 
 						nivra.ayshPeula("ready", () => {
-							console.log("iijiji",nivra)
+							//console.log("iijiji",nivra)
 							
 							if(nivra.pashut) {
 								scene.add(nivra.pashut)
@@ -2168,7 +2174,7 @@ function threeify() {
 
 			}
 		},
-		NaweesOld: {
+		EtsemOld: {
 			get: () => function(opts={}) {
 				var cl = opts.color ||
 						opts.gavan ||
@@ -2247,6 +2253,21 @@ function threeify() {
 			}
 				
 		},
+		average:{
+			get:()=>(ob={})=>{
+				var av = 0;
+				var nms = 0
+				Object.keys(ob)
+				.forEach(k=>{
+					if(typeof(ob[k])=="number"){
+						nms++;
+						av+=ob[k]
+					}
+				})
+				av /= nms
+				return av;
+			}
+		},
 		Domem: {
 			get: () => function(opts = {}) {
 				ATZMUS.Davar.call(this, ...arguments);
@@ -2267,6 +2288,7 @@ function threeify() {
 					}
 				})
 				
+				var chayooseem = opts.chayooseem
 				
 				
 				
@@ -2326,6 +2348,30 @@ function threeify() {
 							}
 						})
 					}
+					
+					if(chayooseem){
+					
+						chayooseem = this.generateChayooseem(chayooseem)
+				
+						Object.keys(chayooseem)
+						.forEach(k=>{
+						/*	Object.defineProperty(maeesuhz,{
+								get:()=>maeesuhz[chayooseem[k]]
+							})*/
+							var mawee = maeesuhz[chayooseem[k]]
+							maeesuhz[k] = mawee
+						})
+					}
+					
+					this.on("finishedSet",a=>{
+						if(!a.property=="scale")return;
+						var av = AWTS.average(this.scale.chootify())
+						Object.keys(maeesuhz)
+						.forEach(k=>{
+							this.chayoosShefuh(k,av)
+						})
+						
+					})
 				})
 				
 				this.on("boray", (olam) => {
@@ -2355,6 +2401,25 @@ function threeify() {
 					modelURL: {
 						get: () => modelString
 					},
+					generateChayooseem:{
+						get:()=>h=>{
+							return Object.fromEntries(
+								Object.entries(h)
+								.map(q=>(
+									(a=>
+										a&&a.name?[q[0],a.name]:null
+									)	  
+									(
+										this
+										.animations
+										.find(z=>
+											  z.name.includes(q[1])
+										)
+									))
+								).filter(q=>q)
+							)
+						}
+					},
 					color: {
 						get: () => this.tzurah?
 							this.tzurah.malchus().material.color:null,
@@ -2376,6 +2441,7 @@ function threeify() {
 						    }
 						}
 					},
+					
 					olam: {
 						get: () => olam,
 						set: o => olam = o
@@ -2412,10 +2478,11 @@ function threeify() {
 						get: () => (shaym, nm) => {
 							var act = maeesuhz[shaym]
 							if(act) {
+								//var sca=AWTS.average(this.scale)
 								if(typeof(nm) == "number") {
 									if(act.timeScale!==nm)
-									act.timeScale = nm;
-								}
+										act.timeScale = nm;
+								} else return act.timeScale
 							}
 						}
 					},
@@ -3115,12 +3182,19 @@ function threeify() {
 					scene: {
 						get: () => (
 							scene
-						)
+						),
+						set:s=>{
+							scene = s	
+						}
 					},
+					
 					camera: {
 						get: () => (
 							camera
-						)
+						),
+						set(c){
+							camera=c	
+						}
 					},
 					domCanvas: {
 						get: () => 
