@@ -18,9 +18,13 @@
 				-webkit-touch-callout: none;
 				-ms-user-select: none;
 			}
+			#load{
+				z-index:-10000000
+			}
 		</style>
 	</head>
 	<body>
+		<div id="loading">Loading [probably?!]</div>
 		<div id="container"></div>
 		<script src="passive.js"></script>
 		<script src="three.min.js"></script>
@@ -334,7 +338,7 @@
 				
 				yaak.scale=2.6;
 				yaak.position.y=-4
-				yaak.position.z=-10
+				yaak.position.z=-40
 				yaak.on("heesCheel",d=>{
 					upts.push(d)
 					var s = findChild(d.pashut,"solid")
@@ -348,11 +352,28 @@
 							r.receiveShadow = true;
 						}
 					})
+					loading.innerHTML=""
 					yaak.playChayoos("stand")
 //					yaak.scale=0.7
 					
 				})
 				yaak.boyray(scene)
+				/*
+				var landO = AWTS.getData("erets.glb")[1]
+				var land = new ATSMUS.Etsem({
+					domem:{
+						model:landO,
+					}
+				})
+				land.scale = 30621.17235345582;*/
+				yaak.position.y=-4
+				//al=land
+			/*	console.log("tried",landO,land)
+				land.on("heesCheel",a=>{
+					land.boyray(scene)
+					console.log(landO,land,a,22,3333)
+					
+				})*/
 				window.yy=yaak
 					/*
 				loader.load(yakM,yk=>{
