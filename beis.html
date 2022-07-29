@@ -395,29 +395,30 @@
 								child.castShadow = true;
 								child.receiveShadow = true;
 							}
-							var mat = child.material
-							if(mat) {
-								var c = mat.color.getHex()
-								var f = colorMats[c]
-								if(!f) {
-									var map = mat.map
-									
-									colorMats[c] = new THREE.MeshLambertMaterial({
-										color:mat.color,
-										map
-									})
-									
-									child.material = colorMats[c]
-									child.material.needsUpdate=true
-								}
-							}
-							if ( child.material.map ) {
+						}
+						var mat = child.material
+						if(mat) {
+							var c = mat.color.getHex()
+							var f = colorMats[c]
+							if(!f) {
+								var map = mat.map
 
-								child.material.map.anisotropy = 4;
+								colorMats[c] = new THREE.MeshLambertMaterial({
+									color:mat.color,
+									map
+								})
 
+								child.material = colorMats[c]
+								child.material.needsUpdate=true
 							}
+						}
+						if ( mat&&child.material.map ) {
+
+							child.material.map.anisotropy = 4;
 
 						}
+
+
 
 					} );
 
