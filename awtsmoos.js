@@ -496,6 +496,42 @@ ATZMUS;
 				
         },
 		
+		gdpw: {
+			get:()=>this.getDataPackWith
+		},
+		chootifyClass: {
+			get:()=>c=>{
+				var str = ""
+				if(typeof(c) == "function") {
+					
+				}
+			}
+		},
+		getDataPackWith: {
+			get:()=>function(opts={}) {
+				var nm;
+
+				if(typeof(opts) == "string") {
+					nm = opts;
+				} else if(opts.name) nm = opts.name;
+				else return null;
+
+				var fnd = null;
+				mawchs
+					.dataPacks.some(d => {
+					
+					return d.some(s => {
+						if(s[0].includes(nm)) {
+							fnd = d;   
+							return true
+						}
+					})
+					
+				})
+
+				return fnd;
+			}
+		},
 		getData: {
 			get:()=>function(opts={}) {
 				var nm;
@@ -663,6 +699,80 @@ ATZMUS;
 					else oyl(1)
 				})
 				
+			}
+		},
+		Eved:{
+			get:()=>function(n,shoymayuh) {
+				//first parameter: web worker data string, or function
+				// to get string from
+				//second: listeners that happen to web worker from the thread it's
+				//called in;
+				var str;
+				var wk;
+				var url;
+				if(typeof(n) == "string"){
+					str = n	
+				}
+				
+				if(typeof(n) == "object") {
+					if(
+						n.constructor.name.includes("HTML") &&
+					    n.constructor.name.includes("Element") &&
+						typeof(n.innerText) == "string"
+					) {
+						str = n.innerText	
+					}
+				}
+				
+				if(typeof(n) == "function") {
+					str = "("+n+")()"
+						
+				}
+				
+				str = str.split("@n")
+				.join("\n")
+				
+				if(typeof(str) == "string") {
+					str = eval(
+						"`" +
+						"//B\"H"
+						+"\\n"+
+						str+"`")
+					
+					url = URL.createObjectURL(new Blob([
+						str
+					]))
+				}
+				
+				if(typeof(url) == "string") {
+					wk = new Worker(url)
+				}
+				
+				if(typeof(shoymayuh) == "object") {
+					var k;
+					wk.addEventListener("message",e=>{
+						for(k in e.data) {
+							if(typeof(shoymayuh[k]) == "function") {
+								shoymayuh[k](e.data)
+							}
+						}
+					})
+				}
+				
+				wk.awts = (nm,d) => {
+					var ob = {}
+					if(typeof(nm) == "string") {
+						ob[nm] = d;	
+					} 
+					
+					if(typeof(nm) == "object") {
+						ob = nm;	
+					}
+					
+					wk.postMessage(ob)
+				}
+				
+				return wk;
 			}
 		},
 		HtmlNode: {
@@ -1876,10 +1986,12 @@ function threeify() {
 				var tl = new THREE.TextureLoader();
 
 				var toyxt = tl.load(data[1],tx=>{
+					
+					/*
 					var cnv = document
 					.createElement("canvas")
 
-					/*tx.image.width = 512;
+					tx.image.width = 512;
 					tx.image.height=256;
 					tx.image.needsUpdate = true*/
 					tx.minFilter = THREE.LinearFilter;
@@ -1943,9 +2055,9 @@ function threeify() {
 				if(typeof(txt) == "string") {
 					if(typeof(tseeyooreem[txt]) == 
 					   "function") {
-						console.log(ts.ctx,
+					/*	console.log(ts.ctx,
 									ts.canvas,
-									tseeyooreem[txt],txt)
+									tseeyooreem[txt],txt)*/
 						if(ts) {
 							tseeyooreem[txt](ts.ctx)
 							ts.tx.needsUpdate=true
@@ -1972,6 +2084,9 @@ function threeify() {
 					({
 						color:tc
 					})
+					
+					lm.isAwtsmoosified = lm.isAwts 
+						= lm.awts = true;
 
 					lm.transparent = true
 					lm.needsUpdate=true
@@ -2024,15 +2139,7 @@ function threeify() {
 					ATZMUS.Nivra.call(this, isd);
 					
 				} else {
-					var ist = opts.three
 					
-					this.pashut;
-					
-					if(ist) this.pashut=ist;
-					else this.pashut = new THREE.Mesh(
-						geom,
-						mat
-					)
 					Object.defineProperties(this,{
 						scale: {
 							get:()=>scale
@@ -2064,9 +2171,18 @@ function threeify() {
 									w = {
 										texture:v
 									}
-								var g = ATZMUS.Mat(w)
+								if(!t.pashut.material) {
+									var g = ATZMUS.Mat(w)
 
-								t.pashut.material=g
+									t.pashut.material=g
+								} else {
+									//cob4
+									var tx = AWTS.texture(w.texture)
+									if(!tx) return;
+									t.pashut.material.map = tx;
+									t.pashut.material.map.needsUpdate = true;
+									t.pashut.material.needsUpdate = true;
+								}
 							}
 						},
 						shape: {
@@ -2087,16 +2203,25 @@ function threeify() {
 							}
 						},
 						material: {
-							get:()=>matt,
+							get:()=>{
+								if(matt) return matt;
+								if(t.pashut&&t.pashut.material) {
+									matt = t.pashut.material	
+								}
+								return matt;
+							},
 							set:v => {
 								if(!v) v = {}
-								var mt = new ATZMUS.Mat(v)
+								
+								var mt = v.isAwts?v:new ATZMUS.Mat(v)
 
 								t.pashut.material = mt;
-								matt = {
-									mat: mt,
+								matt = //{
+									//mat: 
+									mt
+									//,
 									//ctx: t.pashut.material.map.image.getContext("2d")
-								};
+								//};
 
 								if(isDS) t.doubleSided = isDS;
 							}
@@ -2120,6 +2245,23 @@ function threeify() {
 							}
 						}
 					})
+					
+					
+					
+					var ist = opts.three
+					var newMat = opts.mat
+					this.pashut;
+					
+					if(ist) {
+						this.pashut=ist
+						if(newMat) {
+							this.material=mat;
+						}
+					}
+					else this.pashut = new THREE.Mesh(
+						geom,
+						mat
+					)
 				}
 
 				this.boyray=(sc)=>{
@@ -2268,6 +2410,102 @@ function threeify() {
 				return av;
 			}
 		},
+		Sequence: {
+			get: () => function(opts={}) {
+				var ets = opts.etsem||{}
+				var tx = opts.textureList||[]
+				var ind;
+				var name = opts.name || opts.shaym
+				
+				function checkAndAdjust(fin) {
+					var v = fin
+					if(typeof(v) != "number") {
+						return 0;
+
+					}
+
+					if(isNaN(v)) {
+						return 0;	
+					}
+
+					if(v<0) v = 0;
+
+					if(v >= tx.length) {
+						v = v % tx.length//tx.length	
+					}
+					return v;
+				}
+				Object.defineProperties(this,{
+					etsem:{
+						get:()=>ets
+					},
+					name:{
+						get:()=>name
+					},
+					textures:{
+						get:()=>tx
+					},
+					
+					tseeyooreem:{
+						get:()=>tx
+					},
+					
+					textureNames:{
+						get:()=>tx
+					},
+					textureList:{
+						get:()=>tx
+					},
+					currentIndex:{
+						get:()=>ind
+					},
+					
+					cur:{
+						get:()=>this.currentIndex
+					},
+					curInd:{
+						get:()=>this.currentIndex
+					},
+					curIndex:{
+						get:()=>this.currentIndex
+					},
+					
+					add:{
+						get:()=>this.increment
+					},
+					increment:{
+						get:()=>()=>{
+							var ad = checkAndAdjust(ind+1)
+							
+							
+							ind = ad
+							
+							ets.texture = tx[ind]
+							
+							return ind;
+						}
+					},
+					length: {
+						get:()=>{
+							if(tx&&tx.length)
+								return tx.length
+							return 0;
+						}
+					},
+					set:{
+						get: () => v=>{
+							var ad = checkAndAdjust(v)
+							
+							
+							ind = ad
+							
+							ets.texture = tx[ind]
+						}
+					}
+				})
+			}
+			
+		},
 		Domem: {
 			get: () => function(opts = {}) {
 				ATZMUS.Davar.call(this, ...arguments);
@@ -2282,6 +2520,7 @@ function threeify() {
 					"chomer",
 					"model"
 				])
+				
 				Object.defineProperties(this, {
 					pashut: {
 						get: () => m
@@ -2289,7 +2528,7 @@ function threeify() {
 				})
 				
 				var chayooseem = opts.chayooseem
-				
+				var seq = opts.sequences;
 				
 				
 				var model = opts["model"]
@@ -2332,6 +2571,7 @@ function threeify() {
 					}
 				})
 				
+				var foundSequences = {}
 				this.on("cheedaysh", () => {
 					if(!mixer) {
 						mixer = new THREE.AnimationMixer(m)
@@ -2361,6 +2601,54 @@ function threeify() {
 							var mawee = maeesuhz[chayooseem[k]]
 							maeesuhz[k] = mawee
 						})
+					}
+					
+					if(typeof(seq)=="object") {
+						var g;
+						var cs;
+						for(g in seq) {
+							cs = seq[g]
+							var tx = cs.textures||cs.textureNames
+							var on = cs.objectName||
+									cs.shaymDavar;
+							if(!(typeof(tx)=="object"&&
+							   typeof(on)=="string")){
+								tx=cs
+								on=""
+							}
+							var k;
+							var fn;
+							
+							
+							fn = AWTSMOOS.FindDeepTolda(
+								self.pashut,on
+							)
+							
+							if(!fn) {
+								return
+							}
+							
+							for(k in tx){
+								AWTS.texture(tx[k])
+							}
+							
+
+							var foundEtsem = new AWTS.Etsem({
+								three:fn,
+								mat:"awts"
+							});
+							
+							
+							
+
+							foundSequences[g] = new AWTS.Sequence({
+								etsem: foundEtsem,
+								name:on,
+								textureList:tx
+							});
+							
+							foundSequences[g].set(0)
+						}
 					}
 					
 					this.on("finishedSet",a=>{
@@ -2400,6 +2688,35 @@ function threeify() {
 				Object.defineProperties(this, {
 					modelURL: {
 						get: () => modelString
+					},
+					sequences: {
+						get: () => foundSequences
+					},
+					seeqs: {
+						get: () => foundSequences
+					},
+					
+					seeq: {
+						get: () => this.getSeeq
+					},
+					getSeeq: {
+						get: () => v=> self.getSequence(v)
+					},
+					addSeq:{
+						get:()=>v=>{
+							var seeq = self.getSeeq(v)
+							if(!seeq) return;
+							return seeq.add()
+							
+						}
+					},
+					
+					getSequence: {
+						get: () => v=>{
+							var y = foundSequences[v]
+							if(y) return y;
+//							return null;
+						}
 					},
 					generateChayooseem:{
 						get:()=>h=>{
