@@ -39,11 +39,47 @@
 		
 
 		<script>
+			var ev = AWTS.Eved(function() {
+				//importScripts("Octree.js")
+				
+				//@n${AWTS.AwtsOctTree}
+				
+				
+				var self = this
+				var awtsmo = self
+				this.onmessage = e=> {
+					
+					for(var k in e.data) {
+						if(ac[k]) {
+							ac[k](e.data[k])
+						}	
+					}
+				};
+				
+				function p(m) {
+					awtsmo.postMessage(m)	
+				}
+				var ac = {
+					eval(c) {
+						var val = eval(c)
+						
+						p({
+							val
+						})
+					}
+				}
+			}, {
+				
+				val(d){
+					console.log("Data",d)
+				}
+			})
+			
 		
 			
 			
 			const clock = new THREE.Clock();
-			var noShadow = true;
+			
 			const scene = new THREE.Scene();
 			scene.background = new THREE.Color( 0x88ccee );
 			scene.fog = new THREE.Fog( 0x88ccee, 0, 50 );
@@ -62,26 +98,8 @@
 			
 			var amb = new THREE.AmbientLight(0x040404,10)
 			scene.add(amb)
-/*
-			const fillLight1 = new THREE.HemisphereLight( 0x4488bb, 0x002244, 0.5 );
-			fillLight1.position.set( 2, 1, 1 );
-			scene.add( fillLight1 );
-*/
 			const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-			directionalLight.position.set( 0, 26, 0 );
-			if(!noShadow) {
-				directionalLight.castShadow = true;
-				directionalLight.shadow.camera.near = 0.01;
-				directionalLight.shadow.camera.far = 500;
-				directionalLight.shadow.camera.right = 30;
-				directionalLight.shadow.camera.left = - 30;
-				directionalLight.shadow.camera.top	= 30;
-				directionalLight.shadow.camera.bottom = - 30;
-				directionalLight.shadow.mapSize.width = 1024;
-				directionalLight.shadow.mapSize.height = 1024;
-				directionalLight.shadow.radius = 4;
-				directionalLight.shadow.bias = - 0.00006;
-			}
+			directionalLight.position.set( 0, 26, 0 )
 			scene.add( directionalLight );
 
 			const container = document.getElementById( 'container' );
@@ -90,10 +108,7 @@
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			if(!noShadow) {
-				renderer.shadowMap.enabled = true;
-				renderer.shadowMap.type = THREE.VSMShadowMap;
-			}
+			
 			renderer.outputEncoding = THREE.sRGBEncoding;
 			renderer.toneMapping = THREE.ACESFilmicToneMapping;
 			container.appendChild( renderer.domElement );
@@ -282,14 +297,10 @@
 
 				if ( left ) {
 					ang+=rs
-//					if(ang>360) ang-=360
 				}
 
 				if ( right ) {
 					ang-=rs
-///					if(ang<-360) ang+=360
-//				
-//
 				}
 
 				if ( playerOnFloor ) {
@@ -309,16 +320,30 @@
 
 			}
 			
+			
 			var upts = []
 
 			const loader = new THREE.GLTFLoader()
 			var colorMats = {}
+			function loadMouth() {
+				var pack = AWTS.getDataPackWith("mouth")
+				if(!pack) return;
+				
+				var names = pack.map(q=>{
+					
+					return q[0]
+				})
+				
+				return names
+			}
 			thr()
 			ATZMUS.loadData([
-			//	"beis"
+				"asdf",
 				"hi",
 				"yaakov"
 			]).then(q=>{
+				return;
+				var mNames = loadMouth();
 				
 				var mod = AWTSMUS.getData("joined.glb")[1]//.dataPacks[0]
 					if(!mod) return animate()
@@ -332,9 +357,16 @@
 							stand: "stand",
 							daven: "dawv",
 							attack: "attack"
+						},
+						sequences: {
+							peh: {
+
+								textures:mNames,
+								shaymDavar:"mouth"
+							}
 						}
 					}
-				})
+				});
 				
 				yaak.scale=2.6;
 				yaak.position.y=-4
@@ -346,17 +378,24 @@
 					s.visible = false;
 					worldOctree.fromGraphNode(s)
 					yaak.pashut.traverse(r=>{
+						lambertify(r)
 						r.frustumCulled = false;
-						if(!noShadow) {
-							r.castShadow = true;
-							r.receiveShadow = true;
-						}
 					})
 					loading.innerHTML=""
 					yaak.playChayoos("stand")
-//					yaak.scale=0.7
 					
-				})
+				});
+				var frmes = 0
+				yaak.on("hissHavoos",d=> {
+					frmes++
+					if(frmes>100)
+						frmes = 0
+					
+					if(yaak.isTalking) {
+						if(frmes % yaak.isTalking == 0)
+							yaak.seeq("peh").add()	
+					}
+				});
 				yaak.boyray(scene)
 				/*
 				var landO = AWTS.getData("erets.glb")[1]
@@ -367,7 +406,6 @@
 				})
 				land.scale = 30621.17235345582;*/
 				yaak.position.y=-4
-				//al=land
 			/*	console.log("tried",landO,land)
 				land.on("heesCheel",a=>{
 					land.boyray(scene)
@@ -375,13 +413,6 @@
 					
 				})*/
 				window.yy=yaak
-					/*
-				loader.load(yakM,yk=>{
-					scene.add(yk.scene)
-					yk.scene.position.y=20
-					
-				});
-				*/
 				loader.load(mod, ( gltf ) => {
 
 					scene.add( gltf.scene );
@@ -391,33 +422,9 @@
 					gltf.scene.traverse( child => {
 			
 						if ( child.isMesh ) {
-							if(!noShadow) {
-								child.castShadow = true;
-								child.receiveShadow = true;
-							}
 						}
-						var mat = child.material
-						if(mat) {
-							var c = mat.color.getHex()
-							var f = colorMats[c]
-							if(!f) {
-								var map = mat.map
-
-								colorMats[c] = new THREE.MeshLambertMaterial({
-									color:mat.color,
-									map
-								})
-
-								child.material = colorMats[c]
-								child.material.needsUpdate=true
-							}
-						}
-						if ( mat&&child.material.map ) {
-
-							child.material.map.anisotropy = 4;
-
-						}
-
+						
+						lambertify(child)
 
 
 					} );
@@ -428,6 +435,32 @@
 				} );
 			});
 
+			
+			function lambertify(child) {
+				var mat = child.material
+				if(mat) {
+					var c = mat.color.getHex()
+					var f = colorMats[c]
+					if(!mat.type.toLowerCase().includes("lamb")) {
+						if(!f) {
+							var map = mat.map
+
+							colorMats[c] = new THREE.MeshLambertMaterial({
+								color:mat.color,
+								map
+							})
+						}
+
+						child.material = colorMats[c]
+						child.material.needsUpdate=true
+					}
+				}
+				if ( mat&&child.material.map ) {
+
+					child.material.map.anisotropy = 4;
+
+				}	
+			}
 			function teleportPlayerIfOob() {
 
 				if ( camera.position.y <= - 25 ) {
