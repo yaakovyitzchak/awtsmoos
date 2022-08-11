@@ -1,4 +1,5 @@
-( function () {
+//BH
+(function() {
 
 	const _v1 = new THREE.Vector3();
 
@@ -14,17 +15,22 @@
 
 	const _capsule = new THREE.Capsule();
 
-	class Octree {
+	function AwtsOctTree(aBox) {
 
-		constructor( box ) {
+		var constructor = ( box ) => {
 
 			this.triangles = [];
 			this.box = box;
 			this.subTrees = [];
 
 		}
-
-		addTriangle( triangle ) {
+		
+		constructor(aBox);
+		
+		this.chootify = () => {
+			
+		};
+		this.addTriangle = ( triangle ) => {
 
 			if ( ! this.bounds ) this.bounds = new THREE.Box3();
 			this.bounds.min.x = Math.min( this.bounds.min.x, triangle.a.x, triangle.b.x, triangle.c.x );
@@ -38,7 +44,7 @@
 
 		}
 
-		calcBox() {
+		this.calcBox = () => {
 
 			this.box = this.bounds.clone(); // offset small ammount to account for regular grid
 
@@ -49,12 +55,14 @@
 
 		}
 
-		split( level ) {
+		this.split = ( level ) => {
 
 			if ( ! this.box ) return;
 			const subTrees = [];
 
-			const halfsize = _v2.copy( this.box.max ).sub( this.box.min ).multiplyScalar( 0.5 );
+			const halfsize = _v2.copy( this.box.max )
+				.sub( this.box.min )
+				.multiplyScalar( 0.5 );
 
 			for ( let x = 0; x < 2; x ++ ) {
 
@@ -68,7 +76,7 @@
 
 						box.min.copy( this.box.min ).add( v.multiply( halfsize ) );
 						box.max.copy( box.min ).add( halfsize );
-						subTrees.push( new Octree( box ) );
+						subTrees.push( new AwtsOctTree( box ) );
 
 					}
 
@@ -114,7 +122,7 @@
 
 		}
 
-		build() {
+		this.build = () => {
 
 			this.calcBox();
 			this.split( 0 );
@@ -122,7 +130,7 @@
 
 		}
 
-		getRayTriangles( ray, triangles ) {
+		this.getRayTriangles = ( ray, triangles ) => {
 
 			for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
@@ -133,7 +141,10 @@
 
 					for ( let j = 0; j < subTree.triangles.length; j ++ ) {
 
-						if ( triangles.indexOf( subTree.triangles[ j ] ) === - 1 ) triangles.push( subTree.triangles[ j ] );
+						if (
+							triangles
+							.indexOf( subTree.triangles[ j ] ) === - 1
+						) triangles.push( subTree.triangles[ j ] );
 
 					}
 
@@ -149,7 +160,7 @@
 
 		}
 
-		triangleCapsuleIntersect( capsule, triangle ) {
+		this.triangleCapsuleIntersect = ( capsule, triangle ) => {
 
 			triangle.getPlane( _plane );
 			const d1 = _plane.distanceToPoint( capsule.start ) - capsule.radius;
@@ -179,7 +190,11 @@
 
 			const line1 = _line1.set( capsule.start, capsule.end );
 
-			const lines = [[ triangle.a, triangle.b ], [ triangle.b, triangle.c ], [ triangle.c, triangle.a ]];
+			const lines = [
+				[ triangle.a, triangle.b ], 
+				[ triangle.b, triangle.c ], 
+				[ triangle.c, triangle.a ]
+			];
 
 			for ( let i = 0; i < lines.length; i ++ ) {
 
@@ -203,7 +218,7 @@
 
 		}
 
-		triangleSphereIntersect( sphere, triangle ) {
+		this.triangleSphereIntersect = ( sphere, triangle ) => {
 
 			triangle.getPlane( _plane );
 			if ( ! sphere.intersectsPlane( _plane ) ) return false;
@@ -222,7 +237,11 @@
 
 			}
 
-			const lines = [[ triangle.a, triangle.b ], [ triangle.b, triangle.c ], [ triangle.c, triangle.a ]];
+			const lines = [
+				[ triangle.a, triangle.b ], 
+				[ triangle.b, triangle.c ], 
+				[ triangle.c, triangle.a ]
+			];
 
 			for ( let i = 0; i < lines.length; i ++ ) {
 
@@ -248,7 +267,7 @@
 
 		}
 
-		getSphereTriangles( sphere, triangles ) {
+		this.getSphereTriangles = ( sphere, triangles ) => {
 
 			for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
@@ -259,7 +278,10 @@
 
 					for ( let j = 0; j < subTree.triangles.length; j ++ ) {
 
-						if ( triangles.indexOf( subTree.triangles[ j ] ) === - 1 ) triangles.push( subTree.triangles[ j ] );
+						if (
+							triangles
+							.indexOf( subTree.triangles[ j ] ) === - 1
+						) triangles.push( subTree.triangles[ j ] );
 
 					}
 
@@ -273,7 +295,7 @@
 
 		}
 
-		getCapsuleTriangles( capsule, triangles ) {
+		this.getCapsuleTriangles = ( capsule, triangles ) => {
 
 			for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
@@ -284,7 +306,13 @@
 
 					for ( let j = 0; j < subTree.triangles.length; j ++ ) {
 
-						if ( triangles.indexOf( subTree.triangles[ j ] ) === - 1 ) triangles.push( subTree.triangles[ j ] );
+						if (
+							triangles
+							.indexOf(
+								subTree.triangles[ j ]
+							) === - 1)
+							
+							triangles.push(subTree.triangles[ j ]);
 
 					}
 
@@ -298,7 +326,7 @@
 
 		}
 
-		sphereIntersect( sphere ) {
+		this.sphereIntersect = ( sphere ) => {
 
 			_sphere.copy( sphere );
 
@@ -335,7 +363,7 @@
 
 		}
 
-		capsuleIntersect( capsule ) {
+		this.capsuleIntersect = ( capsule ) => {
 
 			_capsule.copy( capsule );
 
@@ -358,7 +386,8 @@
 
 			if ( hit ) {
 
-				const collisionVector = _capsule.getCenter( new THREE.Vector3() ).sub( capsule.getCenter( _v1 ) );
+				const collisionVector = _capsule
+					.getCenter( new THREE.Vector3() ).sub( capsule.getCenter( _v1 ) );
 
 				const depth = collisionVector.length();
 				return {
@@ -372,7 +401,7 @@
 
 		}
 
-		rayIntersect( ray ) {
+		this.rayIntersect = ( ray ) => {
 
 			if ( ray.direction.length() === 0 ) return;
 			const triangles = [];
@@ -383,7 +412,8 @@
 
 			for ( let i = 0; i < triangles.length; i ++ ) {
 
-				const result = ray.intersectTriangle( triangles[ i ].a, triangles[ i ].b, triangles[ i ].c, true, _v1 );
+				const result = ray
+				.intersectTriangle( triangles[ i ].a, triangles[ i ].b, triangles[ i ].c, true, _v1 );
 
 				if ( result ) {
 
@@ -408,8 +438,10 @@
 			} : false;
 
 		}
+		
+		
 
-		fromGraphNode( group ) {
+		this.fromGraphNode = ( group ) => {
 
 			group.updateWorldMatrix( true, true );
 			group.traverse( obj => {
@@ -453,13 +485,17 @@
 				}
 
 			} );
+			
 			this.build();
 			return this;
 
 		}
 
 	}
-
-	THREE.Octree = Octree;
-
-} )();
+	
+	if(window.THREE)
+		THREE.Octree = AwtsOctTree;
+	if(window.AWTS) {
+		AWTS.AwtsOctTree=AwtsOctTree	
+	}
+})()
