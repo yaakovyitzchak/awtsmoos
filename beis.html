@@ -130,8 +130,9 @@
 			const worldOctree = new THREE.Octree();
 
 			const playerCollider = new THREE.Capsule( 
-				new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 2.6, 0 ), 1 );
-
+				new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 1.7, 0 ), .55 );
+			
+		//	resetCollider()
 			const playerVelocity = new THREE.Vector3();
 			const playerDirection = new THREE.Vector3();
 
@@ -340,63 +341,68 @@
 			ATZMUS.loadData([
 				"asdf",
 				"hi",
-				"yaakov"
+				//"yaakov"
 			]).then(q=>{
 				;
 				var mNames = loadMouth();
 				
 				var mod = AWTSMUS.getData("joined.glb")[1]//.dataPacks[0]
 					if(!mod) return animate()
-				var yakM=AWTS.getData("yaakov.glb")[1]
-				
-				var yaak = new ATSMUS.Etsem({
-					domem:{
-						model:	yakM,
-						chayooseem:{
-							walk: "mihawlaych",
-							stand: "stand",
-							daven: "dawv",
-							attack: "attack"
-						},
-						sequences: {
-							peh: {
+				var yakM=AWTS.getData("yaakov.glb")
+				if(yakM) {
+					yakM = yakM[1]
+					var yaak = new ATSMUS.Etsem({
+						domem:{
+							model:	yakM,
+							chayooseem:{
+								walk: "mihawlaych",
+								stand: "stand",
+								daven: "dawv",
+								attack: "attack"
+							},
+							sequences: {
+								peh: {
 
-								textures:mNames,
-								shaymDavar:"mouth"
+									textures:mNames,
+									shaymDavar:"mouth"
+								}
 							}
 						}
-					}
-				});
-				
-				yaak.scale=2.6;
-				yaak.position.y=-4
-				yaak.position.z=-40
-				yaak.on("heesCheel",d=>{
-					upts.push(d)
-					var s = findChild(d.pashut,"solid")
-					if(!s) return ;
-					s.visible = false;
-					worldOctree.fromGraphNode(s)
-					yaak.pashut.traverse(r=>{
-						lambertify(r)
-						r.frustumCulled = false;
-					})
-					loading.innerHTML=""
-					yaak.playChayoos("stand")
+					});
+
+					yaak.scale=2.6;
+					yaak.position.y=-4
+					yaak.position.z=-40
+					yaak.on("heesCheel",d=>{
+						upts.push(d)
+						var s = findChild(d.pashut,"solid")
+						if(!s) return ;
+						s.visible = false;
+						worldOctree.fromGraphNode(s)
+						yaak.pashut.traverse(r=>{
+							lambertify(r)
+							r.frustumCulled = false;
+						})
+						loading.innerHTML=""
+						yaak.playChayoos("stand")
+
+					});
+					var frmes = 0
+					yaak.on("hissHavoos",d=> {
+						frmes++
+						if(frmes>100)
+							frmes = 0
+
+						if(yaak.isTalking) {
+							if(frmes % yaak.isTalking == 0)
+								yaak.seeq("peh").add()	
+						}
+					});
+					yaak.boyray(scene)
+					yaak.position.y=-4
 					
-				});
-				var frmes = 0
-				yaak.on("hissHavoos",d=> {
-					frmes++
-					if(frmes>100)
-						frmes = 0
-					
-					if(yaak.isTalking) {
-						if(frmes % yaak.isTalking == 0)
-							yaak.seeq("peh").add()	
-					}
-				});
-				yaak.boyray(scene)
+					window.yy=yaak
+				}
 				/*
 				var landO = AWTS.getData("erets.glb")[1]
 				var land = new ATSMUS.Etsem({
@@ -405,36 +411,40 @@
 					}
 				})
 				land.scale = 30621.17235345582;*/
-				yaak.position.y=-4
+				
 			/*	console.log("tried",landO,land)
 				land.on("heesCheel",a=>{
 					land.boyray(scene)
 					console.log(landO,land,a,22,3333)
 					
 				})*/
-				window.yy=yaak
-				loader.load(mod, ( gltf ) => {
+				if(mod) {
+					loader.load(mod, ( gltf ) => {
 
-					scene.add( gltf.scene );
-					gltf.scene.position.y-=10
-					worldOctree.fromGraphNode( gltf.scene );
-					
-					gltf.scene.traverse( child => {
-			
-						if ( child.isMesh ) {
-						}
-						
-						lambertify(child)
+						scene.add( gltf.scene );
+						gltf.scene.position.y-=100
+						worldOctree.fromGraphNode( gltf.scene );
+
+						gltf.scene.traverse( child => {
+
+							if ( child.isMesh ) {
+							}
+
+							lambertify(child)
 
 
+						} );
+
+
+						animate();
+						console.log("Loaded entire thing")
 					} );
+				//
 
-
-					animate();
-
-				} );
+				} else {
+					console.log("DIdnt' load anything")		
+				}
 			});
-
 			
 			function lambertify(child) {
 				var mat = child.material
@@ -461,13 +471,17 @@
 
 				}	
 			}
+			
+			function resetCollider(){
+				
+				playerCollider.start.set( 0, 0.1, 0 );
+				playerCollider.end.set( 0, 2.2, 0 );
+				playerCollider.radius = 0.3;
+			}
 			function teleportPlayerIfOob() {
 
-				if ( camera.position.y <= - 25 ) {
-
-					playerCollider.start.set( 0, 0.35, 0 );
-					playerCollider.end.set( 0, 1, 0 );
-					playerCollider.radius = 0.35;
+				if ( camera.position.y <= - 300 ) {
+					resetCollider()
 					camera.position.copy( playerCollider.end );
 					camera.rotation.set( 0, 0, 0 );
 					ang=angx=0;
