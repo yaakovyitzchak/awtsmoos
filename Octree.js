@@ -28,8 +28,28 @@
 		constructor(aBox);
 		
 		this.chootify = () => {
-			
+			return ({
+				triangles:this.triangles,
+				box:this.box,
+				subTrees:this.subTrees.map(k=>k.chootify())
+			});
 		};
+		
+		
+		this.load = (awts) => {
+			this.triangles = awts.triangles
+			this.box = awts.box
+			this.subTrees = []
+			if(awts.subTrees){
+				awts.subTrees.forEach(k=>{
+					var aw = new AwtsOctTree(k.box)
+					aw.load(k)
+					this.subTrees.push(aw)
+				})
+			}
+		}
+		
+		
 		this.addTriangle = ( triangle ) => {
 
 			if ( ! this.bounds ) this.bounds = new THREE.Box3();
