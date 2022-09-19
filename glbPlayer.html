@@ -1,0 +1,137 @@
+BH
+<br>
+
+
+<div id="kin"></div>
+<button id=pl disabled=true>Play?</button>
+<script src="three.min.js"></script>
+<script src="GLTFLoader.js"></script>
+<script src="awtsmoos.js"></script>
+<style>
+	body{
+		background:yellow	
+	}
+</style>
+<script>
+	thr()
+	function Makor(op={}) {
+		var loyk = location.hash.substring(1)
+		var url;
+		try {
+			url = atob(loyk)
+		} catch(e) {
+			console.log("LOL",e)
+		}
+		if(!url) return (
+			kin.innerHTML = "Hi! Actually, couldn't find any GLB file to load!"
+		);
+		
+		var self=this
+		console.log("Got",as=url)
+		AWTS.loadData([
+			url
+		]).then(r=>{
+			console.log("going")
+			var world = new AWTS.Olam()
+			world.start()
+			wl = world;
+			var frstGLB = AWTS.getData("yesod",true)
+			if(!frstGLB) {
+				return kin.innerHTML = "Make sure the main GLB is called 'yesod'"
+			}
+			console.log("gotstuff")
+			if(frstGLB) frstGLB = frstGLB[0][1]
+			hj=frstGLB
+			var gl = new AWTS.Etsem({
+				domem: {
+					model: 	frstGLB
+					
+				}
+			})
+			
+			var koylz=[]
+			var srckoyleem=getKoyleem("awdum")
+			vl=k=>eval(k)
+				
+			gl.on("loaded",d=> {
+				world.activeCam = gl.cameras[0]
+				loadKoyleem(srckoyleem,koylz).then(j=>{
+					if(typeof(op.canplay)=="function"){
+						op.canplay(self)	
+					}
+				})
+			})
+			
+			self.play = function play() {
+				koylz.forEach(u=>{
+					u.play()
+				})
+				gl.playAll({
+					repetitions:1,
+					error(k){
+						console.log(k)	
+					}
+				})
+			}
+			f = gl;
+			world.hoyseef(gl)
+		})
+		
+		function loadKoyleem(s,a){
+			var ind=0
+			return new Promise((r,j)=>{
+				function g1(){
+					var sc=s[ind]
+					if(!sc) return dn()
+					var ad=document.createElement("audio")
+					
+					ad.oncanplay=()=>{
+						a.push(ad)
+						dn()
+						
+					}
+					
+					ad.src=sc
+					console.log(",",m=ad,a)
+					ad.onerror=(n)=>{
+						dn()	
+						console.log(n)
+					}
+
+					function dn(){
+						if(ind++ <= a.length-1)
+							g1()
+						else
+							r()
+					}
+				}
+				//return 
+				g1()
+			})
+		}
+							  
+		function getKoyleem(nm) {
+			var rez=[]
+			var awdumz=AWTS.getData(nm,1)
+			
+			return awdumz.map(i=>(
+				i[0].toLowerCase().includes("audio")?
+				i[1]:null
+			)).filter(q=>q)
+				
+			
+		}
+	}
+	
+	var m = new Makor({
+		canplay: m=>{
+			pl.disabled=false
+			pl.onclick=()=>{
+				m.play()	
+			}
+		}
+	})
+	
+	
+</script>
+	

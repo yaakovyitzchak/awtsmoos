@@ -13,10 +13,61 @@ body,html{
 <input id="nm"><br>
 <button id="fl">Select folder to save to</button>
 <button id="fawee">Select file(s) to import</button>
-<button id="svv">Save</button>
+<button id="svv">Save</button><br>
+OR
+<br>
+	<input type="checkbox" id="okc">
+	<label for="okc">save custom values instead</label>
+	<button id="cust">Add custom name</button>
+	<div id="add"></div>
+	<br>
+	<!--<button id="svc">Save Custom</button>-->
 <input name=awtsmmosoficiyo type="file" multiple id=flz><br>
 <div id="prog"></div>
 <script>
+	var fields = []
+	function add1(n,v) {
+		var nm1 = document.createElement("input")
+		var val = document.createElement("input")
+		
+		var del = document.createElement("button")
+		del.className = "del"
+		del.innerHTML = "Delete field"
+		
+		var br = document.createElement("br")
+		nm1.placeholder = "Enter name of file/url here"
+		val.placeholder = "enter URL or data URL of file"
+		var par = document.createElement("div")
+		
+		par.appendChild(del)
+		
+		par.appendChild(nm1)
+		par.appendChild(val)
+		par.appendChild(br)
+		
+		add.appendChild(par);
+		
+		del.onclick = () => {
+			var ind = fields.findIndex(q=>
+				q[0] == nm1			   
+			)
+			
+			if(ind > -1) {
+				fields.splice(ind, 1)
+				par.parentNode.removeChild(par)
+			}
+		};
+									   
+		fields.push([
+			nm1, val
+		])
+		
+		if(n)nm1.value=n
+		if(v)val.value=v
+	}
+	cust.onclick=()=>{
+		
+	};
 	var _awtsmoosName = localStorage._awtsmoosName
 	if(_awtsmoosName) {
 		nm.value = _awtsmoosName
@@ -43,8 +94,8 @@ body,html{
 		///+972546242388 Micha
 	};
 	
-	svv.onclick = () => {
-		var all = "//B\"H\n//<br>\n" + 
+	function makeHTML(withExtra) {
+		return "//B\"H\n//<br>\n" + 
 			"//<iframe border=0 id=prv></iframe><br>"+
 			"<div id=cnt></div>"+
 			"//<script>var dt=[];function mawchsawnify(d){" +
@@ -53,7 +104,7 @@ body,html{
 			"//<script>\n\n" +
 
 			"mawchsawnify(" + 
-			JSON.stringify(resultz) + 
+			withExtra + 
 			");\n//Moshiach NOW!!!\n\n" +
 
 			"///</" + "script>\n" + 
@@ -63,6 +114,16 @@ body,html{
 			"cnt.appendChild(a)})" +
 
 			"//</"+"script>"
+	}
+	svv.onclick = () => {
+		var all = makeHTML(
+			!okc.checked ? 
+			JSON.stringify(resultz)
+			: JSON.stringify(fields.map(q=>[
+				(q[0].value),
+				(q[1].value)
+			]))
+		)
 		var naym = (nm.value || Date.now())
 		var fln = naym+".html"
 		if(naym) {
@@ -116,6 +177,9 @@ body,html{
 		function getOne() {
 			fr.readAsDataURL(flz.files[ind])
 			fr.onload = () => {
+				var nm=flz.files[ind].name
+				var vl = fr.result
+				add1(nm,vl)
 				resultz.push([flz.files[ind].name,fr.result]);
 				prog.innerHTML += "file " + ind + " out of " +
 					flz.files.length + 

@@ -130,6 +130,7 @@ ATZMUS;
 		*/
 	}
 	}
+	
 	var oyss = (new function() {
 		
 		var oys = "אבגדהוזחטיכךלמםנןסעפףצץקרשתְֱֲֳִֵֶַָֹֺֻּֽ",
@@ -365,6 +366,128 @@ ATZMUS;
 			800: "ף",
 			900: "ץ"
 		}
+		
+		function numberificly(nm) {
+			var noom = nm.toString();
+			var places = [], i, k,
+				digits = "1234567890",
+				full = "",
+				finished = 0
+			for(i = 0; i < noom.length; i++) {
+				full = ""
+				var restOfLength = noom.length - i;
+				for(k = 0; k < restOfLength - 1; k++) {
+					full += 0
+				}
+				full = noom[i] + full
+				finished = parseInt(full)
+
+				places.push(finished)
+
+			}
+			places = places.map(y => {
+				var x = y;
+				if(x > 900) {
+					var cur = x;
+					var arr = []
+					for(i = x; i >= 0; i--) {
+						var it = x - 900
+						if(it >= 0) {
+							arr.push(900)
+							x = it
+						} else {
+							arr.push(numberificly(x))
+							break
+						}
+
+
+
+					}
+					return arr.flat()
+				}
+				return x
+			})
+			return places.flat().filter(x => x)
+		}
+		
+		function arraysEqual(array1,array2) {
+			var isEqual = true;
+			array1.forEach((q,i)=>{
+				array2.forEach((k,p)=>{
+					if(
+						array1[i] !== array2[i] ||
+						array1[p] !== array2[p]
+					) {
+						isEqual = false
+					}
+				})
+			})
+			return isEqual;
+		}
+		
+		function numberToHebrew(nm) {
+			var list = numberificly(nm)
+			
+			//special cases of numbers
+			var cases = [
+				[
+					[
+						10,
+						5
+					],
+					[
+						"ט",
+						"ו"
+					]
+				],
+				
+				[
+					[
+						10,
+						6
+					],
+					[
+						"ט",
+						"ז"
+					]
+				]
+			]
+			
+			var caseInd = 0
+			
+			function doCase() {
+				var now = cases[caseInd]
+				if(now) {
+					var first = now[0]
+					var doesMatch = true
+					var lengthOfNumbersToCheck = first.length
+					var arrayAtEndOfList = list.slice(list.length - lengthOfNumbersToCheck)
+					doesMatch = arraysEqual(arrayAtEndOfList,now[0])
+					
+					if(doesMatch) {
+						first.forEach((q,i) => {
+							var listInd = list.length-first.length+i
+							if(listInd >=0 && listInd < list.length) {
+
+								list[listInd] = now[1][i]
+							}
+						})
+					}
+				//	console.log(arrayAtEndOfList,now[0],list,doesMatch,list)
+					caseInd++;
+					doCase()
+				}
+			}
+			
+			doCase()
+			var hebrew = list.map(q=>
+				(g=>(g?g:q))(gematriaMap[q])								
+			)
+			
+			return hebrew.join("")
+			
+		}
+		
 		var isEnglish = false
 		if(oys[0].charCodeAt(0) !== 1488){
 			isEnglish = true
@@ -379,50 +502,24 @@ ATZMUS;
 				))
 			)
 		}
+		/*
+		
+		old
+		
+					first.forEach((q,i) => {
+						var listInd = list.length-1-first.length+i
+						if(listInd >=0 && listInd < list.length) {
+							
+							if(list[listInd] != q) {
+								doesMatch = false
+							}
+						}
+					})
+		*/
+		
 		this.gematria = nm => {
 			if(typeof(nm) == "number") {
-				return (function numberificly(nm) {
-					var noom = nm.toString();
-					var places = [], i, k,
-						digits = "1234567890",
-						full = "",
-						finished = 0
-					for(i = 0; i < noom.length; i++) {
-						full = ""
-						var restOfLength = noom.length - i;
-						for(k = 0; k < restOfLength - 1; k++) {
-							full += 0
-						}
-						full = noom[i] + full
-						finished = parseInt(full)
-
-						places.push(finished)
-
-					}
-					places = places.map(y => {
-						var x = y;
-						if(x > 900) {
-							var cur = x;
-							var arr = []
-							for(i = x; i >= 0; i--) {
-								var it = x - 900
-								if(it >= 0) {
-									arr.push(900)
-									x = it
-								} else {
-									arr.push(numberificly(x))
-									break
-								}
-
-
-
-							}
-							return arr.flat()
-						}
-						return x
-					})
-					return places.flat().filter(x => x)
-				})(nm).map(x => (
+				return numberificly(nm).map(x => (
 					gematriaMap[x]
 				)).join(
 					isEnglish ? "$" 
@@ -533,7 +630,7 @@ ATZMUS;
 			}
 		},
 		getData: {
-			get:()=>function(opts={}) {
+			get:()=>function(opts={},onlySome=false) {
 				var nm;
 
 				if(typeof(opts) == "string") {
@@ -542,19 +639,28 @@ ATZMUS;
 				else return null;
 
 				var fnd = null;
+				var founds = []
 				mawchs
 					.dataPacks.forEach(d => 
 						d.forEach(s => {
-								if(s[0] == nm) {
+								if(
+									!onlySome?
+									s[0] == nm
+								  	:s[0].includes(nm)
+								) {
 									fnd = s;   
+									if(onlySome) {
+										founds.push(s)	
+									}
 								}
 							}
 						)
 					)
 
-				return fnd;
+				return !onlySome?fnd:founds;
 			}
 		},
+		
 		loadData: {
 			get:()=>function(opts={}) {
 				return new Promise((rs,rj) => {
@@ -572,17 +678,29 @@ ATZMUS;
 
 					var it = 0
 					function getIt() {
-						var scr = document
-						.createElement("script")	
-						scr.src = ar[it]+".html"
-						document.head.appendChild(scr)
-						scr.onload = () => {
+						if(
+						1
+						//	ar[it].length == 1 && typeof(ar[it]) == "object"
+						) {
+							var scr = document
+							.createElement("script")	
+							scr.src = ar[it]//+".html"
+							document.head.appendChild(scr)
+							scr.onload = () => {
+								isDone()	
+							}
+						} else if(ar.length == 2) {
+							mawchsawnify(ar[it][0],ar[it][1])	
+							isDone()
+						}
+						
+						function isDone() {
 							if(it < ar.length - 1) {
 								it++;
 								getIt();
 							} else {
 								rs(true)
-							}
+							}	
 						}
 					}
 					if(ar.length) getIt()
@@ -608,6 +726,18 @@ ATZMUS;
 					)(ATZMUS.Osios.toString().split(""))
 				}
 				return rez
+			}
+		},
+		
+		FindInScene:{
+			get:()=>(sc,fnc)=>{
+				var found = []
+				sc.traverse(r=>{
+					if(fnc(r)) {
+						found.push(r)
+					}
+				})
+				return found;
 			}
 		},
 		FindDeepTolda: {
@@ -907,7 +1037,13 @@ function threeify() {
 		Chochmah: {
 			get: () => function(opts = {}) {
 				var events = {}
+				var meta = "$_awl"
+				var slf = this
 				Object.defineProperties(this, {
+					meta:{
+						get:()=>meta,
+						set:v=>{meta=v}
+					},
 					on: {
 						get: () => (name, func) => {
 							if(!events[name]) events[name] = []
@@ -916,6 +1052,14 @@ function threeify() {
 									func(...data)
 								}
 							})
+							
+							slf.ayshPeula(meta, {
+								
+								name,
+								function: func
+
+							})
+
 						}
 					},
 					events: {
@@ -941,6 +1085,7 @@ function threeify() {
 						}
 					}
 				})
+				
 			}
 		},
 		ChayoosShoymayr: {
@@ -2527,6 +2672,12 @@ function threeify() {
 					}
 				})
 				
+				this.on(this.meta, d=>{
+					if(!this.olam) return;
+					if(d.name == "hissHavoos") {
+						this.makeUpdatable()
+					}
+				})
 				var chayooseem = opts.chayooseem
 				var seq = opts.sequences;
 				
@@ -2660,6 +2811,8 @@ function threeify() {
 						})
 						
 					})
+					mixer.update(0)
+					//this.makeUpdatable()
 				})
 				
 				this.on("boray", (olam) => {
@@ -2685,7 +2838,11 @@ function threeify() {
 					}
 				})
 				
+				var cameras = [];
 				Object.defineProperties(this, {
+					cameras:{
+						get:()=>cameras
+					},
 					modelURL: {
 						get: () => modelString
 					},
@@ -2710,7 +2867,23 @@ function threeify() {
 							
 						}
 					},
+					makeUpdatable:{
+						get:()=>()=>{
+							if(!this.isInUpdate){
+								
+								this.olam.updates.push(this)	
+							}
+						}
+					},
 					
+					makeNotUpdatable:{
+						get:()=>()=>{
+							if(!this.isInUpdate){
+								
+								this.olam.updates.push(this)	
+							}
+						}
+					},
 					getSequence: {
 						get: () => v=>{
 							var y = foundSequences[v]
@@ -2736,6 +2909,12 @@ function threeify() {
 								).filter(q=>q)
 							)
 						}
+					},
+					isInUpdate:{
+						get:()=>(
+							this.olam&&
+							this.olam.updates.includes(this)
+						)
 					},
 					color: {
 						get: () => this.tzurah?
@@ -2771,6 +2950,38 @@ function threeify() {
 					},
 					mixer: {
 						get:() => mixer
+					},
+					
+					pauseAll:{
+						get:()=>(er)=>{
+							try {
+								Object.keys(maeesuhz)
+								.forEach(q=>{
+									this.pauseChayoos(q)
+								})
+							} catch(e){
+								if(typeof(er)=="function"){
+									er(e)
+								}
+							}
+						}
+					},
+					playAll:{
+						get:()=>(settings=false)=>{
+							try {
+								Object.keys(maeesuhz)
+								.forEach(q=>{
+									this.playChayoos(q,settings)
+									
+							//	console.log(settings,q,222)
+								})
+							} catch(e){
+								var er = settings.error
+								if(typeof(er)=="function"){
+									er(e)
+								}
+							}
+						}
 					},
 					setChayoosToOneTime: {
 						get: () => name => {
@@ -2823,27 +3034,47 @@ function threeify() {
 						}
 					},
 					playChayoos: {
-						get: () => shaym => {
+						get: () => (shaym,settings=false) => {
+							this.makeUpdatable()
 							var act = maeesuhz[shaym]
 							if(act) {
 								if(!act.paused) return;
 								act.paused = false
+							//	console.log(settings,shaym,222)
+								if(typeof(settings)=="object"){
+									
+									//	console.log("ih",act)
+									Object.keys(settings)
+									.forEach(k=>{
+										if(act.hasOwnProperty(k)){
+											
+											act[k] = settings[k]	
+										}
+									})
+								}
 								act.play()
 							}
 						}
 					},
 					model: {
-						get: () => () => {
-							console.log("hi")
+						get: () => {
+							//console.log("hi")
+							return model;
 						},
 						set: str => {
+
 							if(typeof(str) == "string") {
 								
 								modelString = str
 								if(THREE.GLTFLoader) {
 									var l = new THREE.GLTFLoader()
 									l.load(modelString, gltf => {
+										
+										console.log("LOL a buy",er=gltf)
 										var gr;
+										if(gltf.cameras) {
+											cameras = gltf.cameras;
+										}
 										animations = gltf.animations
 										if(gltf.scenes.length > 1) {
 										//	gr = new THREE.Group()
@@ -2858,6 +3089,7 @@ function threeify() {
 											this.ayshPeula("sealayk")
 											m = gltf.scenes[0]
 										}
+										
 										if(m) {
 											if(!alreadyLoaded) {
 												this.ayshPeula("loaded", this)
@@ -2973,19 +3205,20 @@ function threeify() {
 				var mouse = {x:0,y:0, clicked:false}
 				var isRendering = true
 				this.updates=updates
+				var activeCam = camera;
 				function loop() {
 					delta = clock.getDelta()
 					if(isRendering)
-						renderer.render(scene, camera)
+						renderer.render(scene, activeCam)
 					
 					updates.forEach(u => {
 						u.ayshPeula("hissHavoos", delta, u);
 					})
 					self.ayshPeula("hissHavoos", delta, self)
-					setTimeout(loop, 16)
+					//setTimeout(loop, 16)
 				}
 				
-				setupLights()
+			//	setupLights()
 				
 				function setupLights() {
 					var light = new THREE.HemisphereLight(0xffffff, 0x444444)
@@ -3361,6 +3594,16 @@ function threeify() {
 					maftayach: {
 						get: () => m => maftaychos[m]
 					},
+					activeCam:{
+						get:()=>activeCam,
+						set:v=>{
+							var otc=activeCam;
+							v.aspect=otc.aspect;
+							
+							activeCam=v;
+							activeCam.updateProjectionMatrix()
+						}
+					},
 					start: {
 						get: () => (opts = {}) => {
 							var parent = opts.parent || document.body,
@@ -3381,16 +3624,16 @@ function threeify() {
 									parent.clientHeight
 								)
 								
-								camera.aspect = (
+								activeCam.aspect = (
 									renderer.domElement.clientWidth /
 									renderer.domElement.clientHeight
 								)
-								camera.updateProjectionMatrix()
+								activeCam.updateProjectionMatrix()
 								
 								loop()
 							}
-							//if(interval) clearInterval(interval)
-							interval = ()=>{loop();true}
+							if(interval) clearInterval(interval)
+							interval = setInterval(loop,1000/FPS)
 							
 							this.ayshPeula("start")
 						}

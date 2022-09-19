@@ -1,0 +1,2757 @@
+BH
+<br>
+<button id='op'>Open folder?!</button>
+<span id="hidn">
+	<button id="xps">export as new page, embedded tracks</button>
+	<button id="xpw">export as wav</button>
+	<button id ="liptin">LipSynkafi?</button>
+</span>
+<br>
+<div id="kinTayn1">
+	<div id="bin"></div>
+
+	<div id="inOuter"></div>
+	<div id="clipProps"></div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="kinTayn2">
+	
+	<div id="controls"></div>
+	<div id="clipEditor"></div>
+</div>
+<div id="finalPreview"></div>
+<br>
+<style>
+	#hidn{
+		#display:none;	
+	}
+	#bin {
+		padding:5px;
+		border:1px solid black;
+		float:left;
+		height:365px;
+		width:247px;
+		overflow-y:scroll;
+	}
+	
+	#controls {
+		padding:3px;
+		border:1px solid black;
+		display:block;
+		
+		float:left;
+	}
+	#inOuter {
+		float:left;
+		padding:5px;
+		width:200px;
+		height:200px;
+		border:1px solid black;
+	}
+	
+	#clipProps {
+		float:left;
+		padding:5px;
+		width:246px;
+		height:254px;
+		border:1px solid black;
+	}
+	
+	
+	
+	.binItem {
+		background:cyan !important;	
+	}
+	
+	
+	.ac {
+		background:orange !important;	
+	}
+	
+	
+	.btn {
+		padding:3px;
+		border:1px solid black;
+		background:yellow;
+		display:block;
+		user-select:none;
+		word-break:break-all	
+	}
+	
+	.sc {
+		display:inline-block !important;	
+	}
+	
+	.btn:hover {
+		cursor:pointer;
+		background:white !important;
+		color:black;
+	}
+	
+	.btn:active {
+		background:black !important;
+		color:white;
+	}
+	
+	#kinTayn1{
+		float:left;	
+	}
+	
+	#kinTayn2{
+		
+		float:left;
+		width:99%;
+	}
+	
+	#clipEditor {
+		#padding:3px;
+		border: 4px;
+		height:300px;
+		width:100%;
+		hoverflow:scroll;
+		#border:1px solid black;
+		float:left;
+		display:block;
+	}
+	
+	.trackEl {
+		background:green;
+		height:64px;
+		#border:1px solid orange;
+		box-shadow:inset 0px 0px 13px 3px #037fff;
+		display:inline-block;
+		dfloat:left;
+		4position:relative
+	}
+	
+	.trackEl:hover {
+		cursor:pointer	
+	}
+	
+	.mtniss{
+		background:silver;	
+		box-shadow:inset 0px 0px 40px 2px purple;
+	}
+	
+	.active {
+		box-shadow:inset 0px 0px 20px 3px yellow;
+	}
+	.seekerSection {
+		width:100%;
+		height:26px;
+		#position:absolute;
+		#border:1px solid black;
+		//user-select:none;
+		#overflow:hidden;
+	}
+	
+	.playerHead {
+		position:relative;
+		#height:200px;
+		#margin-top:-100;
+		width:1px;
+		background:cyan;
+		z-index:9999999
+	}
+	
+	.everything {
+		overflow:scroll;	
+	}
+	
+	.trackSects {
+		height:100px;
+		box-shadow:inset 0px 0px 2px 3px salmon;
+		overflow:scroll;
+	}
+	
+	.timeSec {
+		width:100%;
+		height:100%;
+		bsorder:1px solid black;
+		display:block;
+		box-shadow:inset 0px 0px 2px 2px black;
+	}
+</style>
+<script>
+	
+	
+	var gl = {}
+	gl.mkw=mkw
+	gl.wayvr = gl.mkw(function(){
+		//BH
+		
+		var dd
+		var akw
+		var sr
+		var dayuh
+		var encodedYam;
+		var frakShins = 1;
+		onmessage = e=>{
+			dd=e.data
+			akw = dd.awsayKoylWayv
+			if(akw) {
+				if(akw.sr)
+					sr=akw.sr
+				if(akw.dayuh)
+					dayuh=akw.dayuh
+				if(dayuh&&sr){
+					encodedYam=
+						encodeYam(sr,dayuh)
+				}
+				if(encodedYam){
+					postMessage({sheer:
+						encodedYam})
+				}
+
+				encodedYam=sr=dayuh=dd=
+					akw=null
+			}
+			
+			akw = dd.lipSynkafi;
+			if(akw) {
+				sr = akw.sr
+				dayuh = akw.dayuh
+				frakShins = akw.fractionsOfSecond||
+					akw.fos;
+				var lipt = makeLipsinkify(sr,dayuh,frakShins)
+				if(lipt) {
+					postMessage({
+						lippified: lipt
+					})
+					akw = sr = dayuh = frakShins = null;
+				}
+			}
+		}
+		
+		function makeLipsinkify(sr,q,fractionsOfSecond=100) {    
+			var newL=Math.floor((q.length/sr)*fractionsOfSecond);
+			var step = q.length/newL;
+
+			var newFl = new Float32Array(newL);
+			var i;
+			var offset = 0;
+			for(i = 0; i < q.length; i+=step) {
+				if(i+step < q.length) {
+					var dataAm = q.slice(i,i+step)
+
+					var avRij = aver(dataAm)
+					if(offset<newFl.length){
+						newFl[offset] = avRij
+						offset++;
+					}
+				}
+			   // newFl[fldata.slice(i+offset,i+offset+step)]offset)
+			}
+
+			function aver(ar) {
+				var av = 0;
+				var i;
+				for(i = 0; i < ar.length;i++) {
+					av+=ar[i]
+				}
+				av = av / ar.length
+				return av;
+			}
+
+			return newFl
+		}
+		
+		
+		function chootDaws(r,off,str){
+			var i;
+			for(i=0;i<str.length;i++){
+				r.setUint8(
+					i+off,
+					str.charCodeAt(i)
+				)
+			}
+		}
+		
+		function encodeYam(sr,ds){
+			var bytes4samp=1
+			var chn = 1;
+			var bitsper=bytes4samp*8
+			var blo=bytes4samp*chn
+			var kaylee=new ArrayBuffer(
+				44+
+				ds.length*blo
+			)
+			var r=new DataView(
+				kaylee	
+			)
+			chootDaws(r,0,"RIFF")
+			r.setUint32(4,ds.length*2,
+				true)
+			chootDaws(r,8,"WAVE")
+			chootDaws(r,12,"fmt ")
+			r.setUint32(16,16,true)
+			r.setUint16(20,1,true)
+			r.setUint16(22,chn,true)
+			
+			r.setUint32(24,sr,true)
+			
+			r.setUint32(28,sr*blo,true)
+			
+			r.setUint16(32,blo,true)
+			
+			r.setUint16(34,bitsper,true)
+			
+			chootDaws(r,36,"data")
+			
+			r.setUint32(40,ds.length*blo,
+				true)
+			
+			floyt8b(r,44,ds)
+			return r;
+		}
+		
+		function floyt8b(r,of,fl){
+			var i;
+			var vl;
+			var nm;
+			for(i=0;i<fl.length;i++){
+				vl=Math.max(
+					-1,
+					Math.min(1,fl[i])
+				)
+				nm=(vl*127)+128
+				//if(nm>0)nm=0;
+				//if(nm>255)nm=255
+				r.setUint8(
+					of,
+					nm
+				)
+				of++
+			}
+		}
+	})
+	
+	gl.saveData = {}
+	gl.makeID = () => {
+		var id = "";
+		var nms = [
+			"Awts",
+			"Moos",
+			"Ooh",
+			"Maw",
+			"Hoos",
+			"Aw",
+			"Layn",
+			"Koy",
+			"Dim",
+			"Hawts",
+			"Imps",
+			"Oom"
+		]
+		var dn = Date.now()+""
+		dn.split("").forEach(q=>{
+			id+=nms[parseInt(q)];
+			id+="$"
+			
+		})
+		id+="@"
+		var rand = Math.floor(Math.random()*7770)+4400+""
+		rand.split("").forEach(q=>{
+			id+=nms[nms.length-parseInt(q)-1]
+		})
+		id+=rand;
+		return id;
+	};
+	
+	hidn.style.display="none"
+	
+	gl.fr = new FileReader()
+	gl.readFileAsArrayBuffer = (fl) => gl.readFile(fl,"ab")
+	gl.firstTime = true
+	gl.readAwtsmosified = (awtsTx) => new Promise((r,j) => {
+		try {
+			var awtsmoosify = d => {
+				r({res:d})
+			};
+			eval(awtsTx)
+		} catch(e) {
+			j({err:e})	
+		}
+	});
+	gl.readFileAsText = (fl) => gl.readFile(fl,"txt")
+	
+	gl.readFileAsDataURL = (fl) => gl.readFile(fl,"durl")
+	gl.readFile = (fl,ty) => new Promise((r,j) => {
+		var newFR = new FileReader()
+		newFR.onload = () => {
+			
+			newFR.onload = ()=>{}
+			r(newFR.result);
+		}
+		if(ty == "ab") {
+			
+			newFR.readAsArrayBuffer(fl);
+		} else if(ty == "txt") {
+			newFR.readAsText(fl);
+		} else if(ty="durl") {
+			newFR.readAsDataURL(fl)	
+		}
+		newFR.onerror = () => {
+			j("WOW there was an error actually!?")	
+		}
+	})
+	var abb = document.createElement("a")
+	xpw.onclick=async() => {
+		gl.wayvr.onmessage=e=>{
+			var d = e.data.sheer
+			if(d){
+				abb.href=URL.createObjectURL(
+					new Blob([d],{type:"audio/wav"})
+					
+				)
+				abb.download="ok_"+Date.now()+".wav"
+				abb.click()
+
+				xpw.innerHTML="download wav again?"
+				xpw.disabled=false
+				gl.wavyr.onmessage = null;
+			}
+			console.log("OK",d)
+		}
+		gl.wayvr.postMessage({
+			sr:gl.editor.audioTracks[0].srcShtar.sampleRate,
+			dayuh:gl.editor.data
+		})
+		xpw.innerHTML="downloading wav..."
+		xpw.disabled=true
+	};
+	
+	gl.lipSynkafied = null
+	
+	function lipsynkraniss(){
+		return new Promise((r,j) => {
+			gl.wayvr.onmessage = e=> {
+				if(e.data.lippified) {
+					gl.lipSynkafied= e.data.lippified
+					gl.wayvr.onmessage=null;
+					r(e.data.lippified)
+				}
+			};	
+			
+			gl.wayvr.postMessage({
+				lipSynkafi: {
+					sr: gl.editor.audioTracks[0].srcShtar.sampleRate,
+					dayuh:gl.editor.data,
+					fos:100
+				}
+			})
+			
+		});
+	}
+	
+	liptin.onclick = async () => {
+		var lipped=await lipsynkraniss()
+		var shtarKaweet = gl.editor.audioTracks[0].srcShtar
+		var rad = await gl.readFile(shtarKaweet.file,"durl")
+		
+		var dayTuh = (new Blob([
+`
+	/*B"H
+
+	<br><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<button disabled id="pl">Yo welcome, it's loading,<br>
+	just wait a few milliseconds plus tax!</button>
+	<br>
+	<div id="stayj"></div>
+	<style>
+		:root {
+		  touch-action: pan-x pan-y;
+		  height: 100% 
+		}
+		#stayj {
+			position:absolute;
+			left:0;
+			top:0;
+			width:100%;
+			height:100%;
+			background:cyan;
+			z-index:-1000;
+		}
+
+		body,html {
+			overflow:hidden;
+		}
+
+		.dvar{
+			position:absolute;
+			background:red;
+			border:1px solid black;
+		}
+		.bawlTishoovuh {
+			border-radius:50%;
+			width:36;height:36;
+			background:orange;
+			position:absolute;
+			left:30%;
+			border: 1px solid black;
+			bottom:40%;
+		}
+	</style>
+	<script>
+	var ad = document.createElement("audio")
+	var interVawl;
+	var frames = 0;
+	var curTime=0;
+	var lipSynkafied = 0;
+	var st = {};
+
+	var RIGHT = 39
+	var LEFT = 37
+
+	var keysd = []
+	buildStayj()
+	
+	function awtsmoosOomawhoosify(d){
+		wow=d;
+		
+		fetch(d.dataURL)
+		.then(r=>r.blob())
+		.then(r=>{
+			ad.src = URL.createObjectURL(r)
+			pl.innerHTML = "Welcome to the Essence<br>"+
+				"of the Creator. Start? [aka, click here]"
+
+			pl.disabled = false;
+
+			pl.onclick=()=>{
+				pl.innerHTML = "LOL you already started, no going back now!!<br>"
+					+"[press space bar and arrow keys if u want]"
+				pl.disabled = true
+				ad.play()
+				
+				onkeyup = e=> {
+					if(e.keyCode==32) {
+						jump()
+					}
+
+					keysd[e.keyCode]=false;
+				}
+				
+				addEventListener("click",(e)=>{
+					jump()
+					moveFromPosition(e.clientX,e.clientY)
+				})
+				addEventListener("touchstart",(e)=>{
+					jump()
+					var tc = e.targetTouches[0]
+					if(!tc) return;
+					moveFromPosition(tc.clientX,tc.clientY)
+
+				})
+
+				function moveFromPosition(x,y) {
+					if(x > st.x) {
+						st.clicked = 16
+					} else {
+						st.clicked = -16;
+					}
+				}
+
+				function jump() {
+					st.dy = -st.mxg
+				}
+				onkeydown = e=> {
+					keysd[e.keyCode] = true
+				}
+
+				interVawl = setInterval(() => {
+					frames++;
+					if(frames % 200 == 0) {
+						frames = 0;
+					}
+					if(st.dy<st.mxg) {
+						st.dy+=st.gr;
+					} 
+
+					st.dx = 0;
+					st.otherDx = 0;
+					
+					curTime = Math.floor(ad.currentTime*100)
+					lipSynkafied = d.lipSynkifiedData[curTime]
+					if(lipSynkafied) {
+						st.dx=lipSynkafied*1130
+					}
+
+					if(keysd[RIGHT]) {
+						st.otherDx = 4;
+					}
+
+
+					if(keysd[LEFT]) {
+						st.otherDx = -4;
+					}
+
+					if(typeof(st.clicked)=="number") {
+						st.otherDx = st.clicked;
+						st.clicked = false
+					}
+					
+					st.x+=st.dx+st.otherDx;
+					st.y+=st.dy;
+
+					if(st.y +st.hyt> innerHeight) {
+						st.y = innerHeight - st.hyt-1;
+						st.dy = -1*Math.abs(st.dy);
+						st.dy-=1; 
+					}
+
+					if(st.y < 0) {
+						st.y=0;
+						st.dy = Math.abs(st.dy)
+					}
+
+
+					if(st.x +st.wdth> innerWidth) {
+						st.x = innerWidth - st.wdth-1;
+						st.dx = -1*Math.abs(st.dx);
+					}
+
+					if(st.x < 0) {
+						st.x=0;
+						st.dx = Math.abs(st.dx)
+					}
+
+					st.ball.style.left=st.x+"px";
+					st.ball.style.top=st.y+"px";
+
+					
+					st.ball.style.width=st.wdth;
+					st.ball.style.height=st.hyt;
+					
+
+					if(frames % 26 == 0) {
+						st.dvarify()
+					}
+					if(st.curThings.length>0) {
+						st.curThings.forEach(q=>q.up())
+					}
+
+					
+				},10)
+			}
+		})
+
+		
+	}
+
+	function buildStayj() {
+		st.wdth = 32;
+		st.clicked = false;
+		st.hyt = 32;
+		st.x=0;
+		st.y=0;
+		st.dx=0;
+		st.dy=0;
+	
+		st.otherDx = 0;
+
+		st.gr=1
+		st.mxg=20;
+
+		st.ball=document.createElement("div")
+		st.ball.className="bawlTishoovuh"
+
+		st.curThings = []
+		st.dvarify = () => {
+			st.curThings.push(new st.dvar(st.curThings.length))
+		}
+
+		st.dvar = function(shaym) {
+			this.shaym=shaym
+			this.el = document.createElement("div")
+			this.el.className="dvar"
+			this.dx=0;
+			this.dy=0;
+			this.x=Math.random()*innerWidth;
+			
+			this.w=32 + Math.random() * 16 - 8;
+			this.h=32 + Math.random() * 16 - 8;
+			this.y=-this.h;
+			this.isRemoving = false;
+
+			var rd = 0;
+			this.isGone = false
+			this.up = () => {
+				if(this.isGone) return;
+				if(!this.isRemoving) {
+					if(this.dy < st.mxg) {
+						this.dy++;
+					}
+
+					this.x+=this.dx
+					this.y+=this.dy;
+
+					this.el.style.left=this.x+"px"
+					this.el.style.top=this.y+"px"
+
+					this.el.style.width=this.w+"px"
+					this.el.style.height=this.h+"px"
+
+					if(st.hit(
+						this.x,this.y,this.w,this.h,
+						st.  x,st.  y,st.wdth,st.hyt
+					)) {
+						this.isRemoving = true;
+						rd = Math.random()
+						this.ind = st.curThings.indexOf(this)
+					
+						st.curThings.splice(this.ind,1)
+					}
+				} else {
+					/*if(this.w > 0) {
+						this.w--
+					}
+
+					if(this.h > 0) {
+						this.h--
+					}
+	
+					this.x = rd * 4
+					this.y = rd * 6
+					*/
+				}
+
+				
+				if(!this.isRemoving&&this.y +this.h> innerHeight) {
+					this.isGone = true
+					this.el.parentElement.removeChild(this.el)
+					this.ind = st.curThings.indexOf(this)
+					
+					st.curThings.splice(this.ind,1)
+				}
+			}
+			stayj.appendChild(this.el)
+		}
+		st.hit = function (x1,y1,w1,h1,x2,y2,w2,h2) {
+			return (
+				x1 < x2+w2 &&
+				x1 + w1>x2 &&
+
+				y1 < y2+h2 &&
+				y1+h1 > y2
+			)
+		}
+		stayj.appendChild(st.ball)
+	}
+
+	</`+`script>*/
+	//<script>
+	if(window.awtsmoosOomawhoosify) {
+		awtsmoosOomawhoosify({
+			lipSynkifiedData: ${JSON.stringify(lipped)},
+			dataURL: "${rad}"
+		})
+	}
+</`+`script>
+`
+		],{type:"text/html"}))
+		
+		var fh = await gl.dh.getFileHandle("Awtsmoosified_"+
+			shtarKaweet.name+".html",{create:true})
+		var cw = await fh.createWritable(fh)
+		await cw.write(dayTuh)
+		await cw.close();
+		
+		console.log("lippied")
+	};
+	
+	xps.onclick = async() => {
+		var shtarim2xport = []
+		var at = gl.editor.audioTracks
+		var xportedShtarim=[]
+		at.forEach(q=>{
+			if(shtarim2xport.indexOf(q.srcShtar)) {
+				shtarim2xport.push(q.srcShtar)
+			}
+		})
+		var i;
+		var c;
+		var dayt;
+		for(i = 0; i < shtarim2xport.length; i++) {
+			c=shtarim2xport[i];
+			dayt=await gl.readFile(c.file,"durl")
+			xportedShtarim.push({name:c.name,id:c.id,dayuh:dayt})
+		}
+		
+		var chooted = gl.editor.chooted
+		abb.href=URL.createObjectURL(new Blob([
+			`
+/*B"H
+<br>
+<button id="m" disabled>starting...
+<script>
+	async function awtseelosifawAy(dt,Shtar,Editor) {
+		window.daws = dt;
+		m.disabled=false
+		m.innerHTML="Click to start!?"
+		shtareem = []
+		var xp = dt.koylMakoreem
+		if(!xp) console.log("LOL what?!")
+		var bp = dt.koyleembePashtoos
+		m.onclick=async ()=>{
+
+			m.disabled=true
+			m.innerHTML="doing more loading, ok?!"
+			gl = {}
+			gl.fr=new FileReader;
+			
+
+			gl.readFileAsArrayBuffer = ${gl.readFileAsArrayBuffer}
+			gl.firstTime = true
+			gl.readAwtsmosified = ${gl.readAwtsmosified}
+			gl.readFileAsText = ${gl.readFileAsText}
+			gl.shtareem = shtareem
+			gl.readFileAsDataURL = ${gl.readFileAsDataURL}
+			gl.readFile = ${gl.readFile}
+			gl.koylEenyan = new AudioContext();
+
+			var i;
+			for(i = 0; i < xp.length; i++) {
+				await (async function(q) {
+					var s = await new Shtar({
+						name:q.name, 
+						getFile:()=>new Promise((r,j) => {
+							fetch(q.dayuh)
+							.then(w=>w.blob())
+							.then(w=>r(w))
+						}),
+						isWireless:true
+					},gl)
+					shtareem.push(s)
+					await s.loadData()
+				})(xp[i])
+			}
+
+			gl.editor = await new Editor({isWireless:true})
+
+			var cr=0
+			var a
+			get1(()=>{
+				m.disabled=false
+				m.innerHTML = "OK finally loaded all, play now?! [click if so]"
+				m.onclick=()=>{
+					gl.editor.play()
+				}
+			})
+			async function get1(cb){
+				a = bp.audioTracks[cr]
+				if(!a) return cb()
+				var bt= a.beginTrimSeconds
+				var et = a.endTrimSeconds
+				var off = a.timelineOffset
+		
+				
+				var soyrs = a.srcShtar;
+				if(!soyrs) return;
+
+				var nm = soyrs.name;
+				var curSh = gl.shtareem.find(s => 
+						s.name === nm							 
+					)
+				if(!curSh) return connsole.log("OKOK",curSh,nm,a,cr)
+
+				await gl.editor.addAudioTrack(curSh,bt,et,off)
+				a=null
+				if(cr<bp.audioTracks.length-1) {
+					cr++
+					get1(cb)
+				} else {
+					cb()
+				}
+
+			}
+
+		};
+
+
+
+
+
+
+	}
+
+	
+</`+`script>
+*/
+//<script>
+	
+	if(window.awtseelosifawAy) {
+		awtseelosifawAy(${JSON.stringify({
+			koylMakoreem: xportedShtarim,
+			koyleembePashtoos: chooted
+		})},${Shtar},${Editor})
+	}
+
+//</`+`script>
+			`
+		]))
+		abb.download="etzem_"+Date.now()+".html"
+		abb.click()
+	};
+	
+	op.onclick = async () => {
+		
+		gl.koylEenyan = new AudioContext();
+		gl.dh = await showDirectoryPicker()
+		gl.fls=await gf(gl.dh.values())
+		gl.shtareem = await Promise.all(
+			gl.fls.map(async q=>
+				await new Shtar(q)		   
+			)
+		)
+		
+		gl.shtareem.forEach(async (f)=>{
+			await addToBin(f)
+		})
+		hidn.style.display=""
+		
+		await checkProjectFile(gl.shtareem)
+	};
+	
+	gl.addToEditor = async (shtar,bt,et,offset,adt=true) => {
+		if(!gl.editor) {
+			gl.editor = await new Editor({
+				div:clipEditor,
+				controlsDiv:controls,
+				propsDiv:clipProps
+			})	
+		}
+		await gl.editor.addAudioTrack(shtar,bt,et,offset,adt)
+	};
+	
+	gl.showPreev = async (shtar) => {
+		shtar.active = !!!shtar.active;
+		inOuter.innerHTML = "";
+		gl.bin.forEach(q=>{
+			if(q.el.classList.contains("ac"))
+				q.el.classList.remove("ac");
+			
+		})
+		if(!shtar.active) return;
+		shtar.el.classList.add("ac")
+		
+		var addToBtn = document.createElement("div")
+		addToBtn.className = "btn"
+		inOuter.appendChild(addToBtn)
+		addToBtn.innerHTML = "Loading maybe.."
+		shtar.loadData().then(r => {
+
+			addToBtn.innerHTML = "Add " + shtar.name + " to clip editor?"
+
+			addToBtn.onclick = async () => {
+				await gl.addToEditor(shtar)
+			};
+		}).catch(e=>{
+			
+			addToBtn.innerHTML = e+"";//shtar.name + " is not a media file?!!!"
+			addToBtn.disabled = true;
+		})
+	};
+	
+	
+	async function checkProjectFile() {
+		var sh = gl.shtareem
+		var f = sh.find(q=>
+			q.kesser					 
+		)
+		
+		if(f) {
+			//do project stuff
+			
+			if(gl.firstTime) {
+				
+				gl.firstTime = false
+				//readProjectFile and do stuff
+				var awdoym = await gl.readFileAsText(f.file)
+				gl.redFile = awdoym
+				var proj;  
+				try {
+					proj = await gl.readAwtsmosified(awdoym)
+				} catch(e) {
+					console.log(e)	
+				}
+				
+				if(!proj) return;
+				proj = proj.res;
+				
+				gl.proj=proj
+				var t = proj.timeline
+				//
+				if(t) {
+					gl.saveData.timeline = {};
+					var adt = t.audioTracks
+					if(adt) {
+					//	gl.saveData.timeline.audioTracks = []
+						var i;
+						var a
+						for(i = 0; i < adt.length; i++) {
+							a = adt[i]
+							var soyrs = a.srcShtar;
+							if(!soyrs) return;
+
+							var nm = soyrs.name;
+							var curSh = gl.shtareem.find(s => 
+														 s.name === nm							 
+														)
+
+							if(!curSh)
+								return;
+
+							await curSh.loadData();
+
+							var startT= a.beginTrimSeconds
+							var endT = a.endTrimSeconds
+							var off = a.timelineOffset
+							await gl.addToEditor(curSh,startT,endT,off)
+					
+						}
+						
+					}
+					
+					
+					if(gl.editor) {
+						if(t.scale) {
+							gl.editor.updateCurrentScale(t.scale)
+						}
+					}
+					
+				}
+				return;
+			} 
+			
+			updateAudioTracks()
+			await f.update(gl.saveData)
+			
+			return true;
+		} 
+		
+		//make it
+		var fh = await new Shtar(await gl.dh.getFileHandle(
+			"_eekar_awts.html", {create:true}
+		))
+		
+		updateAudioTracks()
+		await fh.update(gl.saveData)
+		
+		return false;
+	}
+	
+	async function addToBin(sh) {
+		if(!gl.bin) {
+			gl.bin = []
+			gl.saveData.shtareem = gl.bin;
+		}
+		gl.bin.push(sh)
+		if(!sh.kesser)
+			sh.add("bin")
+	}
+	
+	function Editor(opts = {}) {
+		var self = this;
+		return (async () => {
+			this.curTime = 0;
+			this.maxTime = 0;
+			this.audioTracks = []
+			
+			this.curScaleFac = 1
+			var isw=!!opts.isWireless
+			var self = this;
+			this.iswireless=isw
+			if(!isw) {
+				this.div = opts.div
+				if(!this.div)
+					this.div = document.createElement("div")
+
+				this.controlsDiv = opts.controlsDiv;
+				this.propsDiv = opts.propsDiv;
+
+				if(!this.propsDiv)
+					this.propsDiv = document.createElement("div")
+
+			}
+			this.mainL = null
+			
+			var _ct=0
+			var maxT = 0
+			var isp = false
+			
+			var timeStarted = 0;
+			var timeStampStarted = 0
+			var pausedAt = 0;
+			var curPlayingTracks = []
+			this.getP = () =>pausedAt
+			this.tts = () => timeStampStarted
+			this.getCurt = () => curPlayingTracks
+			this.setCurt = v  => curPlayingTracks=v;
+			
+			var _tracks
+			var _filted
+			var _layers = []
+			
+			Object.defineProperties(this, {
+				layers:{
+					get:()=>_layers
+				},
+				data: {
+					get: () => {
+						/*
+						var tst=this.audioTracks.map(q=>q.data)
+						var lng = 0
+						tst.forEach(q=>lng+=(q.length))
+						var myn=new Float32Array(lng)
+						var off=0;
+						tst.forEach(w=>{
+							myn.set(
+								w,off	
+							)
+							off+=w.length
+						})*/
+						var layerD = this.layers.map(q=>q.data)
+						
+						return layerD[0]
+					}
+				},
+				updateCurPlayingTracks: {
+					get: () => () => {
+							
+						_tracks = getTracksAtTime(/*seconds*/this.curTime)
+						_filted = []
+						
+						curPlayingTracks.forEach((w,i)=>{
+							if(!w.isTimelineTimeInRange(this.curTime)) {
+								w.pause()
+								_filted.push(i)
+							}
+							
+						})
+						
+						if(_filted.length)
+						removeMultipleFromArray(
+							curPlayingTracks,_filted	
+						)
+						
+						_tracks.forEach((q,i)=> {
+							
+							if(curPlayingTracks
+								.indexOf(q) < 0) {
+								curPlayingTracks.push(q)	
+								if(this.isPlaying)
+									q.playAtTimelineTime(this.curTime)
+							}
+						})
+						
+						
+					}
+				},
+				curPlayingTracks: {
+					set: v => {
+						curPlayingTracks=v
+					},
+					get: () => {
+						return curPlayingTracks;
+					}
+				},
+				chooted: {
+					get: () => {
+						var oyb = {
+							curTime:this.curTime,
+							maxTime:this.maxTime,
+							layers:this.layers.map(q=>q.chooted),
+							audioTracks:this.audioTracks.map(tr=>
+								tr.chooted								 
+							),
+							scale:this.curScaleFac,
+							isChooted:true
+						}
+						
+						
+						return oyb
+					}
+				},
+				curTime: {
+					get: () => {
+						if(!this.isPlaying) {
+							_ct = pausedAt;
+							return _ct;
+						}
+						_ct = ((Date.now() - timeStampStarted)
+							+timeStarted)/1000
+						
+						return _ct;
+					},
+					set: v  => {
+						if(this.isPlaying)
+							this.playFrom(v*1000)
+						else
+							pausedAt=v
+						_ct = v;	
+					}
+				},
+				maxTime: {
+					set: v => {
+						maxT=v
+					},
+					get: () => {
+						return maxT;
+					}
+				},
+				isPlaying: {
+					get: () => isp,
+					set: v  => {
+						isp = v;
+					}
+				},
+				pause: {
+					get: () => () => {
+						self.isPlaying = false;
+						pausedAt = _ct/*seconds*/;
+						
+						curPlayingTracks.forEach(e=>e.pause())
+						return pausedAt;
+					}
+				},
+				
+				resume: {
+					get: () => () => {
+						this.playFrom(pausedAt*1000)
+					}
+				},
+				
+				playFrom: {
+					get: () => (time/*milliseconds*/) => {
+						
+						timeStarted = time;
+						timeStampStarted = Date.now()
+						curPlayingTracks.forEach(e=>e.pause())
+						
+						curPlayingTracks.forEach(e=>e.playAtTimelineTime(time/1000))
+						/*
+						curPlayingTracks = []
+						var tracks = getTracksAtTime(/*secondstime/1000)
+						tracks.forEach(w=> {
+							w.playAtTimelineTime(time/1000)
+						})
+						curPlayingTracks.concat(tracks)*/
+						
+						self.isPlaying = true;
+					}
+				},
+				play: {
+					get: () => () => {
+						this.playFrom(0)
+					}
+				}
+			})
+			var timeSeeker;
+			var playHead;
+			var trackSects; 
+			var everythingDiv;
+			var timer;
+			var timeSec
+			
+			function updateClipHeight() {			
+				if(!isw)
+				if(playHead&&everythingDiv) {
+					playHead.style.height = 
+						everythingDiv.clientHeight
+				}
+			}
+			//setup controls
+			this.makeControls = () => {
+				
+				everythingDiv = document.createElement("div")
+				everythingDiv.className = "everything"
+				this.div.appendChild(everythingDiv)
+				
+				timeSeeker = document.createElement("div")
+				timeSeeker.className = "seekerSection"
+				everythingDiv.parentNode.insertBefore(timeSeeker,everythingDiv)
+				
+				
+				
+				timeSec = document.createElement("div")
+				timeSec.className = "timeSec"
+				timeSeeker.appendChild(timeSec)
+				
+				timeSec.innerHTML = "&nbsp;"
+				timeSec.onclick = e=> {
+					var ofx = (e.offsetX+scrollAm)/this.curScaleFac;
+					var fac = ofx/this.maxTime
+					if(fac < 1) {
+						this.curTime = ofx	
+					} else {
+						this.curTime = this.maxTime	
+					}
+				};
+				
+				playHead = document.createElement("div")
+				playHead.className = "playerhead"
+				
+				
+				timeSeeker.appendChild(playHead)
+				
+				playHead.innerHTML = "&nbsp;"
+				
+				
+				
+				trackSects = document.createElement("div")
+				trackSects.className = "trackSects"
+				everythingDiv.appendChild(trackSects)
+				updateClipHeight()
+				
+				
+				var scaleUp = document.createElement("div")
+				scaleUp.className = "btn sc"
+				scaleUp.innerHTML = "+"
+				scaleUp.onclick = () => {
+					this.increaseCurrentScale(1)
+				}
+				this.controlsDiv.appendChild(scaleUp)
+				
+				
+				
+				
+				var scaleDown = document.createElement("div")
+				scaleDown.className = "btn sc"
+				scaleDown.innerHTML = "-"
+				scaleDown.onclick = () => {
+					this.decreaseCurrentScale(1)
+				}
+				this.controlsDiv.appendChild(scaleDown)
+				
+				
+				var play = document.createElement("div")
+				play.className = "btn pl sc"
+				play.innerHTML = "Play"
+				play.isPlaying = false;
+				play.onclick = () => {
+					if(!play.isPlaying) {
+						this.resume()
+						play.innerHTML = "Pause"
+						play.isPlaying = true
+					} else {
+						this.pause()
+						play.innerHTML = "Play"
+						play.isPlaying = false	
+					}
+					
+				}
+				this.controlsDiv.appendChild(play)
+				
+				
+				
+				timer = document.createElement("input")
+				timer.className = "timer inp"
+				timer.innerHTML = ""
+				
+				this.controlsDiv.appendChild(timer)
+				
+			};
+			
+			if(!isw)
+			this.makeControls();
+			
+			this.getTimePixel = am => (
+				(am / this.maxTime)
+					* this.gTw()
+			)
+				
+				
+			var scrollAm
+			
+			//
+			this.mainL = setInterval(() => {
+					if(!isw)
+					scrollAm = everythingDiv .scrollLeft
+					this.updateCurPlayingTracks()
+					//if(this.isPlaying) {
+					if(!isw)
+					playHead.style.left = (
+						this.getTimePixel(this.curTime)
+						- scrollAm
+					)+"px";
+				
+					if(!isw)
+					timer.value = this.curTime;
+		
+					
+					if(this.curTime > this.maxTime) {
+						this.isPlaying = false;
+						//	alert("finished!")
+
+					}
+				//}
+				
+			},30)
+			
+			
+			this.increaseCurrentScale = am => {
+				this.updateCurrentScale(this.curScaleFac + am)	
+			}
+			
+			
+			this.decreaseCurrentScale = am => {
+				this.updateCurrentScale(this.curScaleFac - am)	
+			}
+			
+			this.updateCurrentScale = am => {
+				this.layers.forEach(L=>{
+					L.updateCurrentScale(am)
+				})
+				this.curScaleFac = am;
+				this.audioTracks.forEach(at => {
+					at.scale = this.curScaleFac;
+				})
+				
+				
+				if(!isw)
+				var getWd = this.gTw()
+				
+				if(!isw)
+				trackSects.style.width=(getWd+self.audioTracks.length*2+36) + "px"
+				
+				this.audioTracks.forEach(at => {
+					at.timelineOffset=at.timelineOffset
+				})
+				if(!isw)
+				checkProjectFile()
+			};
+			
+			
+			this.setActive = async track => {
+				if(isw) return;
+				this.propsDiv.innerHTML = "";
+				
+				if(!track) return
+				this.audioTracks.forEach(q=>{
+					q.isActive = false;						 
+				})
+				track.isActive = true;
+				var nameD = document.createElement("div")
+				nameD.className="nameD"
+				this.propsDiv.appendChild(nameD)
+				nameD.innerHTML = "Track: "+track.srcShtar.name
+				
+				var beginTrim = document.createElement("input")
+				this.propsDiv.appendChild(beginTrim)
+				beginTrim.type="number"
+				beginTrim.value = track.beginTrimSeconds;
+				beginTrim.onchange = e => {
+					var nm = numOrNoth(beginTrim.value)
+					track.setBeginTrim(nm)
+				};
+				
+				var endTrim = document.createElement("input")
+				this.propsDiv.appendChild(endTrim)
+				endTrim.type="number"
+				endTrim.value = track.endTrimSeconds;
+				endTrim.onchange = e => {
+					var nm = numOrNoth(endTrim.value)
+					track.setEndTrim(nm)
+				};
+				
+				
+				
+				var offsetV = document.createElement("input")
+				this.propsDiv.appendChild(offsetV)
+				offsetV.type="number"
+				offsetV.value = track.timelineOffset/1000;
+				console.log(track,track.timelineOffset)
+				offsetV.onchange = e => {
+					
+					var nm = numOrNoth(offsetV.value)
+					track.timelineOffset = nm * 1000
+				};
+				
+				
+				var dr = document.createElement("div")
+				this.propsDiv.appendChild(dr)
+				dr.innerHTML = track.duration - 
+					track.endTrimSeconds -
+					track.beginTrimSeconds
+				
+				
+				var splattify = document.createElement("button")
+				this.propsDiv.appendChild(splattify)
+				splattify.innerHTML = "Split track?!"
+				splattify.onclick = async e => {
+					await track.split(this.curTime,this);
+				};
+				
+				
+				var dLeetir = document.createElement("button")
+				this.propsDiv.appendChild(dLeetir)
+				dLeetir.innerHTML = "Remove from editor!"
+				dLeetir.onclick = async e => {
+					await track.delete();
+				};
+				
+			};
+			
+			this.gtat = getTracksAtTime;
+			this.gEt = getEndtime
+			this.gTw = getTotalWidth
+			function getTotalWidth() {
+				var wd = 0
+				self.audioTracks.forEach(q=> {
+					wd += q.oldW;
+					//var nm = numOrNoth(q.leftAmount)
+					//wd += nm
+				})
+				return wd;
+			}
+			function getTracksAtTime(time/*seconds*/) {
+				var tracks = []
+				self.audioTracks.forEach(q=> {
+					if(!q.isBlank);
+					if(q.isTimelineTimeInRange(time)) 
+						tracks.push(q)
+				})
+				return tracks;
+			}
+			
+			function getEndtime() {
+				var longestTime = 0;
+				self.audioTracks.forEach(q=> {
+				//	if(q.totalTime > longestTime) {
+						longestTime += q.totalTime	
+				//	}
+				})
+				return longestTime
+			}
+
+
+			function removeMultipleFromArray(ar,listOfIndexes) {
+				var filted = Array.from(listOfIndexes)
+
+				function remove1(i2r) {
+					ar.splice(i2r,1);
+					filted.splice(0,1)
+					if(filted.length) {
+						filted = filted.map(w=>w-1)
+						remove1(filted[0])
+					}
+				}
+				if(listOfIndexes.length)
+					remove1(filted[0])
+			}
+			function insInAr(ar,ind,it){
+				var ik=ar.length
+				ar.length++
+				var q
+				var m=new Array(ar.length-ind)
+				for(q=ind;q<ar.length;q++){
+					m[q]=ar[q];
+					//ar[q]=null
+				}
+
+				ar[ind]=it
+
+				for(q=ind;q<ik;q++){
+					ar[q+1]=m[q];
+
+				}
+				return ar
+			}
+			var editSelf = this;
+			//other
+			this.trackThing = function(shtarOpen,bt = 0, et = 0, tmo=0,layerNum=0) {
+				return (async () => {
+					
+					var shelf = this;
+					this.shaym = Date.now()//gl.makeID()
+					this.srcShtar = shtarOpen;
+					this.beginTrimSeconds = bt || 0;
+					this.endTrimSeconds = et || 0;
+					this.layer=layerNum;
+					
+					this.editor = self;
+					var ia;
+					this.isBlank=shtarOpen.awts=="blank"
+					var koylYawcheed
+					var origD = this.srcShtar.duration();;
+					var isBlank=this.isBlank
+					
+					if(!isBlank){
+						koylYawcheed = await new this.srcShtar.koylYack()
+						this.koylYawcheed=koylYawcheed
+					}
+					
+					if(!isw){
+						var el = document.createElement("div")
+						el.className="trackEl"
+						if(isBlank) el.className+=" mtniss"
+						el.onclick = async () => {
+
+							await editSelf.setActive(this)
+
+						}
+					}
+					
+					
+					var _timeOff = tmo
+					this.el = el;
+					var _scale = 1;
+					var _wdth = 0;
+					var _oldW = 0
+					this.delete = async (repl=false) => {
+						
+						var ind = editSelf.audioTracks.indexOf(this)
+						
+						if(ind > -1) {
+							editSelf.audioTracks.splice(ind,1)	
+						}
+						
+						ind = this.aym.audioTracks.indexOf(this)
+						
+						if(ind > -1) {
+							this.aym.audioTracks.splice(ind,1)	
+						}
+						
+						var curTr = editSelf.curPlayingTracks.indexOf(this)
+						if(curTr > -1) {
+							editSelf.curPlayingTracks.splice(curTr,1)	
+						}
+						
+						if(!isw) 
+						if(el.parentElement) {
+							el.parentElement.removeChild(el)	
+						}
+						
+						this.pause() 
+						
+						if(!this.isBlank){
+							if(!repl) {
+								var ed=await editSelf.addAudioTrack(
+									{awts:"blank",duration:()=>this.duration,
+									sampleRate:this.srcShtar.sampleRate},
+									this.beginTrimSeconds,
+									this.endTrimSeconds,
+									this.timelineOffset,
+									true,
+									ind,
+									layer
+								)
+								
+								await editSelf.setActive(ed)
+							}
+						} else {
+							var i;
+							var offsetical = this.totalTime*1000;
+							for(i = ind; i < editSelf.audioTracks.length;i++) {
+								var nx=	editSelf.audioTracks[i]
+								if(nx){
+									nx.timelineOffset -=
+										offsetical
+									//	this.timelineOffset
+								}
+							}
+							
+							await editSelf.setActive(editSelf.audioTracks[ind])
+						}
+						
+						editSelf.maxTime=editSelf.gEt()
+						
+						//this.editor.updateHolderSect()
+						editSelf.audioTracks.forEach(a=>{a.timelineOffset=a.timelineOffset})
+						
+						
+						if(!isw)
+						checkProjectFile()
+					};
+					
+					this.split = async (timeInSeconds,editor) => {
+						if(this.blank) return "g"
+						var firstTrackOffset = this.startTime*1000;//milliseconds
+						var firstTrackTrimBegin   = this.beginTrimSeconds;
+						var firstTrackTrimEnd     = this.endTime - 
+							timeInSeconds+this.endTrimSeconds ;
+						
+						var secondTrackOffset = timeInSeconds * 1000
+						//	+ firstTrackOffset;
+						
+						
+						var secondTrackTrimEnd = this.endTrimSeconds
+						var ind = this.audInd
+						this.setBeginTrim(firstTrackTrimBegin)
+						this.setEndTrim(firstTrackTrimEnd)
+						this.timelineOffset = firstTrackOffset
+						/*
+						cf = await editSelf.addAudioTrack(
+							this.srcShtar,
+							firstTrackTrimBegin,
+							firstTrackTrimEnd,
+							firstTrackOffset,
+							true,
+							ind
+						)*/
+						
+						
+						var secondTrackTrimBegin = (
+							//firstTrackTrimBegin	+ //(firstTrackOffset/1000)
+							//+ timeInSeconds
+						//	firstTrackTrimEnd -
+						//	firstTrackTrimBegin
+							//this.duration -
+						//	this.beginTrimSeconds
+							//- firstTrackTrimEnd
+						//	timeInSeconds-(firstTrackOffset/1000)
+						//	-firstTrackTrimBegin
+							//-firstTrackTrimEnd
+							//cf.totalTime+cf.startTime
+							timeInSeconds+(firstTrackTrimBegin-this.startTime)
+							//-(this.startTime-timeInSeconds)
+						//	cf.beginTrimSeconds//+(cf.endTime-cf.startTime)
+						)
+						
+						
+						await editSelf.setActive(editSelf.audioTracks[
+							editSelf.audioTracks.length-1
+						])
+						
+						ew=await editSelf.addAudioTrack(
+							this.srcShtar,
+							secondTrackTrimBegin,
+							secondTrackTrimEnd,
+							secondTrackOffset,
+							true,
+							ind+1,
+							layer
+						)
+						await editSelf.setActive(this)
+					//	console.log(ew.chooted,cf.chooted)
+						//await
+					//	await this.delete(true);
+					};
+					
+					this.setBeginTrim = v /*seconds*/=> {
+						this.timelineOffset += v*1000;
+						
+						this.beginTrimSeconds = v;
+						this.updateWidth()
+						
+					};
+					
+					/*
+					this.duration - 
+								this.endTrimSeconds - 
+							(timeInSeconds - firstTrackOffset);
+						
+					*/
+						
+					
+					this.setEndTrim = v => {
+						this.endTrimSeconds = v;
+						this.updateWidth()
+					};
+					
+					this.leftAmount = 0;
+					
+					this.updateWidth = () => {
+						
+						
+						_wdth = this.scale * (
+							this.duration - (
+								this.beginTrimSeconds +
+								this.endTrimSeconds
+							)
+						);
+						_oldW = _wdth
+						
+						if(!isw){
+						this.leftAmount = editSelf
+							.getTimePixel(
+								this
+								.timelineOffset/1000
+							);
+						var numb = numOrNoth(this.leftAmount)
+						}
+						//if(!isw)
+						if(!isw)
+						this.el.style.width = _wdth + "px"
+						
+						
+					//	this.el.style.marginLeft = numb+"px"
+						
+						this.editor.updateHolderSect()
+						
+						_oldW = _wdth
+						
+						if(!isw)
+						shelf.drawWaveform(0.1)	
+						
+					}
+					
+					Object.defineProperties(shelf, {
+						
+						data:{
+							get:()=>{
+
+								var sr = this.srcShtar.sampleRate
+								var t = this.totalTime
+								if(isBlank) {
+									return new Float32Array(sr*t)
+								}
+								
+								var stt = this.startTime/*seconds*/;
+								var startCut = this.beginTrimSeconds
+								
+								var endCut = this.endTrimSeconds
+								var orD = this.srcShtar.dayuhKoyl
+									.getChannelData(0)
+								return orD
+									.slice(
+										startCut*sr,
+										orD.length-endCut*sr
+									)
+								
+							}
+						},
+						aym:{
+							get:()=>{
+								return this.aym||editSelf;	
+							}
+						},
+						audInd:{
+							get:()=>{
+								return this.editor.audioTracks.indexOf(this)	
+							}
+						},
+						
+						isActive:{
+							get: () => ia,
+							set:  v => {
+								if(v) {
+									this.editor
+									.audioTracks.forEach(q=>{
+										q.isActive=false
+									})
+									
+									if(!isw)
+									el.classList.add("active")
+								} else {
+									if(!isw)
+									if(el.classList.contains("active"))
+										el.classList.remove("active")
+								}
+							}
+							
+						},
+						chooted: {
+							get: () => {
+								var ob = {
+									endTrimSeconds:this.endTrimSeconds,
+									beginTrimSeconds:this.beginTrimSeconds,
+									duration:this.duration,
+									width:this.width,
+									startTime:this.startTime,
+									endTime:this.endTime,
+									timelineOffset:this.timelineOffset,
+									scale: this.scale,
+									isActive:this.isActive,
+									shaym:this.shaym,
+									isBlank:this.isBlank,
+									totalTimw:this.totalTime,
+									srcShtar: this.srcShtar.chooted
+								}
+								return ob
+							}
+						},
+						timelineOffset: {
+							get: () => 	_timeOff,
+							set: v => {
+								//milliseconds
+								_timeOff = v;
+								if(this.offEl && this.isActive) {
+									this.offEl.value = _timeOff/1000	
+								}
+								
+								if(!isw){
+								this.el.style.left = ((_timeOff/1000) / editSelf.maxTime)
+									*editSelf.gTw()
+								
+								this.updateWidth()
+								}
+							}
+						},
+						
+						duration: {
+							get: () => 	{
+								//if(3||!this.isBlank){
+									return origD	
+							//	}
+								/**else {
+									return (this.timelineOffset / 1000
+									
+									- this.endTrimSeconds
+									-this.beginTrimSeconds)-
+									shelf.timelineOffset	/ 1000
+								}*/
+								
+							},
+							set: v => {
+								_scale = v;
+								this.updateWidth()
+							}
+						},
+						scale: {
+							get: () => 	_scale,
+							set: v => {
+								_scale = v;
+								this.updateWidth()
+							}
+						},
+						width: {
+							get: () => (
+								_wdth	
+							)
+						},
+						oldW:{
+							get:()=>_oldW
+						},//totalTime
+						startTime: {
+							get: () => (
+								shelf.timelineOffset	/ 1000
+								//returns seconds
+							)
+						},
+						totalTime: {
+							get: () => (
+								this.duration -
+								this.beginTrimSeconds
+								- this.endTrimSeconds
+								//returns seconds
+							)
+						},
+						endCut: {
+							get: () => (
+								this.startTime+
+								this.duration /*seconds*/
+								- this.endTrimSeconds
+								//returns seconds
+							)
+						},
+						endTime: {
+							get: () => (
+								/*milliseconds*/
+									this.timelineOffset / 1000	+ 
+									this.duration /*seconds*/
+									- this.endTrimSeconds
+									-this.beginTrimSeconds
+								//returns seconds
+							)
+						},
+						isTimelineTimeInRange: {
+							get: () => /*seconds*/timelineGeneralTime => {
+								var stt = this.startTime;
+								var endt = this.endTime
+								return timelineGeneralTime >= stt &&
+									timelineGeneralTime <= endt;
+							}
+						},
+						playAtTimelineTime: {
+							get: () => async timelineGeneralTime/*seconds*/ => {
+								if(this.isBlank) return
+								var stt = this.startTime/*seconds*/;
+								var timeToPlay = timelineGeneralTime 
+									- stt
+									+ this.beginTrimSeconds
+								
+								if(timeToPlay < this.duration) {
+									return await koylYawcheed.playFrom(
+										timeToPlay
+									)
+								}
+								return false;
+							}
+						},
+						pause: {
+							get: () => async () => {
+								if(this.isBlank) return
+								await koylYawcheed.pause()
+							}
+						}
+					})
+					
+					if(!isw) {
+					var cnv = document.createElement("canvas")
+					var ctx = cnv.getContext("2d")
+					el.appendChild(cnv)
+					cnv.style.cssText="width:100%;height:100%;"
+					function onr() {
+						cnv.width=cnv.clientWidth
+						cnv.height=cnv.clientHeight
+					}
+					onr()
+					cnv.onresize=onr;
+					
+					this.ctx = ctx;
+					
+					this.drawWaveform = async (minSec) => {
+						if(this.isBlank) return
+						onr()
+						var pres = this.srcShtar.getWaveformWithPrecision(
+							minSec,
+							this.beginTrimSeconds,
+							this.endTrimSeconds
+						)
+						ctx.clearRect(0,0,cnv.width,cnv.height)
+						ctx.beginPath()
+						ctx.strokeWidth = 2;
+						var ht = cnv.height - 10;
+						var x = 0;
+						var fac = cnv.width / pres.length
+						ctx.moveTo(x,cnv.height/2)
+						pres.forEach(q=> {
+							x += fac;
+							ctx.lineTo(x,cnv.height / 2 + q * ht)
+						});
+						ctx.lineTo(cnv.width,cnv.height/2)
+						ctx.stroke()
+						
+					};
+					
+					this.geelooy = (par,i="as") => {
+						var ch=Array.from(par.children)
+						
+						console.log(ch,i,this)
+						if(ch.length==0||i=="as"||i>ch.length-1)
+							par.appendChild(el)
+						else {
+							var oth=editSelf.audioTracks[i]
+							ch[i].insertAdjacentElement("beforeBegin",
+								el		  
+							)
+						}
+						
+						this.drawWaveform(0.1)
+					};
+					}
+					this.scale = _scale;
+					
+					shelf.timelineOffset = _timeOff;
+					
+					return this;
+				})()
+			};
+			
+			this.Holder = (ob={}) => {
+				var self=this;
+				this.audioTracks = []
+				this.addToLayer = (track,indexToAdd) => {
+					insInAr(this.audioTracks,indexToAdd,track)
+					if(typeof(track.geelooy)=="function") {
+						track.geelooy(this.el)	
+					}
+					track.aym=this;//container
+				};
+				this.el = document.createElement("div")
+				this.el.className="layer"
+				if(ob.av&&typeof(ob.av.appendChild)=="function") {
+					ob.av.appendChild(this.el)	
+				}
+				
+				
+				Object.defineProperties(this,{
+					data: {
+						get: () => {
+							var tst=this.audioTracks.map(q=>q.data)
+							var lng = 0
+							tst.forEach(q=>lng+=(q.length))
+							var myn=new Float32Array(lng)
+							var off=0;
+							tst.forEach(w=>{
+								myn.set(
+									w,off	
+								)
+								off+=w.length
+							})
+							return myn
+						}
+					}
+				})
+
+				this.increaseCurrentScale = am => {
+					this.updateCurrentScale(this.curScaleFac + am)	
+				}
+
+
+				this.decreaseCurrentScale = am => {
+					this.updateCurrentScale(this.curScaleFac - am)	
+				}
+
+				this.updateCurrentScale = am => {
+					this.curScaleFac = am;
+					this.audioTracks.forEach(at => {
+						at.scale = this.curScaleFac;
+					})
+
+
+					if(!isw)
+					var getWd = this.gTw()
+
+					if(!isw)
+					this.el.style.width=(getWd+self.audioTracks.length*2+36) + "px"
+
+					this.audioTracks.forEach(at => {
+						at.timelineOffset=at.timelineOffset
+					})
+				};
+				this.getTotalWidth=getTotalWidth;
+				this.getTracksAtTime=getTracksAtTime;
+				this.getEndtime=getEndtime;
+				
+				function getTotalWidth() {
+					var wd = 0
+					self.audioTracks.forEach(q=> {
+						wd += q.oldW;
+						//var nm = numOrNoth(q.leftAmount)
+						//wd += nm
+					})
+					return wd;
+				}
+				
+				function getTracksAtTime(time/*seconds*/) {
+					var tracks = []
+					self.audioTracks.forEach(q=> {
+						if(!q.isBlank);
+						if(q.isTimelineTimeInRange(time)) 
+							tracks.push(q)
+					})
+					return tracks;
+				}
+
+				function getEndtime() {
+					var longestTime = 0;
+					self.audioTracks.forEach(q=> {
+					//	if(q.totalTime > longestTime) {
+							longestTime += q.totalTime	
+					//	}
+					})
+					return longestTime
+				}
+				this.gEt=getEndtime;
+				this.gTw=getTotalWidth;
+				
+				this.updateHolderSect = () => {
+
+					var et = this.gEt()
+
+					self.maxTime = et;
+
+					if(!isw){
+					var getWd = this.gTw()
+				//	timeSeeker.style.width=
+					trackSects.style.width=(
+						getWd+
+						self
+						.audioTracks
+						.length*3+4
+					) + "px"
+					}
+				//	
+				};
+			};
+			
+			this.LayerHolder = () => {
+				/*this.layers = []
+				this.addToHolder = (layer,ind) => {
+					
+				};*/
+				Holder.call(this)
+			};
+			
+			this.Layer = () => {
+				Holder.call(this,...arguments);
+				
+				
+			};
+			
+			this.updateHolderSect = () => {
+				
+				var et = this.gEt()
+				
+				self.maxTime = et;
+				
+				if(!isw){
+				var getWd = this.gTw()
+			//	timeSeeker.style.width=
+				this.el.style.width=(
+					getWd+
+					self
+					.audioTracks
+					.length*3+4
+				) + "px"
+				}
+			//	
+			};
+			
+			this.addAudioTrack =  async(
+				shtar,
+				bt,
+				et,
+				offset="no",
+				adT=true,
+				ind="aw",
+				layerNum = 0
+			) => 
+		//	new Promise(async (r,j) => 
+						{
+				
+				var firstTime = offset
+				if(firstTime=="no") {
+					firstTime = this.gEt()*1000
+				}
+				
+				var nt = await new self.trackThing(shtar,bt,et,firstTime,ind,layerNum)
+				if(ind=="aw"){
+					ind=this.audioTracks.length
+				}
+			//	console.log(this.chooted)
+				if(!_layers[layerNum]){
+					_layers[layerNum] = new Editor.Layer({
+						av: trackSects	
+					})	
+				}
+				
+				insInAr(this.audioTracks,ind,nt)
+				_layers[layerNum].addToLayer(nt,ind)
+				
+				nt.scale = self.curScaleFac;
+			/*	
+				if(!isw)
+				nt.geelooy(trackSects,ind)
+				*/
+				this.updateHolderSect()
+				var et = this.gEt()
+				
+				self.maxTime = et;
+				
+				if(2||!adT) {
+				//	return nt;	
+				}
+				
+				//gl.saveData.timeline.audioTracks.push(nt)
+				if(!isw)
+				checkProjectFile()
+				
+				//r(nt)
+				return nt
+			}
+			
+			
+			
+			return this;
+		})()
+	}
+	function updateAudioTracks() {
+
+		if(!gl.saveData.timeline) {
+			gl.saveData.timeline = {}	
+		}
+		
+		gl.saveData.timeline.scale=gl.editor.curScaleFac
+		/*
+				if(!gl.saveData.timeline.audioTracks) {
+					gl.saveData.timeline.audioTracks = []	
+				}*/
+		gl.saveData.timeline.audioTracks = Array.from(
+			gl.editor.audioTracks	
+		)
+	}
+	
+	var ttm=[]
+	
+	function Shtar(en,te) {
+		
+		if(!te) {
+			te=gl	
+			
+		}
+		var isw=!!te.isWireless
+		this.name=en.name;
+		this.handle = en
+		var d = performance.now()
+		this.id = Date.now()+"_"+Math.random();//gl.makeID()
+		//if(!isw)ttm.push(performance.now()-d)
+		var self = this
+		return (async () => {
+			if(en.getFile) {
+				this.file = await en.getFile()
+				this.kind="file"
+			}
+			
+			if(en.kind == "directory") {
+				this.kind="folder"
+				this.files = await gf(en.values())
+				this.shtarim = await Promise.all(
+					this.files.map(async q=>
+						await new Shtar(q)							  
+					)
+				)
+			}
+			var otherSelf = this
+			this.koylYack = function() {
+				
+				var shtarShelf = otherSelf;
+				var self = this;
+				
+				return (async () => {
+					var _ct = 0;
+					var isPlaying = false;
+					var timePaused = 0;
+
+					var timeStarted = 0;
+					var offset = 0;
+
+					var src;
+
+					var crnT = () => te.koylEenyan.currentTime
+					Object.defineProperties(this, {
+						curTime: {
+							get: () => {
+								if(self.isp) {
+									_ct = ((
+										crnT()
+										- (timeStarted))+offset)
+								} else {
+								
+									_ct = self.tp
+								}
+								
+								
+								return _ct
+							},
+							set: v  => {
+								_ct = v;
+							}
+						},
+						src: {
+							get: () => src,
+							set: v  => {
+								src = v	
+							}
+						},
+						tp: {
+							get: () => timePaused,
+							set: v  => {
+								timePaused=v
+							}
+						},
+						isp: {
+							get: () => isPlaying,
+							set: v  => {
+								isPlaying=v
+							}
+						}
+					})
+
+
+					this.playFrom = async (startT,isor=true) => 
+						new Promise((r,j) => {
+
+							if(self.src) {
+								self.src.onended = () => {
+
+									self.src = null;
+									startIt(startT)
+									r(self.curTime,isor)
+								};
+								try {
+									self.src.stop()	
+								}
+								catch(e){
+									j("WOw dude like what just hapIned?!"+e)	
+								}
+							} else {
+								startIt(startT,isor)
+								r(self.curTime)
+							}
+
+						})
+
+					this.resume = async () => 
+						self.playFrom(self.curTime)
+					
+
+					this.pause = async () => {
+						return new Promise((r,j) => {
+							if(!self.src) j("wow dude like what r u thinking");
+							self.src.onended = () => {
+
+								self.tp = ((
+									crnT()
+									- (timeStarted))+offset)
+								
+								self.isp = false;
+								
+								self.curTime;
+								console.log(timePaused,self.tp,self.isp,self.curTime)
+								
+								self.src = null
+								r(self.curTime)
+							};
+							self.src.stop();
+						})
+					};
+
+					function startIt(startT,isOrig=true) {
+						self.src = te.koylEenyan.createBufferSource()
+						self.src.buffer=shtarShelf.dayuhKoyl
+						self.src.connect(te.koylEenyan.destination)
+						self.src.start(0,startT||undefined)
+						self.isp = true
+						if(isOrig) offset = startT;
+						timeStarted = crnT()
+						self.tp = timeStarted
+						self.curTime = startT
+						
+					}
+					
+					return this;
+					
+				})()
+				
+			}
+			
+			this.extension = (() => {
+				var ld = this.name.lastIndexOf(".")
+				if(ld < 0) return ""
+				var rest = this.name.substring(ld)
+				return rest;
+			})()
+			
+			this.awtsExt = (() => {
+				var ld = this.name.lastIndexOf("_")
+				if(ld < 0) return ""
+				var rest = this.name.substring(ld)
+				return rest;
+			})()
+			
+			if(!isw)
+			this.el = (() => {
+				var tm = document.createElement("div")
+				tm.className="btn binItem"
+				tm.innerHTML = this.name;
+				return tm;
+			})();
+			
+			this.wpr={
+				
+			}
+			
+			this.sampleRate=0
+			this.getWaveformWithPrecision =  (minSec,bt=0,et=0) => {
+				minSec = 1/minSec
+				
+				var wavT;
+				var cutar
+				var trimmed;
+				var newAr
+				var wpr=this.wpr
+				if(wpr[minSec]) {
+					cutar=wpr[minSec]
+				}else{
+					wavT= this.dayuhKoyl.getChannelData(0)
+					wavT = wavT.slice(0,wavT.length)
+
+					
+
+					var presSam = Math.floor(this.dayuhKoyl.sampleRate / minSec);
+					var secshins = Math.floor(wavT.length / presSam);
+					newAr = new Float32Array(secshins)
+
+					var i;
+					var inc = 0;
+					for(i = 0; i < wavT.length; i+= presSam) {
+						if(inc < secshins) {
+							newAr[inc] = wavT[i]
+							inc++;
+						}
+					}
+					cutar= newAr
+					wpr[minSec]=cutar
+				}
+				
+				var sma = Math.floor(this.dayuhKoyl.sampleRate / minSec)
+				
+				var trimmed = cutar.slice(
+					minSec * bt,
+					cutar.length - 
+					minSec * et
+				)
+				
+				
+				return trimmed;
+			};
+			
+			this.duration = () => {
+				if(this.dayuhKoyl) {
+					return this.dayuhKoyl.duration	
+				} else return 0;
+			}
+			
+			this.loadData = async () => new Promise(async (r,j) => {
+				//if(this.notAudio) j("wow")
+				if(this.dayuhKoyl) 
+					return r(this.dayuhKoyl)
+				
+				var foy = this.file
+				if(!foy) {
+					if(this.kind != "folder") {
+						j("Dude like what even is hapInIng?!")	
+					}
+					
+					var aud = this.shtarim.find(q=>
+						q.awtsExt.includes("_koyl")							
+					)
+					if(!aud)
+						j("ok dude like seerEeIsLee, no audio file even found!!!!")
+					
+					foy = aud.file;
+					var frame = this.shtarim.find(q=>
+						q.awtsExt.includes("_frameData")
+					)
+					if(frame) {
+						this.frame = frame;	
+					}
+				}
+				
+				if(!foy) {
+					j("still no awdeeyo faweeyl even found like what in the werAwl?!")	
+				}
+				
+				var fld = await te.readFileAsArrayBuffer(foy)
+				this.fileData = fld
+				var cawp = fld.slice(0,fld.length);
+				var k;
+				try {
+					k = await te.koylEenyan.decodeAudioData(cawp)
+				} catch(e) {}
+				if(!k) {
+					this.notAudio = true;
+					return j("no go");
+				}
+
+				this.dayuhKoyl = k;
+				this.sampleRate=this.dayuhKoyl.sampleRate
+				r(this.dayuhKoyl)
+
+				
+			});
+			
+			if(!isw)
+			this.el.onclick = async () => {
+				
+				await te.showPreev(this);
+			}
+			
+			if(!isw)
+			this.add = (bel) => {
+				var p = document.getElementById(bel)
+				if(!p) return;
+				p.appendChild(this.el);
+			};
+			
+			if(!isw)
+			this.remove = () => {
+				var iof = te.bin.indexOf(this)
+				if(iof < 0) return;
+				te.bin.splice(iof,1)
+				if(this.el.parentElement) {
+					this.el.parentElement.removeChild(this.el)	
+				}
+			};
+			
+			if(this.kind == "file") {
+				this.update = async cnt => {
+					var chooted = {}
+					if(cnt.timeline) {
+						chooted.timeline=cnt.timeline
+						/*
+						var tl = cnt.timeline.chooted;
+						if(cnt.timeline.isChooted)
+							chooted.timeline = cnt.timeline
+						else
+							chooted.timeline = tl
+							*/
+						var ad = cnt.timeline.audioTracks
+						if(ad) {
+							chooted.timeline.audioTracks = 
+								ad.map(w=>w?w.chooted:null)
+								.filter(q=>q)
+						}
+						
+					}
+					
+					if(cnt.shtareem) {
+						chooted.shtareem = cnt.shtareem.map(q=>
+							q.chooted									
+						)
+					}
+						
+					var tx = strOrNothing(chooted)
+					if(!tx) 
+						return null
+					var wr = await this.handle
+						.createWritable()
+					
+					await wr.write("BH"
+						+"\n/*<br>"
+						+"<style>#inv{display:none}"
+						+".tab{display:inline-block;width:32;height:5;}"
+						+"</style>"
+						+"<span id='inv'>"
+						+"<script>if(!window.awtsmoosify)"
+						+"window.awtsmoosify=d=>{"
+						+"aw=d;document.body.innerHTML+=JSON.stringify(d,0,4)"
+
+						+".split('    ').join('<div class=tab>&nbsp;</div>')"
+
+						+".split('\\n').join('<br>')}</"+"script>"
+						+"</span>"
+						+"*/=0;\n//<script>\n"
+						+"awtsmoosify(" + 
+							tx
+						+")"
+						+"//</"+"script>"
+					)
+					await wr.close();
+					return "Did it"
+				}
+			}
+			if(this.awtsExt == "_awts.html") {
+				this.kesser = true;
+				
+			}
+			
+			Object.defineProperties(this, {
+				chooted: {
+					get: () => {
+						var ob = {
+							name: this.name,
+							kind: this.kind,
+							id: this.id,
+						//	awtsExt: this.awtsExt,
+						//	extension: this.extension,
+							duration: this.duration()
+						}
+						if(this.kesser)
+							ob.kesser= this.kesser
+						return ob
+					}
+				}
+			})
+			return this;
+		})()
+	}
+	
+	function insInAr(ar,ind,it){
+		var ik=ar.length
+		ar.length++
+		var q
+		var m=new Array(ar.length-ind)
+		for(q=ind;q<ar.length;q++){
+			m[q]=ar[q];
+			//ar[q]=null
+		}
+		
+		ar[ind]=it
+		
+		for(q=ind;q<ik;q++){
+			ar[q+1]=m[q];
+			
+		}
+		return ar
+	}
+	
+	function numOrNoth(nm) {
+		var r = 0;
+		if(!isNaN(nm)) {
+			r = parseFloat(nm)	
+		}
+		return r;
+	}
+	function jon(ob) {
+		var r = null;
+		try {
+			return JSON.parse(ob)	
+		}catch(e){}
+		return r;
+	}
+	
+	
+	function strOrNothing(ob) {
+		var r = null
+		try {
+			r = JSON.stringify(ob)	
+		} catch(e) {}
+		return r;
+	}
+	
+	function strOrSame(ob) {
+		var r = ob
+		try {
+			r = JSON.stringify(ob)	
+		} catch(e) {}
+		return r;
+	}
+	async function gf(f) {
+		var l = []
+		for await(var k of f) {
+			l.push(k)	
+		}
+		return l
+	}
+	
+	function removeMultipleFromArray(ar,listOfIndexes) {
+		var filted = Array.from(listOfIndexes)
+
+		function remove1(i2r) {
+			ar.splice(i2r,1);
+			filted.splice(0,1)
+			if(filted.length) {
+				filted = filted.map(w=>w-1)
+				remove1(filted[0])
+			}
+		}
+		if(listOfIndexes.length)
+			remove1(filted[0])
+	}
+	gl.mkw=mkw
+	function mkw(fnc) {
+		var str = fnc+""
+		var indf = str.indexOf("{")
+		if(indf<0)return null;
+		var lstf = str.lastIndexOf("}")
+		if(lstf<0)return null;
+		var cnt = str.substring(indf+1,lstf)
+
+		var url = URL.createObjectURL(
+			new Blob(
+				[
+					eval("`"+cnt+"`")
+				],
+				{type:"application/javascript"})
+		)
+		var wrk = new Worker(url)
+		return wrk;
+
+	}
+</script>
