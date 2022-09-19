@@ -5,7 +5,7 @@ BH
 <div id="kin"></div>
 <button id=pl disabled=true>Play?</button>
 <script src="three.min.js"></script>
-<script src="GLTFLoader.js"></script>
+<script src="AwtsmoosGLB.js"></script>
 <script src="awtsmoos.js"></script>
 <style>
 	body{
@@ -27,11 +27,12 @@ BH
 		);
 		
 		var self=this
-		console.log("Got",as=url)
+		var ikarAwdum
+	//	console.log("Got",as=url)
 		AWTS.loadData([
 			url
 		]).then(r=>{
-			console.log("going")
+	//		console.log("going")
 			var world = new AWTS.Olam()
 			world.start()
 			wl = world;
@@ -39,7 +40,7 @@ BH
 			if(!frstGLB) {
 				return kin.innerHTML = "Make sure the main GLB is called 'yesod'"
 			}
-			console.log("gotstuff")
+		//	console.log("gotstuff")
 			if(frstGLB) frstGLB = frstGLB[0][1]
 			hj=frstGLB
 			var gl = new AWTS.Etsem({
@@ -50,16 +51,43 @@ BH
 			})
 			
 			var koylz=[]
-			var srckoyleem=getKoyleem("awdum")
-			vl=k=>eval(k)
+			var srcKoyleem=getKoyleem("awdum")
+			ikarAwdum = getAwdum()
+			if(ikarAwdum)
+				ikarAwdum = ikarAwdum.map(q=>q[1])[0]
+			var awdums
+			
 				
 			gl.on("loaded",d=> {
-				world.activeCam = gl.cameras[0]
-				loadKoyleem(srckoyleem,koylz).then(j=>{
+				
+				if(ikarAwdum) {
+					awdums = 
+						getAwdumsFromKoyleem(srcKoyleem,world)
+					
+					replaceAwdumPlaceholdersWithAwdum
+						(awdums,ikarAwdum,{olam:world})
+						.then(q=> {
+							console.log("hi",df=q)
+							now()
+						}).catch(e=>{
+							console.log("not?",e)
+							now()
+						})
+					
+				} else now()
+			
+				
+				
+				function now() {
+					world.activeCam = gl.cameras[0]
+				loadKoyleem(srcKoyleem,koylz).then(j=>{
 					if(typeof(op.canplay)=="function"){
 						op.canplay(self)	
 					}
-				})
+				})	
+				}
+				
+				vl=k=>eval(k)
 			})
 			
 			self.play = function play() {
@@ -75,14 +103,85 @@ BH
 			}
 			f = gl;
 			world.hoyseef(gl)
-		})
+			wl=world
+		});
 		
+		var basicInvis = new THREE.MeshBasicMaterial()
+		
+		function replaceAwdumPlaceholdersWithAwdum
+		(awdumPlaceholders, ikarAwdum, yaakov) {
+			return new Promise((r,j) => {
+				var ind = 0
+				var replaced = {}
+				var keys = Object.keys(awdumPlaceholders)
+				function do1() {
+					var cur = keys[ind]
+					
+					if(!cur) {
+						r({msg:"yay we did it!",replaced});
+					}
+					
+					var pl = awdumPlaceholders[cur]
+					if(!pl) return j({found:pl,message:"ok no placeholder"})
+					pl = pl[0]
+					
+					pl.material = basicInvis
+					pl.material.needsUpdate = true;
+					pl.material.visible = false
+					var cloned = addYaakov()
+					cloned.on("heesCheel", () => {
+						
+						cloned.pashut.position.setFromMatrixPosition(pl.matrixWorld)
+						
+						cloned.pashut.rotation.copy(pl.rotation)
+						
+						pl.attach(cloned.pashut)
+						//cloned.pashut.scale.copy(pl.scale)
+						ind++
+						do1()
+					})
+					replaced[cur] = cloned
+					
+					yaakov.olam.hoyseef(cloned)
+					
+					
+					
+				}
+				do1()
+			})
+		}
+		//matchAwdumsToKoyleem
+		function getAwdumsFromKoyleem(koy,world) {
+			var matched = {};
+			var names = koy.map(q=>
+				findExtensionAndRemove(				
+					removeAllNumbersFromString(
+						q[0].toLowerCase()
+						.split("audio").join("")
+						.split("awdum").join("")
+					), "."
+				)
+			)
+			console.log(w=names)
+			names.forEach(q=>{
+				var possibilities = AWTS
+					.FilterFromOlam(world, o => 
+						o.name.includes(q)
+					)
+				console.log(possibilities,names)
+				if(!matched[q])
+					matched[q] = possibilities
+				else console.log(q,"hi")
+			})
+			return matched;
+		}
 		function loadKoyleem(s,a){
 			var ind=0
 			return new Promise((r,j)=>{
 				function g1(){
 					var sc=s[ind]
-					if(!sc) return dn()
+					if(!sc || !sc[1]) return dn()
+					
 					var ad=document.createElement("audio")
 					
 					ad.oncanplay=()=>{
@@ -91,8 +190,8 @@ BH
 						
 					}
 					
-					ad.src=sc
-					console.log(",",m=ad,a)
+					ad.src=sc[1]
+					//console.log(",",m=ad,a)
 					ad.onerror=(n)=>{
 						dn()	
 						console.log(n)
@@ -109,18 +208,77 @@ BH
 				g1()
 			})
 		}
-							  
+		
+		var mNames = []
+		
+		function addYaakov() {
+			return new ATSMUS.Etsem({
+				domem:{
+					model:	ikarAwdum,
+					chayooseem:{
+						walk: "mihawlaych",
+						stand: "stand",
+						daven: "dawv",
+						attack: "attack"
+					},
+					culled:false,
+					hide: [
+						"solid"
+					],
+					sequences: {
+						peh: {
+
+							textures:mNames,
+							shaymDavar:"mouth"
+						}
+					}
+				}
+			});
+		}
+		
+		function getAwdum() {
+			return AWTS.getData("awdum",1)
+				.filter(q=>!q[0].toLowerCase().includes("audio"))
+				//.map(q=>q[1])[0]
+		}
+		
 		function getKoyleem(nm) {
 			var rez=[]
 			var awdumz=AWTS.getData(nm,1)
 			
-			return awdumz.map(i=>(
-				i[0].toLowerCase().includes("audio")?
-				i[1]:null
-			)).filter(q=>q)
+			return awdumz
+				.filter(q=>q[0].toLowerCase().includes("audio"))
+				/*.map(i=>(
+					i[1]
+				))*/
 				
 			
 		}
+	}
+	
+	function findExtensionAndRemove(str,ext) {
+		var last = str.lastIndexOf(ext)
+		if(last > -1) {
+			return str.substring(
+				0, last	
+			)
+		}
+		
+		return str;
+	}
+	function removeAllNumbersFromString(str) {
+		var rez = str;
+		var mat = rez.match(/\d+/);
+		if(!mat) return rez;
+		var ind = mat.index;
+		var matched = mat[0]
+		var sub = rez.substring(
+			0, ind
+		) + rez.substring(
+			ind+matched.length
+		);
+		console.log(sub,mat,ind);
+		return removeAllNumbersFromString(sub);
 	}
 	
 	var m = new Makor({

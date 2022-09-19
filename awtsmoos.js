@@ -8,128 +8,7 @@ OT = AW = AT = AWTS =
 ATZMUS;
 
 (function() {
-	function metafyrical() {
-	var met = Array.from(document.getElementsByTagName("meta"))
-	if(met.length < 1) {
-		bodiedNodes = []
-		var s = new MutationObserver(function(yo,k){
-			console.log(yo,bodiedNodes.map(x=>x.innerText))
-			yo.forEach(x=>{
-				x.addedNodes.forEach(y=> {
-					var name = y.nodeName
-					if(name[0] == "#")
-						name = name.substr(1)
-					var el = document.createElement(name)
-					var conten = y.innerHTML
-					var tx = y.innerText
-					el.innerHTML = conten || ""
-					if(!conten) el.innerText = tx || ""
-					bodiedNodes.push(el)
-					
-					y.parentNode.removeChild(y)
-				})
-			})
-    		
-		})
-		s.observe(document.body,{
-			childList:true
-		})
-		var prs = new DOMParser()
-		ps=prs
-		document.addEventListener("readystatechange", () => {
-			if(document.readyState == "complete") {
-				s.disconnect()	
-				var tx = document.documentElement.innerHTML
-				var ifr = document.createElement("iframe")
-				ifr.style.cssText = "border:0;position:absolute;"+
-					"left:0;top:0;width:100%;height:100%"
-
-				var dc = prs.parseFromString(tx,"text/html")
-				doyk = dc
-				w=ifr
-				
-				bodiedNodes.forEach(x=>{
-					dc.body.appendChild(x)
-				});
-				
-				var allTxt = document.documentElement.innerHTML
-				dc = prs.parseFromString(allTxt,"text/html")
-				document.documentElement.innerHTML = ""
-				
-				document.body.appendChild(ifr)
-				
-				var meto = document.createElement("meta")
-				meto.setAttribute("charset","utf-8")
-				ifr.contentDocument.head.appendChild(meto)
-				
-				var scr = document.createElement("script")
-				scr.src=location
-					.href
-					.substring
-				(0,location.href.lastIndexOf("/"))+"/"
-					+"atzmus2.js"
-				ifr.contentDocument.head.appendChild(scr)
-				scr.onload=()=>{
-				var sc = document.createElement("script")
-				sc.innerHTML="console.log(8889,window.A)"
-				
-				ifr.contentDocument.body.appendChild(sc)
-					
-					
-					bodiedNodes
-					.forEach(x => {
-						ifr.contentDocument.body.appendChild(x)
-					})
-				}
-				/*
-				Array
-					.from(
-					dc.head.children
-				)
-				.forEach(x => {
-					ifr.contentDocument.head.appendChild(x)
-				})
-				
-				Array
-					.from(
-					dc.body.children
-				)
-				.forEach(x => {
-					ifr.contentDocument.body.appendChild(x)
-				})
-				//ifr.contentDocument.documentElement.innerHTML=allTxt
-			/*	
-				
-				w = ifr;
-				Array
-					.from(
-					dc.body.children
-				)
-				.forEach(x => {
-					console.log(x,ifr.contentDocument)
-					
-				})
-			/*		ifr
-					.contentDocument
-					.documentElement
-					.innerHTML=///src=URL.createObjectURL(new Blob([
-					"<!DOCTYPE html><meta charset='utf-8'>" + 
-					dc
-					.documentElement
-					.innerHTML
-				], {
-					type:"text/html"	
-				}))
-*/
-				
-
-			}
-		})
-		console.log(ss=s)
-		/*
-		*/
-	}
-	}
+	
 	
 	var oyss = (new function() {
 		
@@ -582,11 +461,13 @@ ATZMUS;
 	var mawchsawn = {
 	    tzurahs: [], choymayreem: [],
 		mats:[],geoms:[],textures:[],images:[],
-		dataPacks:[]
+		dataPacks:[],
+		cache:[]
 	}
 	var mawchs = mawchsawn
 	
 	var madeMawchs = false;
+	
 	Object.defineProperties(ATZMUS, {
 		Osios: {
                 get: () => oyss
@@ -602,6 +483,39 @@ ATZMUS;
 				if(typeof(c) == "function") {
 					
 				}
+			}
+		},
+		dayuhCache: {
+			get: () => nm => {
+				return mawchsawn	
+					.cache.find(q=>q.name==nm)
+			}
+		},
+		setDayuhCache: {
+			get: () => (nm, data) => {
+				var am = mawchsawn.cache.find(q=>q.name==nm)
+				if(!am) {
+					
+					var fr = new FileReader()
+					var bl = new Blob([data])
+					return new Promise((r,j) => {
+						
+						fr.readAsDataURL(bl)
+						fr.onload = () => {
+							mawchsawn.cache.push({
+								name: nm,
+								dayuh: fr.result
+							})
+							
+							r(fr.result)
+						}
+						
+						fr.onerror = () => {
+							j(fr)
+						}
+					})
+				}
+				
 			}
 		},
 		getDataPackWith: {
@@ -738,6 +652,33 @@ ATZMUS;
 					}
 				})
 				return found;
+			}
+		},
+		
+		Filter: {
+			get: () => (obj,fnc) => {
+				if(typeof(fnc) != "function")
+					return;
+				var rez = []
+				obj.traverse(q=>{
+					if(fnc(q)) {
+						rez.push(q)	
+					}
+				})
+				return rez;
+			}
+		},
+		FilterFromOlam: {
+			get: () => (olam,fnc) => {
+				if(typeof(fnc) != "function")
+					return;
+				var rez = []
+				olam.traverse(q=>{
+					if(fnc(q)) {
+						rez.push(q)	
+					}
+				})
+				return rez;
 			}
 		},
 		FindDeepTolda: {
@@ -1006,12 +947,20 @@ ATZMUS;
 		},
 		html: {
 			get: () => AWTSMOOS.HtmlNode	
-		}
+		},
+		threeify: {
+			get: () => threeify	
+		},
+		
 	})
 	
-	
 thr=threeify
+if(window&&window.THREE)
+	threeify()
+	
 function threeify() {
+	if(AWTSMOOS.hasOwnProperty("Gavvan"))
+		return;
 	Object.defineProperties(ATZMUS, {
 		Gavvan: {
 			get: () => function col(op) {
@@ -2502,7 +2451,7 @@ function threeify() {
     				    can.width = 128 * this.pashut.scale.x
     				    can.height = 128 * this.pashut.scale.y
     				    var map = new THREE.CanvasTexture(can)
-    			        console.log(asd=this,this.pashut)
+    			 //       console.log(asd=this,this.pashut)
     				    this.pashut.material.map = map
     				    this.pashut.material.needsUpdate = true
     				    txt(ctx)
@@ -2678,10 +2627,11 @@ function threeify() {
 						this.makeUpdatable()
 					}
 				})
+				
 				var chayooseem = opts.chayooseem
 				var seq = opts.sequences;
-				
-				
+				var hiddenChildren = opts.hide || opts.hidden
+				var culled = opts.culled
 				var model = opts["model"]
 				var m = {
 					
@@ -2736,6 +2686,28 @@ function threeify() {
 								maeesuhz[a.name] = mixer.clipAction(a)
 								maeesuhz[a.name].play()
 								maeesuhz[a.name].paused = true
+							}
+						})
+					}
+					
+					if(culled === false) {
+						if(this.pashut) {
+							this.pashut.traverse(q=> {
+								q.frustumCulled = false
+							})
+						}	
+					}
+					
+					if(hiddenChildren) {
+						var found = false
+						hiddenChildren.forEach(q=> {
+							if(typeof(q) == "string") {
+								this.traverse(w=>{
+									if(found) return;
+									if(w.name == (q)) {
+										w.visible = false;	
+									}
+								})
 							}
 						})
 					}
@@ -2822,17 +2794,22 @@ function threeify() {
 						if(typeof(model) == "string") {
 							this.model = model
 						} else {
-							var geom = ATZMUS.Choymayrifier(
-								chomer
-							)
-							var	material = ATZMUS.Tzurification(
-									tzurah
+							if(model.isObject3D) {
+								m = model;
+								
+							} else {
+								var geom = ATZMUS.Choymayrifier(
+									chomer
 								)
-							var geomM = geom.malchus(),
-								matM = material.malchus()
+								var	material = ATZMUS.Tzurification(
+										tzurah
+									)
+								var geomM = geom.malchus(),
+									matM = material.malchus()
 
-							
-							m = new THREE.Mesh(geomM, matM)
+
+								m = new THREE.Mesh(geomM, matM)
+							}
 							this.ayshPeula("loaded", this)
 						}
 					}
@@ -2840,6 +2817,28 @@ function threeify() {
 				
 				var cameras = [];
 				Object.defineProperties(this, {
+					clone: {
+						get: () => () => {
+							if(!this.pashut) return;
+							var cloyned = this.pashut.clone()
+							var newOpts = opts
+							newOpts.model = cloyned;
+							console.log(ty=newOpts)
+							var doym = new AWTS.Domem(newOpts)
+							
+						}
+					},
+					traverse: {
+						get: () => q => {
+							if(typeof(q) != "function")
+								return;
+							if(!this.pashut) return;
+							if(typeof(this.pashut.traverse) != "function")
+								return;
+							
+							this.pashut.traverse(q)
+						}
+					},
 					cameras:{
 						get:()=>cameras
 					},
@@ -3066,15 +3065,25 @@ function threeify() {
 							if(typeof(str) == "string") {
 								
 								modelString = str
+								//var alreadyLoaded = AWTS
 								if(THREE.GLTFLoader) {
 									var l = new THREE.GLTFLoader()
-									l.load(modelString, gltf => {
-										
+									var exists = AWTS.dayuhCache(str)
+									if(exists) {
+										modelString = exists.dayuh
+										//console.log("try?",fg=modelString)
+									}
+									l.load(modelString, (gltf, dayuh) => {
+										this.gltf = gltf
+										if(!exists) {
+											AWTS.setDayuhCache(str, dayuh)
+										}
 										console.log("LOL a buy",er=gltf)
 										var gr;
 										if(gltf.cameras) {
 											cameras = gltf.cameras;
 										}
+										
 										animations = gltf.animations
 										if(gltf.scenes.length > 1) {
 										//	gr = new THREE.Group()
@@ -3091,6 +3100,19 @@ function threeify() {
 										}
 										
 										if(m) {
+											
+											var lights = AWTS.Filter(m,q=>
+												q.isLight						 
+											)
+											if(lights) {
+												this.gltf.lights = lights
+												lights.forEach(q=>{
+													if(q.intensity > 100)
+														q.intensity = 
+															(q.intensity / 1000)
+															*3
+												})
+											}
 											if(!alreadyLoaded) {
 												this.ayshPeula("loaded", this)
 												
@@ -3112,6 +3134,8 @@ function threeify() {
 											if(m.children) {
 												addCoyb(m.children)
 											}
+											
+											
 											
 										} else {
 											this.ayshPeula("problemLoading")
@@ -3738,6 +3762,15 @@ function threeify() {
 						get: () => (
 							renderer
 						)
+					},
+					traverse: {
+						get: () => q => {
+							if(typeof(q) != "function")
+								return;
+							if(scene) {
+								scene.traverse(q)	
+							}
+						}
 					},
 					scene: {
 						get: () => (
