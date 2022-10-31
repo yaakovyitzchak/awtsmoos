@@ -1,0 +1,72 @@
+BH
+<BR>
+  <button id="st">
+    Start
+  </button>
+  <div id="rosh">
+    <button id="hawvee">Hawvee shtar <br>(bring/ import file) </button>
+  </div><br>
+  <div id="koopuh">
+    
+  </div>
+  <div id="teemuh">
+    
+  </div>
+  <script src="Breeyuh.js"></script>
+  <script>
+    var b=new Breeyuh()
+    var inter
+    st. onclick=()=>{
+      if(!b.ready) {
+        b. start()
+        st.parentNode. removeChild(st)
+        interval=setInterval (()=>{
+          b.poyl("loop")
+        },20)
+      }
+    }
+    
+    hawvee. onclick=()=>{
+      if(!b.ready&&window. st) {
+        b. start()
+        st.parentNode. removeChild(st)
+      }
+      b.hawveeShtareem({
+        koylLoad: false
+      })
+      . then (s=>{
+        
+        var mkoys=[]
+        s. forEach(s=>{
+          var ad=new b.KoylMakor({
+            shtar:s
+          })
+          mkoys. push([ad,s])
+          b.taynliKoopuh(s)
+        })
+        tt=mkoys
+      //  console. log(999)
+        
+        b. all(mkoys, cr=>cr[0].masoyShtar(cr[1]), c=>console. log(c))
+        .then(()=>{
+        
+          refreshKoopuh()
+        })
+        
+       // mkoys[0][0].masoyShtar(s[0]). then(k=>console. log(8))
+      })
+    }
+    
+    function refreshKoopuh() {
+      koopuh.innerHTML=""
+      b.koopuh. list. forEach(kk=>{
+        var bt=document.createElement ("button")
+        bt.innerHTML=kk.shaym
+        koopuh. appendChild(bt)
+        bt. onclick=()=>{
+          b.teemuh(kk,teemuh)
+        }
+      })
+    }
+    
+  </script>

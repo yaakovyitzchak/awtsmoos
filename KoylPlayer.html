@@ -1,0 +1,173 @@
+/*BH
+<br>
+
+
+<div id="kin"></div>
+<button id=pl disabled=true>Play?</button>
+<!--<script src="three.min.js"></script>-->
+
+<script src="awtsmoos.js"></script>
+<style>
+	body{
+		background:yellow	
+	}
+</style>*/
+//<!--
+//<script>
+var isJS=true
+//</script>-->
+//<script>
+	alert(6677)
+	function Makor(op={}) {
+		var loyk = op.hash
+		var url=op.url;
+		var fail1=op.fail1
+		var fail2=op.fail2
+		if(!url){
+		try {
+			url = atob(loyk)
+		} catch(e) {
+		  if(typeof(fail1)=="function")
+		    fail1(e)
+			
+		}
+		if(!url) return (
+		  typeof(fail2)=="function"?fail2:0;
+	//		kin.innerHTML = "Hi! Actually, couldn't find any GLB file to load!"
+		);
+		}
+		var self=this
+		var ikarAwdum
+	//	console.log("Got",as=url)
+	function getLinks(txt){
+	  return txt.split("\n"). map(j=j. trim())
+	  . filter(t=>(t=>(t!="B\"H"&&t!="BH"))(t.toLowerCase()))
+	}
+	
+
+		fetch(url)
+		. then(r=>r. text())
+		.then(r=>{
+	//		console.log("going")
+	  var urls=getLinks(r)
+	  
+			var world = new AWTS.Olam()
+			world.start()
+			wl = world;
+			
+			
+			
+			var koylz=[]
+			var srcKoyleem=urls. filter(t=>t.includes(".ogg"))
+		//	alert(srcKoyleem)
+			
+				
+			
+				
+				 now()
+			
+				
+				
+				function now() {
+				  
+				loadKoyleem(srcKoyleem,koylz).then(j=>{
+					if(typeof(op.canplay)=="function"){
+						op.canplay(self)	
+					}
+				})	
+				}
+				
+				vl=k=>eval(k)
+			})
+			
+			self.play = function play() {
+				koylz.forEach(u=>{
+					u.play()
+				})
+			}
+				
+			
+		}
+		
+	//	var basicInvis = new THREE.MeshBasicMaterial()
+		
+	
+		function loadKoyleem(s,a){
+			var ind=0
+			return new Promise((r,j)=>{
+				function g1(){
+					var sc=s[ind]
+					if(!sc || !sc[1]) return dn()
+					
+					var ad=document.createElement("audio")
+					
+					ad.oncanplay=()=>{
+						a.push(ad)
+						dn()
+						
+					}
+					
+					ad.src=sc[1]
+					//console.log(",",m=ad,a)
+					ad.onerror=(n)=>{
+						dn()	
+						console.log(n)
+					}
+
+					function dn(){
+						if(ind++ <= a.length-1)
+							g1()
+						else
+							r()
+					}
+				}
+				//return 
+				g1()
+			})
+		}
+		
+		
+	function findExtensionAndRemove(str,ext) {
+		var last = str.lastIndexOf(ext)
+		if(last > -1) {
+			return str.substring(
+				0, last	
+			)
+		}
+		
+		return str;
+	}
+	function removeAllNumbersFromString(str) {
+		var rez = str;
+		var mat = rez.match(/\d+/);
+		if(!mat) return rez;
+		var ind = mat.index;
+		var matched = mat[0]
+		var sub = rez.substring(
+			0, ind
+		) + rez.substring(
+			ind+matched.length
+		);
+//		console.log(sub,mat,ind);
+		return removeAllNumbersFromString(sub);
+	}
+	
+	try{
+	if(!window.isJS)
+	var m = new Makor({
+	  hash:location.hash.substring(1),
+		canplay: m=>{
+			pl.disabled=false
+			pl.onclick=()=>{
+				m.play()	
+			}
+		}
+	})
+	
+	}catch(e){
+	  alert(e+"")
+	}
+	
+	
+//</script>
+	

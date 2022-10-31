@@ -212,7 +212,7 @@ ATZMUS;
 				else if(splat[i] == " ")
 					reezAr.push(" ")
 			}
-			console.log(voylzz, vw, vi, cr)
+			AWTS.log(voylzz, vw, vi, cr)
 			return reezAr.join("")
 		}
 		
@@ -352,7 +352,7 @@ ATZMUS;
 							}
 						})
 					}
-				//	console.log(arrayAtEndOfList,now[0],list,doesMatch,list)
+				//	AWTS.log(arrayAtEndOfList,now[0],list,doesMatch,list)
 					caseInd++;
 					doCase()
 				}
@@ -462,7 +462,9 @@ ATZMUS;
 	    tzurahs: [], choymayreem: [],
 		mats:[],geoms:[],textures:[],images:[],
 		dataPacks:[],
-		cache:[]
+		cache:[],
+		fonts:{}
+	
 	}
 	var mawchs = mawchsawn
 	
@@ -574,7 +576,64 @@ ATZMUS;
 				return !onlySome?fnd:founds;
 			}
 		},
-		
+		fonts: {
+		    get(){
+		         return mawchsawn.fonts
+		    }
+		},
+		loadFonts:{
+		    get:()=> (f)=>new Promise ((rz,j)=>{
+		        if(!THREE) j("no three")
+		        if(!THREE.isAwtsmoosifiedFont){
+		            AWTS.loadData([
+		                "FontLoader.js"
+		            ]). then(r=>{
+		              
+		                if(r) now()
+		                else j("no font loader")
+		            })
+		        }
+		       
+		        function now(){
+		            var cur=0;
+		            if(typeof f != "object") {
+		                f={
+		                    "hi ":f
+		                }
+		            }
+		            var mfonts=[]
+		            var loaded={}
+		            var k=Object. keys(f)
+		            get()
+		            function get(){
+		                var m=k[cur]
+		                if(!m){
+		                
+		                   mfonts.forEach(r=>{
+		                       mawchs.fonts[r[0]]=r[1]
+		                   })
+		                   
+		                   rz(loaded)
+		                   return
+		                }
+		                
+		                var path=f[m]
+		               AWTS. log(THREE.FontLoader+"",f,m,cur,k)
+		                var l =new THREE.FontLoader()
+		                l.load(path, font=>{
+		                    font.derech=path
+		                    mfonts.push([
+		                        m, font
+		                    ])
+		                    loaded[m]=font
+		                    cur++
+		                    get()
+		                    
+		                })
+		            }
+		        }
+		    })
+		},
 		loadData: {
 			get:()=>function(opts={}) {
 				return new Promise((rs,rj) => {
@@ -591,6 +650,7 @@ ATZMUS;
 					}
 
 					var it = 0
+					var gots=[]
 					function getIt() {
 						if(
 						1
@@ -601,6 +661,7 @@ ATZMUS;
 							scr.src = ar[it]//+".html"
 							document.head.appendChild(scr)
 							scr.onload = () => {
+							    gots.push(scr.src)
 								isDone()	
 							}
 						} else if(ar.length == 2) {
@@ -613,7 +674,7 @@ ATZMUS;
 								it++;
 								getIt();
 							} else {
-								rs(true)
+								rs(gots)
 							}	
 						}
 					}
@@ -765,9 +826,15 @@ ATZMUS;
 							} else rj({w,msg:"LOL what?"})
 						}
 					}
+					if(opts.fonts){
+						AWTS.loadFonts(opts.fonts).then((m)=>{
+						
+						AWTS.log(m,"fontific")
 					if(opts.dawfeem) 
 						ATZMUS.Dawfeem(opts.dawfeem).then(oyl)
 					else oyl(1)
+					}).catch(e=>AWTS.log(e))
+					}
 				})
 				
 			}
@@ -872,7 +939,7 @@ ATZMUS;
 							for(k in obj) {
 								var eventName = k
 								var fnc = obj[k]
-								//console.log("doing",k,fnc,obj)
+								//AWTS.log("doing",k,fnc,obj)
 								if(typeof(fnc) == "function") {
 									el.addEventListener(eventName, fnc)
 									if(!listenerFunctions[k]) {
@@ -1134,11 +1201,11 @@ function threeify() {
 									})
 									
 								})
-								console.log("yes", propsCurrent,
+								AWTS.log("yes", propsCurrent,
 									hoyvehChayoosZman
 								)
 							} else {
-							/*	console.log("?!",currentChayoosIndex,
+							/*	AWTS.log("?!",currentChayoosIndex,
 								nextChayoosIndex,i,c.zman,hoyvehChayoosZman,
 								n.zman
 								)*/
@@ -1247,7 +1314,7 @@ function threeify() {
 				}
 				
 				function hoyseefChayoosMaftayach() {
-					console.log("WHAT?!", makor)
+					AWTS.log("WHAT?!", makor)
 					if(makor && makor.chootify) {
 						hoyvehZman = Date.now() - startZman
 						if(meedosLiShomayr) {
@@ -1741,44 +1808,59 @@ function threeify() {
 			}
 		},
 		Taroves: {
-			get: () => function(opts = {}) {
+			get: () => function(fr = {}) {
 				ATZMUS.Heeoolee.call(this, ...arguments)
-				
+				var opts=fr;
+				if(typeof(fr)=="string") {
+				    opts={
+				        type:fr
+				    }
+				}
 				var type = opts.type || opts.basic,
 					base = opts.base,
 					map = opts.map || {},
 					defArgs = [1,1,1],
-					arguments2 = opts.arguments || opts.args || defArgs
+					arguments2 = opts.arguments || opts.args || defArgs || []
 					
 				if(arguments2) {
 					if(arguments2.constructor.name !== "Array") {
 			//			arguments2 = [arguments2]
 					}
 				}
+				
+		
 				var found = map[type],
-					pashut, constructor, myArgs
-					
+					pashut, constructor2
+					var myArgs = defArgs
 				if(window[base]) {
 					var it = window[base][found]
 					if(it) {
-						constructor = it
+						constructor2 = it
 						myArgs = arguments2
 						
 					} else if(base[opts.basic]) {
-						constructor = it
-						myArgs = defArgs
+						constructor2 =window[base][opts.basic]
+						
 					
+					} else{
+					    var k =Object.keys(map)
+					    if(k.length){
+					        constructor2 =window[base][map[k[0]]]
+					        AWTS.log ("binomial", k,base,map,constructor2)
+					    }
 					}
+					
+					AWTS.log (JSON.stringify(opts),myArgs,type,map[type],found,constructor2+"")
 					
 					Object.defineProperties(this, {
 						malchus: {
 							get: () => () => !pashut ? (
-								pashut = new constructor(...myArgs) 
+								pashut = new constructor2(...myArgs) 
 							) : pashut
 							|| null
 						},
 						constructor: {
-							get: () => constructor
+							get: () => constructor2
 						},
 						arguments: {
 							get: () => myArgs
@@ -1799,6 +1881,10 @@ function threeify() {
 		
 		Tzurification: {
 		    get: () => function(opts={}) {
+		        if(typeof(opts)=="string")
+		            opts={
+		                type:opts
+		            }
 		        if(!opts.arguments)
 		            opts.arguments = []
 		        if(opts.arguments.length < 1)
@@ -1831,6 +1917,11 @@ function threeify() {
 		},
 		Choymayrifier: {
 		    get: () => function(opts={}) {
+		        if(typeof(opts)=="string")
+		            opts={
+		                type:opts,
+		                arguments:[]
+		            }
 		        if(!opts.arguments)
 		            opts.arguments = []
 		        if(!opts.type)
@@ -1970,7 +2061,7 @@ function threeify() {
 										typeof(funct) == "function" ?
 											funct()
 										:	(()=>{
-											console.log("this " + 
+											AWTS.log("this " + 
 											funct + 
 											"isn't a function?!")
 										})()
@@ -2149,7 +2240,7 @@ function threeify() {
 				if(typeof(txt) == "string") {
 					if(typeof(tseeyooreem[txt]) == 
 					   "function") {
-					/*	console.log(ts.ctx,
+					/*	AWTS.log(ts.ctx,
 									ts.canvas,
 									tseeyooreem[txt],txt)*/
 						if(ts) {
@@ -2169,7 +2260,7 @@ function threeify() {
 				))
 				if(!g) {
 				/*
-					console.log("new texture!",g,realTx,
+					AWTS.log("new texture!",g,realTx,
 						finishedTxture,
 						mawchs.mats)*/
 					var lm=new THREE.
@@ -2376,7 +2467,7 @@ function threeify() {
 						nivra.ayshPeula("boray", this)
 
 						nivra.ayshPeula("ready", () => {
-							//console.log("iijiji",nivra)
+							//AWTS.log("iijiji",nivra)
 							
 							if(nivra.pashut) {
 								scene.add(nivra.pashut)
@@ -2451,7 +2542,7 @@ function threeify() {
     				    can.width = 128 * this.pashut.scale.x
     				    can.height = 128 * this.pashut.scale.y
     				    var map = new THREE.CanvasTexture(can)
-    			 //       console.log(asd=this,this.pashut)
+    			 //       AWTS.log(asd=this,this.pashut)
     				    this.pashut.material.map = map
     				    this.pashut.material.needsUpdate = true
     				    txt(ctx)
@@ -2600,9 +2691,85 @@ function threeify() {
 			}
 			
 		},
+		matchToBoundingBox:{
+		get:()=>(tm,base)=>{
+		   base.geometry.computeBoundingBox()
+		   
+		    var bb=base.geometry.boundingBox
+		    tm.scale.set(
+		        (bb.max.x-bb.min.x)*base.scale.x,
+		        (bb.max.y-bb.min.y)*base.scale.y,
+		        (bb.max.z-bb.min.z)*base.scale.z
+		    )
+		    base.parent.add(tm)
+		    tm.rotation.copy(base.rotation)
+		    console.log(JSON.stringify(base.matrixWorld ))
+		    tm.position.copy(base.position)
+			//    tm.position.setFromMatrixPosition(base.matrixWorld)
+		    
+	     tm.position.x+=tm.scale.x/2
+	     tm.position.y+=tm.scale.y/2
+	     tm.position.z+=tm.scale.z/2
+		    base.attach(tm)
+		    }
+		},
 		Domem: {
 			get: () => function(opts = {}) {
-				ATZMUS.Davar.call(this, ...arguments);
+			  var loaded = false
+				var onloadedFunctions = []
+				var otherListeners = (
+									opts.arguments &&
+									opts.arguments.listeners ||
+									opts.listeners
+								);
+				var	 lastened = addFunctionsAsArrayToObject(
+							{
+								...(
+									otherListeners
+								)
+							},
+							{
+								neeoor(){},
+								loaded(self) {
+								
+									loaded = true
+									onloadedFunctions.forEach(x => {
+										x()
+									})
+							
+								},
+								ready: funct => (
+									(tmp => 
+										!loaded ? 
+											onloadedFunctions.push(tmp)
+										: tmp()
+									)(() =>
+										typeof(funct) == "function" ?
+											funct()
+										:	(()=>{
+											AWTS.log("this " + 
+											funct + 
+											"isn't a function?!")
+										})()
+									)
+								),
+								set(data, self) {
+									var tmp = data => {
+										
+										(pash => 
+											pash
+											[data.property]
+											[data.subProperty] = data.value
+										)(self.pashut || {})
+									}
+									if(loaded) tmp(data)
+									else onloadedFunctions.push(() => tmp(data))
+								}	
+							}
+						)
+				
+			  opts.listeners=lastened
+				ATZMUS.Davar.call(this, opts);
 				
 				var self = this
 				this.hoyseefYesodos([
@@ -2614,7 +2781,8 @@ function threeify() {
 					"chomer",
 					"model"
 				])
-				
+				var maskInfo=opts.mask
+				var maskMesh
 				Object.defineProperties(this, {
 					pashut: {
 						get: () => m
@@ -2646,7 +2814,9 @@ function threeify() {
 					typeof(cb) == "function" ?
 						cb(opts) : 0
 				)
+				if(opts.color){
 				
+				}
 				tzurah = opts.material || opts.tzurah
 				chomer = opts.geometry || opts.chomer
 				var started = false;
@@ -2661,7 +2831,7 @@ function threeify() {
 				})
 				this.needsHeeshavoos=true
 				this.on("hissHavoos", (d) => {
-					//console.log(0)
+					//AWTS.log(0)
 					if(animations.length > 0) {
 						if(
 							mixer
@@ -2674,6 +2844,15 @@ function threeify() {
 				
 				var foundSequences = {}
 				this.on("cheedaysh", () => {
+				  if(maskInfo) {
+				      var geom=ATZMUS.Choymayrifier(maskInfo).malchus()
+				      var basic=AWTS.Tzurification("basic").malchus()
+				      var box=new THREE.Mesh(geom)
+				      AWTS.matchToBoundingBox(box,self.pashut)
+				      self.mask=box
+				      box.coyb=self
+				     box.material.visible=false
+				  }
 					if(!mixer) {
 						mixer = new THREE.AnimationMixer(m)
 					} else {
@@ -2772,6 +2951,9 @@ function threeify() {
 							
 							foundSequences[g].set(0)
 						}
+						
+						
+						
 					}
 					
 					this.on("finishedSet",a=>{
@@ -2785,6 +2967,8 @@ function threeify() {
 					})
 					mixer.update(0)
 					//this.makeUpdatable()
+					
+					this.ayshPeula("michoodish", self)
 				})
 				
 				this.on("boray", (olam) => {
@@ -2794,14 +2978,15 @@ function threeify() {
 						if(typeof(model) == "string") {
 							this.model = model
 						} else {
-							if(model.isObject3D) {
+						
+							if(model && model.isObject3D) {
 								m = model;
 								
 							} else {
 								var geom = ATZMUS.Choymayrifier(
 									chomer
 								)
-								var	material = ATZMUS.Tzurification(
+								var	 material = ATZMUS.Tzurification(
 										tzurah
 									)
 								var geomM = geom.malchus(),
@@ -2823,7 +3008,7 @@ function threeify() {
 							var cloyned = this.pashut.clone()
 							var newOpts = opts
 							newOpts.model = cloyned;
-							console.log(ty=newOpts)
+							AWTS.log(ty=newOpts)
 							var doym = new AWTS.Domem(newOpts)
 							
 						}
@@ -2916,12 +3101,19 @@ function threeify() {
 						)
 					},
 					color: {
-						get: () => this.tzurah?
-							this.tzurah.malchus().material.color:null,
+						get: () => self.pashut&&
+						  self. pashut. material?
+						  self. pashut. material. color: null, 
 						set: o => {
+						  //  this.pashut.material.color = new THREE.Color(o)
+						
 							if(!this.tzurah) return;
+							var t;
+							if(typeof this.tzurah=="string")
+							  t=this.tzurah
+							  else t=this.tzurah.type
 						    var exists = ATZMUS.Tzurification({
-						        type: this.tzurah.type,
+						        type: t,
 						        arguments: [
 						            {
 						                color: o
@@ -2972,7 +3164,7 @@ function threeify() {
 								.forEach(q=>{
 									this.playChayoos(q,settings)
 									
-							//	console.log(settings,q,222)
+							//	AWTS.log(settings,q,222)
 								})
 							} catch(e){
 								var er = settings.error
@@ -3039,10 +3231,10 @@ function threeify() {
 							if(act) {
 								if(!act.paused) return;
 								act.paused = false
-							//	console.log(settings,shaym,222)
+							//	AWTS.log(settings,shaym,222)
 								if(typeof(settings)=="object"){
 									
-									//	console.log("ih",act)
+									//	AWTS.log("ih",act)
 									Object.keys(settings)
 									.forEach(k=>{
 										if(act.hasOwnProperty(k)){
@@ -3057,7 +3249,7 @@ function threeify() {
 					},
 					model: {
 						get: () => {
-							//console.log("hi")
+							//AWTS.log("hi")
 							return model;
 						},
 						set: str => {
@@ -3071,14 +3263,14 @@ function threeify() {
 									var exists = AWTS.dayuhCache(str)
 									if(exists) {
 										modelString = exists.dayuh
-										//console.log("try?",fg=modelString)
+										//AWTS.log("try?",fg=modelString)
 									}
 									l.load(modelString, (gltf, dayuh) => {
 										this.gltf = gltf
 										if(!exists) {
 											AWTS.setDayuhCache(str, dayuh)
 										}
-										console.log("LOL a buy",er=gltf)
+										AWTS.log("LOL a buy",er=gltf)
 										var gr;
 										if(gltf.cameras) {
 											cameras = gltf.cameras;
@@ -3148,6 +3340,11 @@ function threeify() {
 				})
 			}
 		},
+		log:{
+		    get: ()=>(m)=>{
+		        
+		    }
+		},
 		Ayin: {
 			get: () => function(opts={}) {
 				ATZMUS
@@ -3193,6 +3390,8 @@ function threeify() {
 					originalCan =  opts.toyarim.originalCanvas
 					
 				}
+				
+				
 				var cb = ()=>{}
 				var loydid=false
 				if(dawfs) {
@@ -3217,6 +3416,9 @@ function threeify() {
 					this.on(x[0], x[1])
 				})
 				
+				if(opts.lights){
+				    setupLights()
+				}
 				html.forEach(x => {
 					htmlElements.push(new ATZMUS.HtmlNode(x))
 				})
@@ -3245,21 +3447,28 @@ function threeify() {
 			//	setupLights()
 				
 				function setupLights() {
+				/*
 					var light = new THREE.HemisphereLight(0xffffff, 0x444444)
 					light.position.set(0, 20, 0)
 					scene.add(light)
-					
+					*/
 					var light2 = new THREE.DirectionalLight(0xffffff)
-					light2.position.set(0, 20, 10)
+					light2.position.set(0, 20, 20)
+					scene.add(light2)
+					/*
+					var light2 = new THREE.HemisphereLight(0xffffff, 0x444444)
+					light2.position.set(0, 20, -20)
 					scene.add(light2)
 					
-					var light3 = new THREE.HemisphereLight(0xffffff, 0x444444)
-					light.position.set(0, 20, -20)
-					scene.add(light2)
-					
-					var light2 = new THREE.DirectionalLight(0xffffff)
-					light2.position.set(0, 20, -10)
+					var light3 = new THREE.DirectionalLight(0xffffff)
+					light3.position.set(0, 20, -10)
 					scene.add(light3)
+					
+					var light4 = new THREE.DirectionalLight(0xffffff)
+					light4.position.set(0, -20, -10)
+					scene.add(light4)
+					
+					*/
 				}
 				
 				this.on("heesCheelKavZireeka", () => {
@@ -3267,7 +3476,7 @@ function threeify() {
 						
 						de = originalCan || renderer.domElement
 						addEventListener("mousemove", e => {
-							//console.log(e)
+							//AWTS.log(e)
 							it=e
 							mouse.flatX = (
 								
@@ -3298,10 +3507,12 @@ function threeify() {
 				});
 				
 				addEventListener("mousedown", e => {
-					mouse.clicked = true;
+				    
+				mouse.clicked = true;
 					if(!curSelected) {
 						self.ayshPeula("kolYotzay")
 					}
+				
 				});
 				
 				addEventListener("mouseup", e => {
@@ -3326,7 +3537,7 @@ function threeify() {
 						
 					
 					
-						
+					/*
 					
 					if(is(meenim, "Array")) {
 						meenim.forEach(x => {
@@ -3348,6 +3559,8 @@ function threeify() {
 						);
 					
 					!meen && !meenim &&
+					*/
+					
 						castIt(
 							mapIt(nivrayim)
 							
@@ -3363,7 +3576,7 @@ function threeify() {
 								var other = Array.from(first)
 								for(let i = 0; i < other.length; i++) {
 									
-									if(other[i].children) {
+									if(other[i].children.length) {
 										other[i] = single(other[i])
 									}
 								}
@@ -3410,17 +3623,18 @@ function threeify() {
 									return ar.flat();
 								}
 							}
-							return ungroupIt(p.children).flat()
+							return p.coyb&&p.coyb.mask?p.coyb.mask:p//ungroupIt(p.children).flat()
 							
 						})(x.pashut))
 					}
 					function castIt(list) {
-
-						list = list.flat()
+      
+					//	list = list.flat()
 
 						
 						caster.setFromCamera(mouse, camera);
 						inter = caster.intersectObjects(list)
+							  
 						is(mawtzatzaw, "Function") && 
 						inter.length > 0 ? (() => {
 							mawtzatzaw(
@@ -3477,7 +3691,83 @@ function threeify() {
 						self.ayshPeula("maftayachLimahtuh", e)
 					})
 				})
+				var draggable=false
+				this.on("drag",(op={})=>{
+				  if(draggable) return
+				  draggable=true
 				
+				  var startP={
+				    
+				  }
+				  var startCamP={
+				    
+				  }
+				  var curP={
+				    
+				  }
+				  var difx=0
+				  var dify=0;
+				  var min=op.min||{}
+				  var miny=min.y||-99999
+				  var max=op.max||{}
+				  
+				  var maxy=max.y||999999
+				  function  move(){
+			//	    console.log(Object.entries(curP),Object.entries(startP))
+			      difx=startP.screenX-curP.screenX
+			      dify=-startP.screenY+curP.screenY
+			      var newy=startCamP.y+(dify/20)
+			      if(newy>=miny)
+			       self.activeCam.position.y=newy
+			     else self.activeCam.position.y=miny;
+			     
+			     if(newy<=maxy)
+			      self.activeCam.position.y =newy
+			      else self.activeCam.position.y =maxy
+			      
+			     startCamPos=self.activeCam.position
+			     startP=curP
+				  }
+				  function start(m){
+            startP=m
+				    dragging=true
+				    startCamP=self.activeCam.position
+				  }
+				  var dragging=false
+				  addEventListener ("touchstart",e=>{
+				    start(e.touches[0])
+				  })
+				  addEventListener ("scrollstart",e=>{
+				    start(e)
+				  })
+				  
+				  
+				  addEventListener("scroll",e=>{
+				    curP=e
+				    move()
+				  })
+				  addEventListener ("touchmove",e=>{
+				    curP=e.touches[0]
+				    move()
+				  })
+				  
+				  addEventListener("touchend",e=>{
+				    dragging=false
+				  })
+				  addEventListener("dragstart",e=>{
+				    start(e)
+				  })
+				  
+				  addEventListener("drag",e=>{
+				    curP=e
+				    move()
+				  })
+				  
+				  addEventListener("dragend",e=>{
+            dragging=false
+				  })
+				  
+				})
 				this.on("makeThingsClickable", (potentshul) => {
 					
 					this.ayshPeula("heesCheelKavZireeka")
@@ -3489,12 +3779,13 @@ function threeify() {
 					
 					var startedClicked = false,
 						startedDown = false, obj = null
-					this.on("hissHavoos", () => {
+					 addEventListener ("mousedown",() => {
 						
 						this.ayshPeula("kavZorayk", {
 							meen,
 							meenim,
 							mawtzatzaw(zeeveem) {
+							
 								if(
 									zeeveem[0].object != obj 
 									&& obj !== null
@@ -3605,6 +3896,9 @@ function threeify() {
 					},
 					hoyseefDaf: {
 						get: () => hoyseefDaf
+					},
+					lights:{
+					    get:()=>()=>setupLights()
 					},
 					dafeem: {
 						get: () => dafim

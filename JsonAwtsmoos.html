@@ -1,0 +1,395 @@
+B"H
+<br>
+<h2>
+  JsonAwtsmoos!
+</h2>
+<button id="sv">shmoyr?<br>[save]</button>
+<br>
+<textarea placeholder="output" id="output"></textarea><br><br>
+<button id="ldv">mawsoy?<br>[load]</button>
+<br>
+<textarea placeholder="input JsonAwtsmoos" id="it"></textarea><br><br><br>
+<select id="base">
+  <option value="Object">Object</option>
+  <option value="Array">Array</option>
+  
+</select>
+<label for="base">base (deletes current) </label>
+<br><br>
+<button id="hys">Hoyseef? <br>[add]</button>
+<div id="kint"></div>
+<style>
+  .awv{
+    margin-left:15px;
+    margin-top:15px;
+  }
+</style>
+<script>
+alert(8)
+  hys.onclick=()=>hoys(kint, !isar, awveenoos);
+  
+  var br=document.createElement("br")
+  
+  
+  var awveenoos=[]
+  
+  
+  
+  var y=hoys(kint,true,awveenoos)
+  
+  var val=()=>y.val()
+  
+  function chb(v){
+    kint.innerHTML=""
+    awveenoos=[]
+    base.value=v
+  }
+  var isar=false
+  base.onchange=()=>{
+    kint.innerHTML=""
+    awveenoos=[]
+    if(base. value=="Array"){
+      hoys(kint, false,awveenoos)
+      isar=true 
+    } else{
+      hoys(kint, true,awveenoos)
+      isar=false
+    }
+  }
+  sv.onclick=()=>{
+    output.value=JSON.stringify(val())
+  }
+  
+  ldv.onclick=()=>{
+    var prs
+    try{
+      prs=JSON.parse(it.value)
+    } catch(o){
+      
+    }
+    if(!prs) {
+      return
+    }
+    
+    var ty=typeof (prs)
+    if(ty!="object") return
+    var y
+    var ar=prs.constructor.name=="Array"
+    if(ar){
+      chb("Array")
+      prs.forEach(k=>{
+        y=hoys(kint,false,awveenoos, k)
+      })
+    } else{
+      chb("Object")
+      Object.keys(prs).forEach (k=>{
+        var obj={}
+        obj[k]=prs[k]
+         y=hoys(kint,true,awveenoos,k,prs[k])
+      })
+     
+    }
+    if(y){
+      window.val=()=>y.val()
+    }
+  }
+  function hoys(kin, hasKey=true,pawvs,k,val){
+    var entry=k
+    
+    if(hasKey){
+      entry=val
+    }
+    var ent=entry;
+  
+    
+    var awv=document.createElement("div")
+    if(hasKey){
+    var key=document.createElement ("input")
+    if(ent){
+      key.value=k
+    }
+    awv. appendChild(key)
+    }
+    awv.className="awv"
+    
+    
+    
+    
+    
+    kin.appendChild(awv)
+ //   kin.appendChild(br.cloneNode())
+    
+    var rem=document.createElement("button")
+        rem.innerHTML="remove"
+        rem.className="removeAr"
+        rem.onclick=()=>{
+          
+          var ind=pawvs.indexOf(awv)
+          if(ind>-1)
+            pawvs.splice(ind,1)
+          if(kin.seaLake)
+            kin.seaLake()
+            else {
+              kin.removeChild(awv)
+            }
+        }
+        
+        
+    
+    
+    
+        
+    
+    var ty=document.createElement("select")
+    ty.className="meent"
+    
+    
+    
+    
+    
+    
+    
+    awv.appendChild(ty)
+    
+    
+    
+    
+    var arr=document.createElement("option")
+    arr.value=arr.innerHTML="String"
+    
+    
+    
+    ty.appendChild(arr)
+    
+    
+    var arrn=document.createElement("option")
+    arrn.value=arrn.innerHTML="Number"
+    ty.appendChild(arrn)
+    
+    
+    var arr1=document.createElement("option")
+    arr1.value=arr1.innerHTML="Array"
+    ty.appendChild(arr1)
+    
+    
+    var arr1=document.createElement("option")
+    arr1.value=arr1.innerHTML="Object"
+    ty.appendChild(arr1)
+    
+    
+    
+    var valHolder=document.createElement("div")
+    valHolder.className="valHolder"
+    awv.appendChild(valHolder)
+    
+    awv.appendChild(rem)
+    ty.onchange=()=>updateMeen(ty.value,valHolder)
+    updateMeen(ty.value,valHolder)
+    
+    var vll=()=>valHolder.val()
+    awv.val=()=>hasKey?({
+      [key.value]:vll()
+    }):vll()
+    if(!kin.awveenoos){
+      kin.awveenoos =[]
+    }
+    pawvs.push(awv)
+    if(ent){
+        var en=entry
+        if(entry&&typeof(entry)=="object"&&entry. constructor. name!="Array"){
+          ty.value="Object"
+        } else if(entry&&typeof (entry)=="object") {
+          ty. value="Array"
+        } else if(typeof(entry)=="number") {
+          ty.value="Number"
+        } else if(entry){
+          ty.value="String"
+        }
+        updateMeen(ty.value,valHolder,en)
+    }
+    
+    
+    function getVal(awveenoos){
+      var valAr=awveenoos.map(k=>k.val());
+      if(hasKey){
+     //   return [valAr,awveenoos.length]
+        var ob={}
+        valAr.forEach (r=>{
+          Object.keys(r).forEach (f=>{
+            ob[f]=r[f]
+          })
+        })
+        
+        return ob
+      } else {
+        return valAr
+      }
+    }
+    
+    
+    return ({
+      val:()=>getVal(pawvs),
+      type:hasKey?"Object": "Array",
+      awveenoos:()=>pawvs
+    })
+  }
+  
+  
+  function updateMeen(mn,valHolder,deef){
+      
+      if(mn=="String") {
+        doString(valHolder,deef)
+      }
+      
+      if(mn=="Number"){
+        doNumber(valHolder,deef)
+      }
+      if(mn=="Array"){
+        doArray(valHolder,deef)
+      }
+      
+      if(mn=="Object"){
+        doObj(valHolder,deef)
+      }
+    }
+    
+    function doString(par,deef="") {
+      var inp=document.createElement("input")
+      
+      par.innerHTML=""
+      
+      par.appendChild(inp)
+      par.val=()=>inp.value
+      par.firstVal=par.val;
+      par.setv=v=>inp.value=v
+      inp.value=deef
+    }
+    
+    function doNumber(par,deef=""){
+      var inp=document.createElement("input")
+      inp.type="tel"
+      var l=""
+      var nt=" "
+      inp.oninput=e=>{
+        if(isNaN(inp.value)||nt.split("").includes(inp.value)){
+          inp.value=l
+        } else{
+          l=inp.value
+        }
+        
+      }
+      par.innerHTML=""
+      
+      par.appendChild(inp)
+      par.setv=v=>!isNaN?inp.value=v:0
+      par.val=()=>parseFloat(inp.value)
+      if(!isNaN(deef)){
+        inp.value=deef
+      }
+    }
+    
+    function doArray(par,deef=""){
+      
+      var fr=""
+      if(par.val)
+        fr=par.val()
+      par.innerHTML=""
+      var btna=document.createElement("button")
+      btna.className="buttonAr"
+      btna. innerHTML=("add array element")
+      par.appendChild(btna)
+      btna.onclick=()=>{
+        addArr()
+      }
+      
+      var arAwv=document.createElement("div")
+      arAwv.className="array"
+      par.appendChild(arAwv)
+      
+      var itt
+      var inps=[]
+      var awvs=[]
+      
+      par.seaLake=()=>{
+        par.removeChild(arAwv)
+      }
+      function addArr(vl="") {
+        var sec=document.createElement("div")
+        /*
+        var el=document.createElement("input")
+        el. className="arrEl"
+        el.value=vl*/
+        arAwv.appendChild(sec)
+        itt=hoys(sec, false,awvs,vl)
+        //inps.push(el)
+        
+        /*
+        sec.appendChild(el)
+        sec.appendChild(rem)
+        
+        return el
+        */
+      }
+    //  itt.val=()=>
+     par.val=()=>itt.val()
+     par.setv=(v)=>{
+       
+     }
+     
+     if(deef&&typeof(deef)=="object" && deef. constructor. name=="Array"){
+       
+       deef.forEach(k=>{
+         /*
+         awvs.push({
+           val:()=>k
+         })*/
+         addArr(k)
+       })
+     } else addArr(fr)
+   //   par.firstVal=par.val[0]||"hi"
+      
+    }
+    function doObj(p,deef){
+      p.innerHTML=""
+      var b=document.createElement("button")
+      p.appendChild(b)
+      b.innerHTML="add object key- value pair"
+      b.onclick=()=>{
+        addo()
+      }
+      var ohl=document.createElement("div")
+      ohl.className="objh"
+      p.appendChild(ohl)
+      
+      var itt
+      var awvs=[]
+      p.seaLake=()=>{
+        p.removeChild(ohl)
+      }
+      
+      function addo(k,ent){
+        var sec=document.createElement("div")
+        ohl.appendChild(sec)
+        itt=hoys(sec, true, awvs,k,ent)
+      }
+      
+      p.val=()=>//itt.awveenoos()?getVal(itt.awveenoos()):
+      itt.val()
+      if(deef&&typeof(deef)=="object"){
+       Object.keys(deef).forEach(k=>{
+         var obj={}
+         obj[k]=deef[k]
+         addo(k,deef[k])
+         /*
+         awvs.push({
+           val:()=>({
+             [k]:deef[k]
+           })
+         })*/
+       })
+     } else {
+      addo()
+     }
+      
+    }
+</script>
