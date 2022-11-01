@@ -1,5 +1,8 @@
 # B"H
-# reebooyaw
+# Awtsmoos
+
+awtsmoos.com
+
 Video and game based engine, with tile-based movement and other editors for textures and stuff
 
 for tile game just arrow keys and WASDQE to move, space to jump.
@@ -20,4 +23,4 @@ press enter to start typing commands, so far only commands are:
 
 --for Beis Hameekdawsh game [works on mobile], similar, WASD to move or the movement pad, Space to jump
 
-From page at https://yaakovyitzchak.github.io/reebooyaw/
+
