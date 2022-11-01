@@ -1,4 +1,13 @@
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="Peuluh.js"></script>
+    
+  </head>
+  <body>
 <div class="BH"></div>B"H</div>
+
 <br>
 <br>
 <button id="taweel">
@@ -24,23 +33,43 @@
     
     }
   </style>
-  <script src="Koylier.js"></script>
-  <script src="Breeyuh.js"></script>
+ 
+  
   <script>
-  var analyze=true
-  var bree=new Breeyuh();
+  var koyl;
+  function awtsKoyl() {
+    return new Promise((r,j)=>{
+      function mk() {
+        removeEventListener ("awtsMoosified",mk)
+        r(koyl)
+        
+      }
+      if(koyl) {
+        r(koyl)
+      } else addEventListener("awtsMoosified",mk)
+    })
+    
+  }
+  
+  ls([
+    "ZmanKavShoymayuh.js",
+    "Koylier.js"
+  ]). then(()=>{
   if(window. Makor){
+    var analyze=0
     taweel. innerHTML = "click to start"; 
     taweel.classList. toggle("roychawv")
     taweel.onclick=()=>{
       taweel. disabled=true
       taweel. innerHTML="loading koyl dayuh<br>(audio data)"
-      bree. start()
+      
       var a=new Makor()
       a.get({
         hash: location. search//location.hash
           .substring (1)
       }).then(p=>{
+        window. koyl=p
+        
       //  document.body.innerHTML="what?"+p
      // document.body.innerHTML=(p. koyleem[0]. keys). join("<br>")
      // document.body.innerHTML =(p.koyleem[0]. audio. buffered. end(0)) 
@@ -58,9 +87,35 @@
               p. pause()
             }
           }
+          dispatchEvent(new Event("awtsMoosified"))
         }
         
         if(analyze) {
+          doAnalyze()
+          
+          
+        } else dn()
+        
+      }).catch(s=>{
+        console. log(s)
+        document.body.innerHTML=s+"vi"
+      })
+    }
+  } else document.body.innerHTML +="<br>[files didn't actually load properly] !"   
+  function contact()  {
+    return 'contact <a href="mailto:whatAmEyeDoingWithMyLife@Awtsmoos.com">Awtsmoos</a> for help'
+  }
+  
+  function doAnalyze() {
+    Makor.loadScript("Breeyuh.js"). then(h=>loaded)
+    . catch(e=>{
+      taweel. innerHTML="hmm something happened"
+      console. log(e)
+    })
+    taweel. innerHTML="loading script"
+    document. body. appendChild(sc)
+    function loaded() {
+      var bree=new Breeyuh();
           taweel. innerHTML = "processing koylos (/ sounds)..."
           p. goyluhmeem(). then(g=>{
             console. log(pt=g)
@@ -78,17 +133,10 @@
             console. log(e)
             taweel. innerHTML = "had some trouble. check the console, "+contact()
           })
-          
-          
-        } else dn()
-        
-      }).catch(s=>{
-        console. log(s)
-        document.body.innerHTML=s+"vi"
-      })
     }
-  } else document.body.innerHTML +="<br>[files didn't actually load properly] !"   
-  function contact()  {
-    return 'contact <a href="mailto:whatAmEyeDoingWithMyLife@Awtsmoos.com">Awtsmoos</a> for help'
   }
+  })
+  
   </script>
+  </body>
+  </html>

@@ -17,23 +17,105 @@ function Makor(otp={}){
           }).catch(j=>jh(j))
         }).catch(h=>jh(h))
       } else {
-        
+        op=lowerCaseify(op)
         var koyleemLinks=op.koyleem||op.audio||op.voices||op.sounds
-        var lk=op.loaded||op.loadedKoyleem||op.lk
+        var lk=op.loaded||op.loadedkoyleem||op.lk
         var derech=op.derech||"./"
+        var dayuh = op.dayuh;
+        var ksawv/*script*/=op. script||op.ksawv
         if(koyleemLinks) {
          // rd(JSON. stringify(op))
           getKoyleem(koyleemLinks, derech).then(r=>{
             if(typeof(lk)=="function"){
               lk(r)
             }
-            rd(r)
+            if(dayuh) {
+              getDayuh(dayuh,derech). then(d=>{
+                r.dayuh=d;
+                if(typeof(ksawv)=="string") {
+                  console. log("mukk",derech,ksawv)
+                  Makor.loadScript(derech+"/"+ksawv)
+                  . then(h=>{
+                    console. log("striving")
+                    rd(r)
+                  }). catch(e=>{
+                    console. log(e)
+                    rd(r)
+                  })
+                } else
+                  rd(r)
+              })
+            } else
+              rd(r)
           }).catch(j=>jh(j))
         } else jh("LOL nothing")
   }
     })
   }
   
+  function getDayuh(dy,dr) {
+    var  cr=0
+    var rez={}
+    var keys=null
+    return new Promise((r,j)=>{
+      if(typeof(dy)=="object")
+        g1()
+      else j()
+      function g1() {
+        if(! keys) {
+          keys=Object. keys(dy)
+        }
+        var c=dy[keys[cr]]
+        if(!c) {
+          r(rez)
+        } else {
+          var ob={}
+          
+          getFile(dr+"/"+c,y=>y.blob())
+          . then(t=>{
+            t.arrayBuffer(). then(ab=>
+              dn(new Uint8Array(ab))
+            )
+            
+          }). catch(e=>{
+            console. log(e)
+            dn()
+          })
+          
+          function dn(d) {
+            rez[keys[cr].toLowerCase()] = d;
+            cr++;
+            g1()
+          }
+        }
+      }
+    })
+  }
+  
+  function getFile(url,fn) {
+    var cb=typeof(fn)=="function"? fn:
+      r=>r. text;
+    return new Promise((rs,j)=>{
+      fetch(url)
+      . then(cb)
+      . catch(j)
+      . then(r=>{
+        rs(r)
+      })
+      . catch(j)
+    })
+  }
+  
+  function lowerCaseify(ob) {
+    if(ob === null || typeof (ob)!="object")
+      return ob
+    var rt={};
+    var k
+    for(k in ob) {
+      rt[k. toLowerCase()] = ob[k]
+    }
+    return rt
+  }
   this. kool=null
   var s=this
   function getKoyleem(klz,b="./") {
@@ -135,10 +217,10 @@ function Makor(otp={}){
     return new Promise((r,j)=>{
           var ad=document.createElement("audio")
 					
-					ad.oncanplay=()=>{
+					ad.addEventListener("loadedmetadata",()=>{
 						r(ad)
 						
-					}
+					})
 					
 					ad.src=info
 					//console.log(",",m=ad,a)
@@ -152,6 +234,7 @@ function Makor(otp={}){
 }
 
 function KoylGoof(){
+  peuluh. call(this)
   var koyleem=[]
   this. push=(h)=>{
     koyleem. push(h)
@@ -172,10 +255,20 @@ function KoylGoof(){
     
   }
   var playing=false
-  
+  var self=this
   Object. defineProperties(this, {
     koyleem: {
       get: ()=> koyleem
+    },
+    dayuh:{
+      set(v) {
+        Object. keys(v). forEach(y=>{
+          var sh=koyleem. find(g=>g. shaym. toLowerCase()==y)
+          if(sh) {
+            y.gawleemB=v[k]
+          }
+        })
+      }
     },
     setMikoyros: {
       get: ()=>mks=>{
@@ -230,21 +323,43 @@ function KoylGoof(){
     playing: {
       get: ()=> playing
     },
-    length: {
-      get: ()=> {
-        var lengths=koyleem. map(u=>
-          u. length
-        )
+    longest:{
+      get:()=>fnc=> {
+        if(typeof(fnc)!="function") {
+          fnc=(k)=>k;
+        }
+        var lengths=koyleem. map(fnc)
         var longest=Math.max(
          ... lengths
         )
-        return longest || koyleem. length
+        return longest
+      }
+    },
+    duration: {
+      get:()=>{
+        
+        return this. longest(u=>
+          u. duration
+        )
+      }
+    },
+    currentTime: {
+      get:()=>{
+        return this. longest(u=>u.currentTime)
+      }
+    },
+    length: {
+      get: ()=> {
+        
+        return koyleem. length
       }
     },
     play: {
       get: ()=>()=>{
         koyleem. forEach(k=>{
-          k.play()
+          k.play(). then(k=>{
+            self. poyl("play")
+          })
           playing=true
           
         })
@@ -253,7 +368,9 @@ function KoylGoof(){
     pause: {
       get: ()=>()=>{
         koyleem. forEach(k=>{
-          k.pause()
+          k.pause(). then(r=>{
+            self. poyl("pause")
+          })
           playing=false
           
         })
@@ -269,24 +386,47 @@ function Koyl(o={}){
   
   this.  error=o.error
   
-  this.  play=()=>{
-    this. audio. paused=false
-    this. audio. play()
-  }
-  this. pause=()=>{
-    this. audio. paused=true
-    if(typeof(this. audio. pause)=="function") {
-      this. audio. pause()
-    }
-  }
+  
+  
   
   var length=0
-  
+  var gawleem
   /*
   this. audio. currentTime=Number. MAX_SAFE_NUMBER
   length=this. audio. currentTime
   this. audio. currentTime=0*/
   Object. defineProperties(this, {
+    play: {
+      get: ()=>()=>new Promise((r,j) => {
+        this. audio. paused=false
+        this. audio. play(). then(r)
+      })
+    },
+    getDoydee:{
+      get:()=>tnth=>{
+        if(! gawleem) return 0;
+        var e8th=Math.floor(tnth/e8th)// time of tenth of second, but each byte is 8
+        var nm=gawleem[e8th]
+        if(!nm) {
+          console. log("no", tnth, gawleem, e8th)
+          return 0;
+        }
+        
+        var bit=(nm >>> 0) & 1
+      }
+    },
+    currentTime: {
+      get:()=>this. audio. currentTime
+    },
+    pause: {
+      get: ()=>()=>new Promise((r,j) => {
+        this. audio. paused=true
+        if(typeof(this. audio. pause)=="function") {
+          this. audio. pause()
+          r()
+        } else r()
+      })
+    },
     length: {
       get: ()=>{
         var buf=this. audio. buffered
@@ -299,6 +439,15 @@ function Koyl(o={}){
         return length
       }
     }, 
+    gawleemB:{
+      get:()=>gawleem,
+      set(v){
+        gawleem=v
+      }
+    },
+    duration: {
+      get:()=>this. audio. duration
+    },
     setMikoyr: {
       get: ()=>mk=>{
         this. audio=mk
@@ -361,3 +510,7 @@ Makor.getHashInfo=(op={})=>{
 		}).catch(w=>j(w))
   })
 }
+
+
+Makor.loadScript=loadScript
+
