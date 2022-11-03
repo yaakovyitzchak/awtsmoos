@@ -376,9 +376,10 @@ function Breeyuh()  {
       var g=document.createElement ("br")
       p. appendChild(g)
     }
-    
+    var sty;
     function style() {
       var f=document.createElement ("style")
+      sty=f
       document. head. appendChild(f)
       f.innerHTML=`
         .${myId}redlight{
@@ -397,46 +398,12 @@ function Breeyuh()  {
           word-break:break-word;
           box-shadow: 0px 0px 5px black inset;
         }
-        .${myId}holder{
-          width:88%;
-          height: 15px;
-          display: block; 
-          border: 1px solid black; 
-          position: relative;
-        }
         
-        .${myId}currentTimePointer{
-          position: absolute; 
-          width:2px;
-          height: 100%;
-          background: blue;
-          display: inline-block; 
-        }
       `
     }
     
-    this. peuluh=peuluh
-    function peuluh(){
-      var evz={}
-      Object. defineProperties (this, {
-        on:{
-          get:()=>(name, fun)=>{
-            var g=evz[name]
-            if(!g) evz[name]=[]
-            evz[name]. push(fun)
-          }
-        },
-        poyl:{
-          get:()=>(name, data)=>{
-            if(evz[name]) {
-              evz[name]. forEach(o=>{
-                o(data)
-              })
-            }
-          }
-        }
-      })
-    }
+    this. peuluh=window. peuluh
+    
     
     function MawdrayguhChaylik(op={}){// timeline component
       peuluh. call(this)
@@ -728,86 +695,8 @@ function Breeyuh()  {
       })
     }
     
-    this.ZmanKavShoymayuh=ZmanKavShoymayuh
-    function ZmanKavShoymayuh(){
-      var z=this
-      var tme=0
-      peuluh. call(this)
-      var plb=document. createElement("div") // background for playing
-      plb.className=myId+"holder"
-      
-      plb.onclick=e=>{
-        var x=e. clientX
-        var dx=x/ plb.clientWidth
-        
-        this. poyl("update", dx*totalTime)
-      }
-      
-      var cr=document. createElement("div")
-      plb. appendChild(cr)
-      cr. className=myId+"currentTimePointer"
-      var totalTime=0
-      var width;
-      Object. defineProperties (this ,{
-        appendTo:{
-          get:()=>p=>{
-            p. appendChild(plb)
-            width=plb.clientWidth
-          }
-        },
-        totalTime:{
-          get:()=>totalTime,
-          set:(v)=>totalTime=v
-        },
-        time:{
-          get:()=>tme,
-          set:(v)=>{
-            z.poyl("update", v)
-          }
-        }
-      })
-      
-      this.  on("updatePointer",  time=>{
-        tme=time
-        
-        cr. style.  left=(
-          (time/ totalTime)*plb.clientWidth
-        )+"px"
-        
-        /*
-        console. log(time, width, plb.offsetWidth,plb. clientWidth, totalTime,
-          cr.style.left
-        )*/
-      })
-      
-      this.on("shoymayuhKoyl",koyl=>{
-        totalTime=koyl.duration
-        function heesHawvoos() {
-          
-          if(koyl.curTime>koyl. duration) {
-            koyl. pause()
-            koyl. currentTime=koyl. duration
-            
-          }
-          
-          z.poyl("updatePointer",koyl.curTime)
-          if(koyl.gawleem) {
-            z.poyl("volume", koyl.gawleem[Math. floor(
-              koyl. curTime/zmanKawtsawr//10th of second
-            )]) 
-          }
-          
-          
-        }
-        
-        z.on("update", t=>{
-         editor. poyl("updated")
-          koyl.currentTime=t
-        })
-        editor.on("heesHawvoos",heesHawvoos)
-      })
-      
-    }
+    this.ZmanKavShoymayuh=window. ZmanKavShoymayuh
+    
     
     function mawseem() {
     editor.on("paused",  val=>{
@@ -844,8 +733,27 @@ function Breeyuh()  {
         var pl=document. createElement ("button")
         pl. innerHTML="Taweel<br>[aka \"Play\"]"//"Play"
         
-        var zman=new ZmanKavShoymayuh()
+        var zman=new ZmanKavShoymayuh({
+          myId,
+          hoyvehToyr/*current time indicator style*/:`
+            background: blue;
+            width:2px;
+          `,
+          koylMawkom:`
+            width:88%;
+            height: 15px;
+          
+            border: 1px solid black; 
+          `
+        })
         zman.poyl("shoymayuhKoyl",s.koylMakor)
+        function go() {
+          zman.poyl("heesHawvoos")
+        }
+        z.on("updated", ()=>{
+          editor. poyl("updated")
+        }) 
+        editor. on("heesHawvoos",go)// get back to: remove event
         var t=document. createElement("div")
         
         var volNm=document. createElement("div")

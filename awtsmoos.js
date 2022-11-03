@@ -969,7 +969,7 @@ ATZMUS;
 						children(otherArray) {
 							var oa;
 							if(typeof(otherArray) == "function") {
-								oa = otherArray(t)
+								oa = otherArray(t, toyldoys)
 							} else 
 							if(typeof(otherArray.forEach)=="function") {
 								oa = otherArray	
@@ -979,10 +979,18 @@ ATZMUS;
 								
 							
 							oa.forEach(x => {
+							  var ts=x. start
 								var ch = new ATZMUS.HtmlNode({
 									...x,
-									parent: el
-									
+									parent: el, 
+									start(m) {
+									  m.toldos. forEach(h=>{
+									    toyldoys. push(h)
+									  })
+									  
+									  if(typeof(ts)=="function")
+									    ts(m)
+									}
 								})
 								toyldoys.push(ch)
 							})
@@ -1003,11 +1011,22 @@ ATZMUS;
 					}
 				})
 				
+				el.toldos=toyldoys
 				var hees = opts.heesCheel||opts.start;
 				if(typeof(hees) == "function") {
 					hees(el,t)
 				}
 				
+				toyldoys. forEach(y=>{
+				  var afterWords=y. after||y.awchawray||y.awchawr;
+				  
+				  if(typeof(afterWords) == "function") {
+				    var r={
+				      afterWords
+				    }
+				    r.afterWords. call(y,y)
+				  }
+				})
 				return el;
 				   
 			}

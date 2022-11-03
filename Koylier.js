@@ -36,7 +36,7 @@ function Makor(otp={}){
                   console. log("mukk",derech,ksawv)
                   Makor.loadScript(derech+"/"+ksawv)
                   . then(h=>{
-                    console. log("striving")
+                    console. log("striving",kk=h,mm=d,vv=r,r.dayuh)
                     rd(r)
                   }). catch(e=>{
                     console. log(e)
@@ -256,16 +256,31 @@ function KoylGoof(){
   }
   var playing=false
   var self=this
+  var dayuh
   Object. defineProperties(this, {
     koyleem: {
       get: ()=> koyleem
     },
+    
+    doydeem:{// audio levels at current tenth of second
+      get: ()=>(tnth)=>{
+        return koyleem. map(y=>({
+          doydee:y.getDoydee(tnth),
+          shaym: y. shaym
+        }))
+      }
+    },
     dayuh:{
+      get: ()=>dayuh, 
       set(v) {
+        console. log("seeing", v, koyleem)
+        dayuh=v
         Object. keys(v). forEach(y=>{
           var sh=koyleem. find(g=>g. shaym. toLowerCase()==y)
           if(sh) {
-            y.gawleemB=v[k]
+            
+            sh.gawleemB=v[y]
+            console. log(y,sh,v[y])
           }
         })
       }
@@ -343,9 +358,20 @@ function KoylGoof(){
         )
       }
     },
+    curTime: {
+      get:()=>this. currentTime, 
+      set(v){
+        this. currentTime=v
+      }
+    },
     currentTime: {
       get:()=>{
         return this. longest(u=>u.currentTime)
+      }, 
+      set(v){
+        koyleem. forEach(t=>{
+          t. currentTime=v
+        })
       }
     },
     length: {
@@ -402,20 +428,35 @@ function Koyl(o={}){
         this. audio. play(). then(r)
       })
     },
-    getDoydee:{
-      get:()=>tnth=>{
+    getDoydee:{// binary time data of audio
+      get:()=>tnth=>{// at trnth of second
         if(! gawleem) return 0;
-        var e8th=Math.floor(tnth/e8th)// time of tenth of second, but each byte is 8
-        var nm=gawleem[e8th]
-        if(!nm) {
-          console. log("no", tnth, gawleem, e8th)
-          return 0;
-        }
+        //"no gawleem yet";
         
-        var bit=(nm >>> 0) & 1
+        var e8th=Math.floor(tnth/8)// time of tenth of second, but each byte is 8
+      
+        var nm=gawleem[e8th]
+        
+        if(!nm) {
+          //console. log("no", tnth, gawleem, e8th)
+          return 0;
+          //
+        }
+        var offset=tnth%e8th
+        
+        if(offset >8)
+        console. log(offset,"right")
+        var bit=(nm >>> offset) & 1;
+        return bit
       }
     },
     currentTime: {
+      get:()=>Math. floor(this. audio. currentTime*10)/10,
+      set(v) {
+        this. audio. currentTime=v
+      }
+    },
+    curTime: {
       get:()=>this. audio. currentTime
     },
     pause: {
