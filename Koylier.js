@@ -20,7 +20,7 @@ function Makor(otp={}){
         op=lowerCaseify(op)
         var koyleemLinks=op.koyleem||op.audio||op.voices||op.sounds
         var lk=op.loaded||op.loadedkoyleem||op.lk
-        var derech=op.derech||"./"
+        var derech=op.derech||""
         var dayuh = op.dayuh;
         var ksawv/*script*/=op. script||op.ksawv
         if(koyleemLinks) {
@@ -118,7 +118,7 @@ function Makor(otp={}){
   }
   this. kool=null
   var s=this
-  function getKoyleem(klz,b="./") {
+  function getKoyleem(klz,b="") {
     var ad=new KoylGoof()
     return new Promise((r,j)=>{
       loadKoyleem(klz,ad, b).then(f=>{
@@ -170,7 +170,7 @@ function Makor(otp={}){
 				        "http:/"
 				      ) && !sb. includes(
 				        "https:"
-				      )) lk = "./"+b+"/"+lk
+				      )) lk = b+"/"+lk
 				      
 				      console.  log("koyling off",lk)
 				      var errors=[]
