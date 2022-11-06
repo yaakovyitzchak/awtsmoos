@@ -171,6 +171,8 @@ function Makor(otp={}){
 				      ) && !sb. includes(
 				        "https:"
 				      )) lk = "./"+b+"/"+lk
+				      
+				      console.  log("koyling off",lk)
 				      var errors=[]
 				      function goOn(er){
 				        if(er) errors.push(er)
@@ -541,7 +543,7 @@ Makor.getHashInfo=(op={})=>{
 		    fail1(e)
 			j(e+"")
 		}
-		url="./"+url
+		
 		
 		fetch(url)
 		. then(r=>r.json())
