@@ -368,7 +368,7 @@ function KoylGoof(){
     },
     currentTime: {
       get:()=>{
-        return this. longest(u=>u.currentTime)
+        return this. koyleem. length? this. koyleem[0]. currentTime:770// longest(u=>u.currentTime)
       }, 
       set(v){
         koyleem. forEach(t=>{
