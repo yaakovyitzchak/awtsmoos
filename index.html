@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" class="notranslate" translate="no" xmlns="http://www.w3.org/1999/xhtml" dir="ltr" >
+
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<style>
+    
+    body,html{
+        overflow:hidden
+    }
+    .full{
+         width: 100%;
+         height:100%;
+         position: absolute;
+         left:0;top:0
+    }
+    
+.BH{
+    user-select:none
+}
+</style>
+</head>
+<body Lang="en">
+    <div lang="en" dir="ltr" class="BH">
+        B"H
+    </div>
+<br>
+
+<Title>AWTSMOOS</TITLE>
+<Div id="etsem" class="full"></Div>
+<script src="three.min.js"></script>
+<script src="TextGeometry.js"></script>
+<script src="Lightning.js"></script>
+ <script src="awtsmoos.js" lang="en"></script>
+<script>
+    AWTSMOOS.Tzimtzoom({
+        dawfeem:[
+          "TextGeometry.js",
+          "Lightning.js",
+          "CSS3Renderer.js"
+        ],
+        olam:{
+            lights: true,
+        }, 
+        start:{
+             parent: etsem
+         },
+         fonts: {
+             h:"helvetica.json"
+         }
+    }).then(w=>{
+        
+        text({
+            text: "welcome to the", 
+            position: {
+                x:-16,
+                z:-20,
+                y:6
+            },
+            onclick(e){
+                e.object.coyb.color=!e.object.d?"orange": "blue"
+                   e.object. d=!!!e.object.d
+            }
+        })
+        
+        text({
+            text: "AWTSMOOS",
+            scale: 5,
+            color:"yellow",
+            position: {
+                x:-16,
+                z:-20,
+                y:0
+            }
+        })
+        
+        button({
+          text: "What is the \nAWTSMOOS, anyway? ",
+          scale:.8,
+          position: {
+            z:-10,
+            y:-12
+          }
+        })
+//var lightning=new THREE.LightningStrike()
+        var mat=AWTS.Tzurification({
+          type:"phong",
+          arguments: [
+            {
+              color: "blue"
+            }
+          ]
+        }). malchus()
+        
+        //var lm=new THREE.Mesh(lightning, mat)
+        
+      //  w.scene.add(lm)
+      //  lm.position.z=-40
+      
+        function button(opr={}){
+          var txt=text({
+            text:opr.text,
+            scale:opr. scale, 
+            size: opr. size, 
+            position: opr.position,
+            scale: opr. scale, 
+            rotation: opr. rotation, 
+            color:opr.color,
+            onclick(e){
+              var oldc=e.object.coyb.color;
+              
+            },
+            onstart:m=>{
+              
+                var btnm=AWTS.Tzurification({
+                    type: "lambert", 
+                    arguments: [{
+                     color: m.color
+                    }]
+                  }).malchus()
+                  
+                  var b=AWTS.Choymayrifier("box").malchus ()
+                  
+                  var btn=new THREE.Mesh(b,btnm)
+                  m.olam.scene.add(btn)
+                  AWTS.matchToBoundingBox (btn,m. pashut)
+            }
+            
+          })
+        }
+        function text(op={}){
+                
+                
+                var cl=op.color||"blue"
+        var m=new AWTSMOOS.Domem({
+            listeners: {
+                achbarMatah(m){
+                    typeof(op.onclick)=="function"? op.onclick(m):0
+                },
+                michoodish(m){
+                
+                  if(typeof(op.onstart)=="function")
+                    op.onstart(m)
+                  
+                  
+                }
+            },
+            
+            mask:"box",
+            geometry:   {
+                type:"text",
+                arguments: [
+                   op.text,{ 
+                       font:AW.fonts["h"],
+                       size:op.size||1,
+                       height: .1
+                   }
+                ]
+            },
+            material: "lambert",
+            position:op.position,
+           
+            scale:op.scale,
+            rotation:op. rotation
+            
+            
+            
+            
+        })
+        
+        w.hoyseef(m)
+        if(op.color)m.color=op.color
+        
+        return w;
+        }
+    
+        
+        rt=w
+        w.ayshPeula("makeThingsClickable")
+        w.ayshPeula("drag",{
+          max:{
+            y:-1
+          }
+        })
+    })
+</script>
+</body>
+</html>
