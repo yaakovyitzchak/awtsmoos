@@ -218,7 +218,7 @@ function Makor(otp={}){
   function loadKoyl(info){
     return new Promise((r,j)=>{
           var ad=document.createElement("audio")
-					
+					ad.setAttribute("preload","auto")
 					ad.addEventListener("loadedmetadata",()=>{
 						r(ad)
 						
