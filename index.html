@@ -1,13 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" class="notranslate" translate="no" xmlns="http://www.w3.org/1999/xhtml" dir="ltr" >
+<html id="etsm" lang="en" class="notranslate" translate="no" xmlns="http://www.w3.org/1999/xhtml" dir="ltr" >
 
 <head>
 <meta charset="utf-8">
 <meta name="google" content="notranslate">
 <style>
-    
     body,html{
-        overflow:hidden
+      margin: 0;
+    }
+    html{
+        overflow:hidden;
+        background-position-y: 659px;
+      position: absolute;
+        background: radial-gradient(rgb(240,80,80), red, blue)  ;
+        
+    }
+    #back{
+      
+      z-index:-566;
+    }
+    .fullr{
+         width: 100%;
+         height:100%;
+         position: relative;
+         left:0;top:0
     }
     .full{
          width: 100%;
@@ -19,6 +35,23 @@
 .BH{
     user-select:none
 }
+
+.browser {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  #transform: translate(-50%,-50%);
+  width: 770px;
+  display: block;
+  z-index:7755;
+  height: 50%;
+  box-shadow:0px 0px 8px inset;
+  
+}
+
+.hid{
+  display: none;
+}
 </style>
 </head>
 <body Lang="en">
@@ -28,53 +61,194 @@
 <br>
 
 <Title>AWTSMOOS</TITLE>
+<div class="browser hid" id="brow"></div>
+<div id="back" class="full"></div>
 <Div id="etsem" class="full"></Div>
+<div id="cssr"></div>
+<style>
+  #etsem{
+    box-shadow: 0px -109px 66px rgba(200,0,0,254)
+    inset;
+    user-select: none;
+    width: 100vw;
+    backgrohund: cyan;
+    height: 70vw;
+  }
+</style>
 <script src="three.min.js"></script>
 <script src="TextGeometry.js"></script>
+<script src="CSS3DRenderer.js"></script>
 <script src="Lightning.js"></script>
  <script src="awtsmoos.js" lang="en"></script>
 <script>
+  var seel="https://awtsmoos-server.herokuapp.com/awts/geelooy/awtseeloos.json"
+    var backup="./LOLWowYouDontEvenHaveWebGLICouldLaughAllDayAndNightIfIWanted.html"
+    function back(){
+      location. href=backup
+    }
     AWTSMOOS.Tzimtzoom({
+        er() {
+        // back()
+        },
         dawfeem:[
-          "TextGeometry.js",
+      //    "TextGeometry.js",
           "Lightning.js",
-          "CSS3Renderer.js"
+        //  "CSS3Renderer.js"
         ],
         olam:{
             lights: true,
         }, 
+        cssr:cssr,
         start:{
              parent: etsem
+             
          },
          fonts: {
              h:"helvetica.json"
          }
     }).then(w=>{
-        
-        text({
+       text({
             text: "welcome to the", 
+            color: "cyan", 
+            scale: 40,
             position: {
-                x:-16,
-                z:-20,
-                y:6
+                x:-270,
+                z:-300,
+                y:120
             },
             onclick(e){
-                e.object.coyb.color=!e.object.d?"orange": "blue"
+                e.object.coyb.color=!e.object.d?"orange": "cyan"
                    e.object. d=!!!e.object.d
             }
         })
         
         text({
             text: "AWTSMOOS",
-            scale: 5,
+            scale: 50,
             color:"yellow",
             position: {
-                x:-16,
-                z:-20,
-                y:0
+                x:-200,
+                z:-300,
+                y:50
             }
         })
         
+        AWTS.html({
+          innerHTML:"might be loading!",
+          style: {
+            
+          //  transform: "scale(0.003)"
+          },
+          
+          css3d:{
+            world: w,
+            position: {
+              x:0,
+              z:-20,
+              y:-18
+            }
+          },
+          start(k){
+            k. css3d.scale.set(0.1,0.1,0.1)
+            fetch(seel)
+            . then(j=>j. json()). catch(k=>{
+              back()
+            }). then(g=>{
+              k. innerHTML=""
+              var d=g. dawfeem
+              if(!d) {
+                return g. innerHTML="just bring Moshiach (didn't load page data) "
+              }
+              var p=AWTS.html({
+                parent: k
+              })
+              var rt=g.Prawteem
+              if(typeof(rt)!="object")
+                rt=null
+                
+              Object. keys(d)
+              . forEach(f=>{
+                AWTS. html({
+                  parent: p,
+                 shaym: "dawf_"+d[f],
+                  toldos: [
+                    {
+                      innerHTML: f,
+                      tag: "button"
+                    }, 
+                    {
+                      className:"reeyuh", // view
+                      start(h){
+                        var reeyuh=rt[d[f]]
+                        if(!reeyuh) {
+                          return h. innerHTML="nothing"
+                          
+                        }
+                        Object. keys(reeyuh)
+                        . forEach(o=>{
+                            
+                          
+                          var real=rt[
+                            reeyuh[o]
+                          ]
+                          
+                          if(! real){
+                            return h. innerHTML="not much here yet"
+                          }
+                          
+                          
+                          var hees=real
+                          . heestawlshiloos
+                          
+                          var chawd=AWTS.html({
+                            parent: h,
+                            tag:"h4",
+                            innerHTML: o
+                          })
+                          if(!hees)  {
+                            return h. innerHTML="no saydir"
+                          }
+                          
+                          Object. keys(hees)
+                          . forEach(y=>{
+                            AWTS.html({
+                              parent: chawd,
+                              innerHTML: y,
+                              tag:"button", 
+                              onclick() {
+                                var ch=real.Chaweeyoos
+                                console. log("hi", ch,y,hees)
+                                if(!ch)ch="/"
+                                browser({
+                                  url: ("./"
+                                  +ch).
+                                  split(
+                                    "$__awts"
+                                  )
+                                  .join(
+                                    hees[y]
+                                  )
+                                })
+                              }
+                            })
+                          })
+                        })
+                      }
+                    }
+                  ]
+                })
+              })
+            })
+            k.css3d=(
+          //   -10,-22,
+             0,
+            -10,
+            -10
+            )
+          }
+          
+        })
+        /*
         button({
           text: "What is the \nAWTSMOOS, anyway? ",
           scale:.8,
@@ -82,13 +256,13 @@
             z:-10,
             y:-12
           }
-        })
+        })*/
 //var lightning=new THREE.LightningStrike()
         var mat=AWTS.Tzurification({
           type:"phong",
           arguments: [
             {
-              color: "blue"
+              color: "cyan"
             }
           ]
         }). malchus()
@@ -132,7 +306,7 @@
         function text(op={}){
                 
                 
-                var cl=op.color||"blue"
+                var cl=op.color||"cyan"
         var m=new AWTSMOOS.Domem({
             listeners: {
                 achbarMatah(m){
@@ -177,13 +351,47 @@
     
         
         rt=w
+        
+        w.on("moving", a=>{
+          var back=etsm
+          console. log(back. style. 
+     //     marginTop
+          backgroundPositionY
+          =(a.startCamP.y + (a.dify/30))+"px")
+          
+        })
         w.ayshPeula("makeThingsClickable")
         w.ayshPeula("drag",{
           max:{
             y:-1
           }
         })
+        
     })
+    
+    function browser(op={}){
+      console. log(op.url)
+      brow. classList.toggle("hid")
+      AWTS.html({
+        parent: brow, 
+        className: "navigation", 
+        toldos: [
+          {
+            innerHTML: "close",
+            className: "close", 
+            onclick(){
+              brow. innerHTML=""
+              brow. classList.toggle("hid")
+            }
+          },
+          {
+            tag:"iframe", 
+            src: op.url,
+            className: "fullr"
+          }
+        ]
+      })
+    }
 </script>
 </body>
 </html>
