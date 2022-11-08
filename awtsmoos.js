@@ -471,6 +471,20 @@ ATZMUS;
 	var madeMawchs = false;
 	
 	Object.defineProperties(ATZMUS, {
+	  Soymawch3D:/*webgl support?!*/{
+	    get:()=>function webgl_support () { 
+  	      try { 
+  	        var canvas = document.createElement('canvas'); 
+    	      return !!window.WebGLRenderingContext && 
+    	      (
+    	        canvas.getContext('webgl') || 
+    	        canvas.getContext('experimental-webgl')
+    	      ); 
+  	        
+  	      } catch(e) { return false; } 
+  	      
+  	    }
+	  },
 		Osios: {
                 get: () => oyss
 				
@@ -811,6 +825,13 @@ ATZMUS;
 			get: () => function(opts = {}) {
 				return new Promise((rs,rj) => {
 					threeify()
+					var support=AWTS.Soymawch3D()
+					var er=opts.er||opts.error||opts.no3d
+					if(!support) {
+					  if(typeof(er)=="function") {
+					    er()
+					  }
+					}
 					var oyl = s => {
 						if(s) {
 							var oy = opts.olam ||
@@ -926,6 +947,7 @@ ATZMUS;
 					parent = opts.parent || document.body,
 					exclusions = "tag events attributes children style",
 					toyldoys = [],
+					css3d=opts.css3d||opts.c3,
 					listenerFunctions = {},
 					t = (n) => toyldoys.find(q=>
 						q.shaym == n
@@ -956,7 +978,7 @@ ATZMUS;
 							}
 							if(!st || typeof(st) != "object")
 								return;
-							
+							console. log("store", st)
 							var k;
 							for(k in st) {
 								el.style[k] = st[k]	
@@ -1011,6 +1033,22 @@ ATZMUS;
 					}
 				})
 				
+				if(css3d) {
+				  var w=css3d. world||css3d.olam;
+				  if(
+				    window. THREE&&
+				    THREE.CSS3DRenderer&&
+				    w
+				  ) {
+				    var ob=new THREE.CSS3DObject(el)
+				    el.css3d=ob
+				    var p=css3d. position 
+				    if(typeof(p)=="object"){
+				      ob. position. copy(p)
+				    }
+				    w.hoyseef(ob)
+				  }
+				}
 				el.toldos=toyldoys
 				var hees = opts.heesCheel||opts.start;
 				if(typeof(hees) == "function") {
@@ -1471,7 +1509,7 @@ function threeify() {
 		Heeoolee: {
 			get: () => function(opts = {}) {
 				ATZMUS.Chochmah.call(this, ...arguments)
-				
+				this. awts=true
 				var listeners = opts.listeners || {}
 				Object.keys(listeners).forEach(k => {
 					if(typeof(listeners[k]) == "function") {
@@ -3405,6 +3443,15 @@ function threeify() {
 						opts.toyarim || {}
 					)
 				});
+				var css3r;
+				var cparent
+				if(THREE.CSS3DRenderer) {
+				  cparent=opts.css3r||opts.cssParent
+				  css3r=new THREE.CSS3DRenderer({
+				//    domElement:cparent||document. body
+				  })
+				  console. log(77,css3r)
+				}
 				if(opts.toyarim && opts.toyarim.originalCanvas) {
 					originalCan =  opts.toyarim.originalCanvas
 					
@@ -3453,9 +3500,13 @@ function threeify() {
 				var activeCam = camera;
 				function loop() {
 					delta = clock.getDelta()
-					if(isRendering)
+					if(isRendering) {
 						renderer.render(scene, activeCam)
-					
+						
+						if(css3r) {
+						  css3r. render(scene, activeCam)
+						}
+					}
 					updates.forEach(u => {
 						u.ayshPeula("hissHavoos", delta, u);
 					})
@@ -3746,11 +3797,20 @@ function threeify() {
 			      
 			     startCamPos=self.activeCam.position
 			     startP=curP
+			     self. ayshPeula("moving", {
+			       startCamP,
+			       difx, dify,
+			       newy
+			     })
 				  }
 				  function start(m){
             startP=m
 				    dragging=true
 				    startCamP=self.activeCam.position
+				    self. ayshPeula("started", {
+				      startCamP,
+				      startP
+				    })
 				  }
 				  var dragging=false
 				  addEventListener ("touchstart",e=>{
@@ -3767,7 +3827,7 @@ function threeify() {
 				  })
 				  addEventListener ("touchmove",e=>{
 				    curP=e.touches[0]
-				    move()
+				    move(e,curP)
 				  })
 				  
 				  addEventListener("touchend",e=>{
@@ -3779,11 +3839,14 @@ function threeify() {
 				  
 				  addEventListener("drag",e=>{
 				    curP=e
-				    move()
+				    move(e,curP)
 				  })
 				  
 				  addEventListener("dragend",e=>{
             dragging=false
+            self. ayshPeula("ended", {
+              e
+            })
 				  })
 				  
 				})
@@ -3945,17 +4008,41 @@ function threeify() {
 						get: () => (opts = {}) => {
 							var parent = opts.parent || document.body,
 								FPS = opts.fps || 60
+							cparent=parent
 							parent.appendChild(renderer.domElement)
-							renderer.domElement.style.position = "absolute"
-							renderer.domElement.style.left = 0
-							renderer.domElement.style.top = 0
-							renderer.domElement.style.width = "100%"
-							renderer.domElement.style.height = "100%"
-							renderer.domElement.style.zIndex = -1
+							
+							if(css3r){
+							 //
+
+							 cparent. appendChild(css3r.domElement)
+						//	 cparent. style. background="yel
+							  styr({
+							    domElement:css3r. domElement
+							  },0)
+							  cparent=css3r.domElement.parentNode
+							  
+							} else {
+							  
+							}
+							styr(renderer)
+							function styr(renderer,z=-2){
+							  renderer.domElement.style.position = "absolute"
+  							renderer.domElement.style.left = 0
+  							renderer.domElement.style.top = 0
+  							renderer.domElement.style.width = "100%"
+  							renderer.domElement.style.height = "100%"
+  							renderer.domElement.style.zIndex =z
+							}
+							
 							addEventListener("resize", resize)
 							resize()
 							function resize() {
-								
+								if(css3r) {
+								  css3r.setSize(
+  									cparent.clientWidth,
+  									cparent.clientHeight
+  								)
+								}
 								renderer.setSize(
 									parent.clientWidth,
 									parent.clientHeight
@@ -4005,52 +4092,65 @@ function threeify() {
 					},
 					hoyseef: {
 						get: () => nivra => {
-							nivra.on("sealayk", () => {
-								var old = scene.children.includes(nivra.pashut)
-								var oldn = nivrayim.indexOf(nivra)
-								if(oldn > -1) {
-									delete nivrayim[oldn]
-								}
-								if(old) {
-									scene.remove(nivra.pashut)	
-								}
-							})
-							nivra.on("goofChadash", () => {
-								scene.add(nivra.pashut)
-								nivra.ayshPeula("cheedaysh")
-							})
-							nivra.ayshPeula("boray", this)
-							
-							nivra.ayshPeula("ready", () => {
-								if(nivra.pashut) {
-									scene.add(nivra.pashut)
-									nivra.ayshPeula("cheedaysh")
-									nivrayim.push(nivra)
-									
-								/*	if(nivra.eventNames.includes(
-										"hissHavoos"
-									)) updates.push(nivra)*/
-									
-									if(nivra.meen) {
-										self.ayshPeula(
-											"addMeen", 
-											nivra.meen, 
-											nivra
-										);
-									}
-									
-									if(nivra.meenim) {
-									
-										nivra.meenim.forEach(x => {
-											self.ayshPeula(
-												"addMeen", 
-												x, 
-												nivra
-											);
-										})
-									}	
-								}
-							})
+						  console. log("neev", nivra)
+						  if(!(nivra)) return
+						  if(nivra. awts) {
+						  
+  							nivra.on("sealayk", () => {
+  								var old = scene.children.includes(nivra.pashut)
+  								var oldn = nivrayim.indexOf(nivra)
+  								if(oldn > -1) {
+  									delete nivrayim[oldn]
+  								}
+  								if(old) {
+  									scene.remove(nivra.pashut)	
+  								}
+  							})
+  							nivra.on("goofChadash", () => {
+  								scene.add(nivra.pashut)
+  								nivra.ayshPeula("cheedaysh")
+  							})
+  							nivra.ayshPeula("boray", this)
+  							
+  							nivra.ayshPeula("ready", () => {
+  								if(nivra.pashut) {
+  									scene.add(nivra.pashut)
+  									nivra.ayshPeula("cheedaysh")
+  									nivrayim.push(nivra)
+  									
+  								/*	if(nivra.eventNames.includes(
+  										"hissHavoos"
+  									)) updates.push(nivra)*/
+  									
+  									if(nivra.meen) {
+  										self.ayshPeula(
+  											"addMeen", 
+  											nivra.meen, 
+  											nivra
+  										);
+  									}
+  									
+  									if(nivra.meenim) {
+  									
+  										nivra.meenim.forEach(x => {
+  											self.ayshPeula(
+  												"addMeen", 
+  												x, 
+  												nivra
+  											);
+  										})
+  									}	
+  								}
+  							})
+						  } else {
+                console. log("trying", nivra)
+						    try {
+						      console. log(nivra)
+						      scene. add(nivra)
+						    } catch(j){
+						      console. log(j,77666)
+						    }
+						  }
 						}
 					},
 					interval: {
