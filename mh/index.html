@@ -1,0 +1,297 @@
+B"H
+
+<br> 
+
+<a href="https://awtsmoos.com">awtsmoos</a>
+
+<br>
+
+<h2>
+
+  Mawgawl Hawoyluhmee <br>
+
+  ("the world circle")
+
+</h2>
+
+<h4>
+
+  the Lubavitcher Rebbe asked us to make sure there is at least one minyan of people in the world, together, during every hour of the day, which is learning matters of Moshiach and the future redemption. This will speedily bring the complete and true redemption, in actuality. So select a weekly timeslot where you can put together a minyan of people, or even a few, or even by yourself, to learn matters of the complete redemption. 
+
+</h4>
+
+<div id="week">
+
+  
+
+</div>
+
+<style>
+
+  .col{
+
+    display: inline-block;
+
+    padding: 8px;
+
+    
+
+  }
+
+  
+
+  .title{
+
+    font-size: 10px;
+
+  }
+
+  
+
+  .item{
+
+    width: 100%;
+
+    hejight:64px;
+
+    line-height: 64px;
+
+    text-align: center;
+
+    padding:3px;
+
+    display: block;
+
+    box-shadow: 0px 0px 7px black inset;
+
+  }
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  #week{
+
+    border: 1px solid black;
+
+  }
+
+</style>
+
+<script>
+
+console. log(888)
+
+console. log(7)
+
+  var days="Times| Rishon Shaynee Shleeshee Riveeyee Chawmeeshee Sheeshee HaShawbuss"
+
+    . split(" ")
+
+  var sections = 48
+
+  var chart=days. map(t=>Array. from({length:sections}). map(y=>({
+
+    dayuh:{
+
+      people: []
+
+    }
+
+  })))
+
+  var table=[]
+
+  var colors="red cyan purple yellow orange". split(" ")
+
+  
+
+  function nmToTime(nm) {
+
+    var s=Math. floor(nm/60)
+
+    var remainder=nm%60
+
+    var ob= {
+
+      hours:s,
+
+      minutes: remainder
+
+    }
+
+    
+
+    return s+":"+remainder
+
+  }
+
+  function make(info,d) {
+
+    info. forEach((k,n)=>{
+
+      var dt=[]
+
+      table[n]=dt
+
+      var t=n==0
+
+      console. log(k)
+
+      var col=document. createElement("div")
+
+      var title=document. createElement("div")
+
+      title. className="title"
+
+      col. appendChild(title)
+
+      title. innerHTML=!t?("Yom "+
+
+      days[n]+" (Day #"+n+")<br>"):"Military Time EST"
+
+      d. appendChild(col)
+
+      col. className="col"
+
+      k. forEach((i,m)=>{
+
+        table[n][m]=info[n][m]
+
+        var item=document. createElement("div")
+
+        item. className="item"
+
+        console. log(55)
+
+        item. innerHTML=t?
+
+        
+
+          nmToTime((m)*30)+" to "+nmToTime((m+1)*30)
+
+        :0
+
+        chart[n][m]={
+
+          div: item, 
+
+          dayuh:table[n][m].dayuh
+
+        }
+
+        if(n>0)
+
+        set(n,m)
+
+        col. appendChild(item)
+
+        if(!t)
+
+        item. onclick=()=>{
+
+         var name=t?
+
+           ""
+
+         :4//prompt("What is your (code) name?")
+
+         
+
+         if(! chart[n][m].dayuh. people. length) {
+
+          chart[n][m].dayuh. people. push(name)
+
+          added=true
+
+         } else {
+
+           chart[n][m].dayuh. people.pop()
+
+         }
+
+         table[n][m]=chart[n][m]
+
+         
+
+                    
+
+          set(n,m)
+
+          var str=JSON.stringify(table)
+
+          localStorage.charted=str
+
+          console. log(str)
+
+        }
+
+      })
+
+    })
+
+  }
+
+  var added=false
+
+  var ch=chart;
+
+  try {
+
+    ch=JSON.parse( localStorage.charted)
+
+    
+
+  } catch(k){
+
+    console. log(k)
+
+  }
+
+  
+
+  function set(y,x) {
+
+    var s=chart[y][x]
+
+    if(s&&s.dayuh) {
+
+      var item=s.div
+
+      var lng=s.dayuh. people. length
+
+      console. log(7889999,lng)
+
+          item. innerText=lng
+
+          item. style. backgroundColor=colors[lng%colors. length]
+
+          return
+
+    } 
+
+    
+
+    console.  log("no", y,x,chart)
+
+  }
+
+  function load(tb,ch) {
+
+    
+
+  }
+
+  if(typeof(ch)!="object")
+
+    ch=chart
+
+make(ch,week)
+
+</script>
