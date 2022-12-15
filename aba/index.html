@@ -1,0 +1,177 @@
+<h1>B"H</h1>
+<br>
+<h2><a href="https://awtsmoos.com">AWTSMOOS</a></h2><br>
+<style>
+    video {
+        max-width:500px
+    }
+</style>
+<button id="st">
+    Start recording
+</button>
+<button id="mkc">
+    Make call
+    offer
+</button>
+<br>
+<textarea placeholder=
+"local description goes here automatically" 
+id="localDesc">
+</textarea>
+
+<br>
+<button id="acc">
+    Accept call
+    [from offer below, on other end]
+</button>
+<br>
+<textarea placeholder=
+"paste local desc. from other side to acc." 
+id="acceptDesc">
+</textarea>
+<br>
+<textarea id="ansd" placeholder=
+"answer description automatically goes here">
+</textarea>
+<br>
+
+<button id="adi">
+    Add ice candidate,
+    paste ice SDP below 
+    then click here
+</button>
+<br>
+<textarea id="ict"
+placeholder="paste ices from other side">
+</textarea>
+
+<br>
+Ice candidates from this side:<br>
+<div id="ices">
+</div>
+<br>
+<textarea id="localDescSet">
+    Didn't set local desc
+</textarea>
+<br>
+<button id="ma">
+    Make answer
+    [shows into below]
+</button>
+<br>
+<textarea id="gotAnswer">
+</textarea>
+<br>
+<button id="acptb">
+    Accept answer <br>
+    [paste from other side below]
+</button>
+<br>
+<textarea id="acptan"
+placeholder="Paste answer to accept"
+></textarea>
+<br>
+Local vid:<br>
+<video autoplay muted="true"
+ id="lcv"></video>
+<br>
+Remove vid:<br>
+<video autoplay muted="true"
+ id="rmtv"></video>
+
+
+<script src="https://awtsmoos.github.io/awts/awtsWebrtc.js"></script>
+<script>
+    var rtc = new KoyrayAwtsmoos()
+    rtc.start();
+
+    rtc.on(
+        "gotDescription",
+        desc => {
+            console.log(desc)
+            localDesc.innerHTML = JSON
+            .stringify(desc)
+        }
+    )
+
+    rtc.on("gotIce", ic => {
+        if(!ic) return;
+        var tx = document.createElement(
+            "textarea"
+        )
+        ices.appendChild(tx)
+        var b = document.createElement("br")
+        ices.appendChild(b)
+        console.log(ic)
+        tx.innerHTML = JSON.stringify(ic)
+    })
+
+    rtc.on("track", e => {
+        console.log("Hi",rr=e)
+        rmtv.srcObject = e.streams[0]
+    })
+
+    mkc.onclick = () => {
+        rtc.poyl("makeOffer")
+    }
+
+    acptb.onclick = () => {
+        rtc.poyl("acceptAnswer",
+            JSON.parse(
+                acptan.value
+            )
+        )
+    }
+
+    acc.onclick = () => {
+        rtc.on("madeAnswer",ans => {
+            ansd.innerHTML = JSON.stringify(
+                ans
+            )
+        })
+
+        rtc.on("setToychin", toych => {
+            localDescSet
+            .innerHTML = 
+            "Set local DESC:<br>"
+            + toych
+            
+        })
+
+        rtc.poyl(
+            "acceptInvite",
+            JSON.parse(
+                acceptDesc.value
+            )
+        )
+
+        
+    };
+
+    ma.onclick = () => {
+        rtc.poyl("makeAnswer", a => {
+            console.log("Got answer",a)
+            gotAnswer.innerHTML = JSON
+            .stringify(a);
+        })
+    };
+
+
+    adi.onclick = () => {
+        rtc.addIce(
+            JSON.parse(ict.value)
+        )
+    }
+
+    st.onclick = () => {
+        navigator.mediaDevices
+        .getUserMedia({
+            video: true,
+            audio: true
+        }).then(str=> {
+            lcv.srcObject = str;
+            rtc.addStream(str)
+        })
+    }
+
+</script>
