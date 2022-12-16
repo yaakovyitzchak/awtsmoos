@@ -1,14 +1,20 @@
 <h1>B"H</h1>
 <br>
 <h2><a href="https://awtsmoos.com">AWTSMOOS</a></h2><br>
+
 <style>
     video {
         max-width:500px
     }
 </style>
 <button id="st">
-    Start recording
+    Capture webcam
 </button>
+<button id="screenr">
+    Capture screen
+</button>
+<button id="strc">Start recording</button>
+<br>
 <button id="mkc">
     Make call
     offer
@@ -30,9 +36,7 @@ id="localDesc">
 id="acceptDesc">
 </textarea>
 <br>
-<textarea id="ansd" placeholder=
-"answer description automatically goes here">
-</textarea>
+
 <br>
 
 <button id="adi">
@@ -59,7 +63,8 @@ Ice candidates from this side:<br>
     [shows into below]
 </button>
 <br>
-<textarea id="gotAnswer">
+<textarea id="gotAnswer" placeholder=
+"answer description automatically goes here">
 </textarea>
 <br>
 <button id="acptb">
@@ -72,15 +77,15 @@ placeholder="Paste answer to accept"
 ></textarea>
 <br>
 Local vid:<br>
-<video autoplay muted="true"
+<video autoplay controls muted="true"
  id="lcv"></video>
 <br>
 Remove vid:<br>
-<video autoplay muted="true"
+<video autoplay controls muted="true"
  id="rmtv"></video>
 
 
-<script src="https://awtsmoos.github.io/awts/awtsWebrtc.js"></script>
+<script src="awtsWebrtc.js"></script>
 <script>
     var rtc = new KoyrayAwtsmoos()
     rtc.start();
@@ -93,6 +98,8 @@ Remove vid:<br>
             .stringify(desc)
         }
     )
+
+    var naharos = []
 
     rtc.on("gotIce", ic => {
         if(!ic) return;
@@ -108,6 +115,7 @@ Remove vid:<br>
 
     rtc.on("track", e => {
         console.log("Hi",rr=e)
+        naharos.push(e.streams[0])
         rmtv.srcObject = e.streams[0]
     })
 
@@ -124,11 +132,12 @@ Remove vid:<br>
     }
 
     acc.onclick = () => {
+        /*
         rtc.on("madeAnswer",ans => {
             ansd.innerHTML = JSON.stringify(
                 ans
             )
-        })
+        })*/
 
         rtc.on("setToychin", toych => {
             localDescSet
@@ -169,9 +178,51 @@ Remove vid:<br>
             video: true,
             audio: true
         }).then(str=> {
+            naharos.push(str)
             lcv.srcObject = str;
             rtc.addStream(str)
         })
     }
+
+
+    screenr.onclick = () => {
+        navigator.mediaDevices
+        .getDisplayMedia({
+            video: true,
+            audio: true
+        }).then(stree=> {
+            naharos.push(stree)
+            lcv.srcObject = stree;
+            rtc.addStream(stree )
+        })
+    }
+
+    var mr;
+    var mainStream = new MediaStream();
+    var a = document.createElement("a")
+    strc.onclick = () => {
+        if(!mr) {
+            naharos.forEach(w=>{
+                w.getTracks()
+                .forEach(w=>{
+                    mainStream.addTrack(w)
+                })
+            })
+            mr = new MediaRecorder(mainStream);
+            mr.ondataavailable = e => {
+                a.href = URL.createObjectURL(
+                    e.data
+                )
+                a.download = "BH_"+Date.now()+".mp4"
+                a.click()
+                mr = null;
+                
+            }
+            mr.start()
+            strc.innerHTML = "Click to stop <br>and save"
+        } else {
+            mr.stop();
+        }
+    };
 
 </script>
