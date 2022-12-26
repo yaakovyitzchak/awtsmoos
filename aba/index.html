@@ -182,6 +182,7 @@ Remove vid:<br>
     }
 
     st.onclick = () => {
+        try {
         navigator.mediaDevices
         .getUserMedia({
             video: true,
@@ -190,7 +191,12 @@ Remove vid:<br>
             naharos.push(str)
             lcv.srcObject = str;
             rtc.addStream(str)
+        }).catch(e=>{
+            errors.value = e+""  
         })
+        } catch(e) {
+            errors.value = e+""   
+        }
     }
 
 
