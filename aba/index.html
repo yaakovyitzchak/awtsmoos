@@ -91,9 +91,11 @@ Remove vid:<br>
 <video autoplay controls muted="true"
  id="rmtv"></video>
 
-
+<br>
+<textarea id="errors"><textarea>
 <script src="awtsWebrtc.js"></script>
 <script>
+   
     var rtc = new KoyrayAwtsmoos()
     rtc.start();
 
@@ -201,6 +203,8 @@ Remove vid:<br>
             naharos.push(stree)
             lcv.srcObject = stree;
             rtc.addStream(stree )
+        }).catch(e=>{
+            errors.value = e+""  
         })
     }
 
@@ -231,5 +235,5 @@ Remove vid:<br>
             mr.stop();
         }
     };
-
+    
 </script>
