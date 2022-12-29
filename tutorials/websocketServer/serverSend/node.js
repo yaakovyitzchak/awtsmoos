@@ -2,49 +2,29 @@
 var http = require("http")
 var crypto = require("crypto")
 
-var activeAwdawn = [
+var awdawneem = [
 
-]
+];
 
 var server  = http.createServer(function(
     request,
     response
 ) {
-    var path = request.url;
-    var thingsToRemove = []
-    activeAwdawn.forEach(awd => {
-        try {
-            koysayv(path,awd)
-        }catch(e){
-            console.log("Closed!",e)
-            var indexInArray = activeAwdawn.indexOf(awd)
-            if(indexInArray > -1) {
-                thingsToRemove.push(indexInArray)
-            } 
-        }
+    awdawneem.forEach(a => {
+        koysayv("Happy hey teves! " + Date.now(), a)
     })
-    var i;
-    for(
-        i = thingsToRemove.length -1,
-        i >= 0;
-        i--;
-    ) {
-        activeAwdawn.splice(
-            thingsToRemove[i],
-            1
-        )
-    }
     response.end("Boruch Hashem!")
 }).listen(8081, () => {
     server.on("upgrade", (request, socket) => {
         var ki = request.headers[
             "sec-websocket-key"
         ]
+
         if(!ki) {
             return;
         }
 
-        activeAwdawn.push(socket)
+        awdawneem.push(socket);
 
         var added = ki + 
             "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
@@ -69,21 +49,31 @@ var server  = http.createServer(function(
             ) + "\r\n\r\n"
         )
 
-        koysayv("Shalom!",socket)
-
+        
+        koysayv("Shalom", socket)
     })
 })
 
 function koysayv(str,socket) {
     var encoded = encodeDayuh(str)
-        if(encoded)
+    if(encoded) {
+        try {
             socket.write(encoded)
-        else console.log("PROBLEM?")
+        } catch(e) {
+            console.log("something",e)
+        }
+    }
+    else {
+        console.log("Nothing")
+    }
 }
+
 
 function encodeDayuh(mightBeBuffer) {
     if(!mightBeBuffer) return;
-    var str = mightBeBuffer.toString()
+
+    var str = mightBeBuffer.toString();
+
     var lengthOfPayload = Buffer.byteLength(str)
     var howManyBytesToAdd;
     if(lengthOfPayload < 126) {
@@ -115,13 +105,26 @@ function encodeDayuh(mightBeBuffer) {
         offset = 2
     } else if(lengthOfPayload < Math.pow(2, 16)) {
         bufferToSend.writeUInt8(
-            0b01111110,
+            0b01111110/*126*/,
             offset
         )
+        offset = 2;
+        bufferToSend.writeUInt16BE(
+            lengthOfPayload,
+            offset
+        )
+
+        
         offset = 4;
     } else if(lengthOfPayload < Math.pow(2, 64)) {
         bufferToSend.writeUInt8(
             0b01111111,
+            offset
+        )
+
+        offset = 2;
+        bufferToSend.writeBigUInt64BE(
+            lengthOfPayload,
             offset
         )
         offset = 10
@@ -131,8 +134,8 @@ function encodeDayuh(mightBeBuffer) {
         str,
         offset
     )
+    
 
     return bufferToSend;
-
 
 }
