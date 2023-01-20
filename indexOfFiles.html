@@ -1,0 +1,56 @@
+B"H
+<bR>
+<div id="links"></div>
+<style>
+    a {
+        display:block;
+
+        position: relative; 
+        display: block;
+
+        text-align: center;
+        line-height: 63px;
+        background: rgb(93, 156, 252);
+        border-radius: 25%;
+        font-size: 30px;
+        color: rgb(0, 0, 0);
+        transition: .5s;
+    }
+
+    a::before {
+    content: '';
+ 
+    border-radius: 50%;
+    background: #ffee10;
+    transition: .5s;
+    transform: scale(.9);
+    z-index: -1;
+    }
+
+    a:hover::before {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #ffee10;
+    }
+
+    a:hover {
+    color: #ffee10;
+    box-shadow: 0 0 5px #ffee10;
+    text-shadow: 0 0 5px #ffee10;
+    }
+</style>
+<script>
+
+files = 
+["Hello Assistance Requested.html","aiGame1.html","code2.html","database.html","databaseCode.html","email1.html","emailCode.html","fourworlds.html","game2.html","gltfCode.html","lawsOfNizikinDonkeyMoshiach.html","rambamDavidLawsOfStealing1.html","rambamDonkeyMosiachCisterns1.html","webmAndVorbisEncoder.html","websckets.html","world.html"]
+;
+
+files.forEach(q=>{
+
+    var a=document.createElement("a")
+    a.href = "https://firebasestorage.googleapis.com/v0/b/awtsmoos.appspot.com/o/ai"
+        + encodeURIComponent("/" + q)
+        + "?alt=media"
+    links.appendChild(a)
+    a.innerHTML = q;
+})
+</script>
