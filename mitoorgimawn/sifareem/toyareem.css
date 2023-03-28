@@ -8,6 +8,13 @@ buttona {
     
 }
 /* Buttons */
+button[disabled] {
+    color: #000000;
+    box-shadow: 0px 10px 20px rgba(78, 65, 48, 0.5) inset;
+    background-color: #ffffff;
+    cursor:not-allowed;
+}
+
 button {
     margin:18px;
 display: inline-block;
@@ -24,13 +31,13 @@ cursor: pointer;
 transition: all 0.3s ease-in-out;
 }
 
-button:hover {
+button:hover:enabled {
     color: #d3f3ff;
 transform: scale(1.1);
 box-shadow: 0px 15px 30px rgba(255, 198, 124, 0.8);
 }
 
-button:active {
+button:active:enabled {
 transform: scale(0.9);
 color:black;
 box-shadow: 0px 5px 10px rgba(252, 210, 0, 0.8),
@@ -272,36 +279,4 @@ color: #333;
 
 input[type="checkbox"] {
 appearance: none;
-/*
-position: relative;
-cursor: pointer;
-transition: all 0.3s ease-in-out;
-width: 30px;
-height: 30px;
-border: 2px solid #fff;
-border-radius: 50%;
-margin-right: 10px;*/
 }
-/*
-input[type="checkbox"]:checked::after {
-content: "\2714";
-font-size: 20px;
-color: #fff;
-position: absolute;
-top: 4px;
-left: 8px;
-}
-
-input[type="checkbox"]:hover {
-background-color: rgba(255, 255, 255, 0.2);
-}
-
-input[type="checkbox"]:checked {
-background-color: #F9A826;
-border-color: #F9A826;
-}
-
-input[type="checkbox"]:checked:hover {
-background-color: #222;
-border-color: #222;
-}*/
