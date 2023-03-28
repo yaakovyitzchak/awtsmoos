@@ -1,11 +1,13 @@
 B"H
 <link rel="stylesheet" href="../../toyareem.css">
+<script src="../../getSayfir.js"></script>
 <br>
 <a href="https://awtsmoos.com"><h1>
   Welcome to AWTSMOOS Rambam
   </h1>
 </a>
 <h2>Sefer Madah</h2>
+<div id="curChapt">
 <h3>Chapter 1</h3>
 <p>
 B"H
@@ -827,3 +829,17 @@ Section 12:
 להשיג אמיתת דבר זה על בורייו - "to attain the truth of this matter on his own"
 
 </p>
+<h2 class="chapL" id="chp2">Chapter 2</h2>
+<div id="chap2"></div>
+</div>
+
+<script>
+chp2.onclick=()=>{
+  getSayf("./chapters/2.html",r=>{
+r.forEach((q,i)=>{
+  chap2.innerHTML += "Halacha "+(i+1)+
+  "<br>"+q
+})
+},er=>chap2.innerHTML="Error:"+er)
+}
+</script>
