@@ -120,39 +120,79 @@ well.onclick = () => {
     }
     
 
-    out.innerHTML = "processing.."
+    out.innerHTML = "processing..<br>"
     txt(ok.value, r => {
         out.innerHTML = r.choices[0].message.content
+    }, e=>{
+        out.innerHTML += "{There was an error:}"+e
+    }, prog => {
+        prog = prog.split("\r").join("<br>")
+            .split("\n").join("<br>")
+        out.innerHTML += prog
     })
 };
 
-function txt(choot, cb=()=>{}, er=()=>{}) {
+function txt(choot, cb=()=>{}, er=()=>{}, prog=()=>{}) {
     
     console.log("processing", choot, "with API key", apiKey.value)
+    //B"H
+
     fetch("https://api.openai.com/v1/chat/completions", {
-        headers: {
-            "Authorization": "Bearer " + apiKey.value,
-            "Content-Type":"application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [
-                {
-                    role: "user",
-                    content: `
+            headers: {
+                "Authorization": "Bearer " + apiKey.value,
+                "Content-Type":"application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                stream:true,
+                messages: [
+                    {
+                        role: "user",
+                        content: `
+                        B"H
                         ${prompt}
-                        
+
+
                         ${choot}
-                    `
+                        `
+                    }
+                ]
+            })
+        }).then(async r=>{
+            console.log("HI!")
+            var itt = await r.body.getReader()
+            var dn,vl,txt,js;
+            
+            var te = new TextDecoder()
+            while(!dn) {
+                var red = await itt.read()
+                vl = red.value
+                dn = vl.done;
+                txt = te.decode(vl)
+                var lines = txt.split("\n").filter(q=>q);
+
+                lines.forEach(w => {
+                    var newText = w.replace("data: ","")
+                try {
+                    js = JSON.parse(newText)
+                    prog(js.choices[0].delta.content)
+                    console.log(js.choices[0].delta.content)
+                } catch(e) {
+                    console.log("COuldn't parse",e,newText)
                 }
-            ]
+                })
+                
+            }
+            return r.text()
+            
         })
-    }).then(r=>r.json())
-    .then(g=>{
-        w=g;
-        console.log(g)
-        cb(g)
-    })
+        .then(g=>{
+            w=g;
+            console.log(g)
+            cb(g)
+        })
+
+
 }
 </script>
