@@ -1,12 +1,18 @@
 B"H
 <link rel="stylesheet" href="../../toyareem.css">
-<script src="../../getSayfir.js"></script>
+
 <br>
 <meta charset="utf-8">
 <a href="https://awtsmoos.com"><h1>
   Welcome to AWTSMOOS Rambam.
   </h1>
 </a>
+<script>
+var chaptersNumbers=4;
+var skip=[1]
+var chapterURL = "./chapters"
+var elementID="curChapt"
+</script>
 <h2>Sefer Madah</h2>
 <div id="curChapt">
 <h3>Chapter 1</h3>
@@ -837,23 +843,5 @@ Section 12:
 <p id="chap2"></p>
 </div>
 
-<script>
-chp2.onclick=()=>{
-  getSayf("./chapters/2.json",r=>{
-r.forEach((q,i)=>{
-  chap2.innerHTML += "Halacha "+(i+1)+
-  "<br>"+q
-})
-},er=>chap2.innerHTML="Error:"+er)
-}
 
-
-chp3.onclick=()=>{
-  getSayf("./chapters/3.json",r=>{
-r.forEach((q,i)=>{
-  chap3.innerHTML += "Halacha "+(i+1)+
-  "<br>"+q
-})
-},er=>chap3.innerHTML="Error:"+er)
-}
-</script>
+<script src="../../getSayfir.js"></script>
