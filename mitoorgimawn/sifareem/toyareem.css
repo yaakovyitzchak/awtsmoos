@@ -102,11 +102,6 @@ border-bottom: 3px dotted #F9A826;
 transition: all 0.3s ease-in-out;
 }
 
-h2:hover {
-color: #ffffff;
-border-bottom: 3px dotted #444;
-}
-
 /* Styles for h3 */
 
 h3 {
@@ -120,15 +115,20 @@ border-bottom: 2px solid #F9A826;
 transition: all 0.3s ease-in-out;
 }
 
-h3:hover {
-color: #ffd0d0;
-border-bottom: 2px solid #666;
-}
 
-/* Styles for h4 */
 a {
     text-decoration:none;
+    color:black;
+    transition: all 0.3s ease-in-out;
+    
 }
+
+a:hover {
+    background:black;
+    color:white;
+}
+
+
 h4 {
 font-size: 1.5em;
 font-weight: bold;
@@ -136,10 +136,6 @@ text-align: left;
 margin: 0.5em;
 padding: 0.2em;
 color: #070505;
-}
-h4:hover {
-color: #ffcece;
-border-bottom: 2px solid #666;
 }
 /* Styles for textarea */
 
