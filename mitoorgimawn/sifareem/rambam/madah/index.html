@@ -831,16 +831,29 @@ Section 12:
 
 </p>
 <h2 class="chapL" id="chp2">Chapter 2</h2>
-<div id="chap2"></div>
+<p id="chap2"></p>
+
+<h2 class="chapL" id="chp3">Chapter 3</h2>
+<p id="chap2"></p>
 </div>
 
 <script>
 chp2.onclick=()=>{
-  getSayf("./chapters/2.html",r=>{
+  getSayf("./chapters/2.json",r=>{
 r.forEach((q,i)=>{
   chap2.innerHTML += "Halacha "+(i+1)+
   "<br>"+q
 })
 },er=>chap2.innerHTML="Error:"+er)
+}
+
+
+chp3.onclick=()=>{
+  getSayf("./chapters/3.json",r=>{
+r.forEach((q,i)=>{
+  chap3.innerHTML += "Halacha "+(i+1)+
+  "<br>"+q
+})
+},er=>chap3.innerHTML="Error:"+er)
 }
 </script>
