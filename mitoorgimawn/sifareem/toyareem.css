@@ -41,9 +41,13 @@
 
     p {
     line-height: 1.5;
-    color: #333;
+    color: #000;
     margin-bottom: 2rem;
-
+    white-space: pre-wrap;
+    font-weight: bold;
+    font-size: 24;
+    padding: 16px;
+    text-shadow: 1px 1px 1px white, -1px -1px 1px #FFFFFF;
 white-space:pre-wrap;
         padding:16px;
     }
