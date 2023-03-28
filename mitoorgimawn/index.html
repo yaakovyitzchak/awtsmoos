@@ -105,6 +105,26 @@ function txt(choot, cb=()=>{}, er=()=>{}) {
                         In general you can decide when to break up the text, but if there is a paragraph break in the original, it should be broken there always.
                         
                         In a case when you are breaking up the text into smaller parts, then provide the natural language summary after each part (collection of words) rather than at the end of the entire translation etc..
+                        
+                        remember the steps are:
+
+                        break down into smaller sentences / phrases
+
+                        within each phrase:
+                            break each phrase into words
+
+                            within each word:
+                                give its "meaning", followed by
+                                other info as mentioned above^
+                                (root, tense, prefixes/suffixes/notes)
+
+                                don't forget the root
+
+                                don't forget to do each word in 
+                                addition to each phrase
+
+                                don't forget to summarize each phrase at the end 
+                                of each word for word, and to summarize the whole thing (all phrases) at end
                         ${choot}
                     `
                 }
