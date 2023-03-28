@@ -33,11 +33,65 @@ B"H
 
 </p>
 
+<h3>(Or just use the OpenAI playground or ChatGPT etc.
+    with the following prompt per paragraph (paste hebrew text after):
+</h3>
+<p id="promptInfo" contenteditable>
+
+</p>
+
 <script>
 
 
 //B"H
+var prompt = `B"H
 
+Please translate the following Hebrew text into English, 
+
+providing a word-by-word translation with the root, 
+
+tense, prefixes/suffixes, 
+
+and any other relevant information for each word. 
+
+this word for word translation should be in list format, for example
+
+{Hebrew Word}: "meaning", first person etc.
+
+(replace with actual values^^)
+
+remember, after saying the meaning of the word in quotes like "meaning", say afterwards (in short hand if u need to) the tense, like "m pr. pl." for "masculine present plural", or use another system of abbreviations etc., and if there are any prefixes or suffixes, then say the hebrew letter of them followed by their meaning, like ל - to.
+
+After each general phrase (which is itself a collection of words), please provide a summary of the meaning of the phrase in natural language.
+
+Please first break up each paragraph into smaller phrases before providing a word-by-word translation for each phrase.
+
+In general you can decide when to break up the text, but if there is a paragraph break in the original, it should be broken there always.
+
+In a case when you are breaking up the text into smaller parts, then provide the natural language summary after each part (collection of words) rather than at the end of the entire translation etc..
+
+remember the steps are:
+
+break down into smaller sentences / phrases
+
+within each phrase:
+    break each phrase into words
+
+    within each word:
+        give its "meaning", followed by
+        other info as mentioned above^
+        (root, tense, prefixes/suffixes/notes)
+
+        don't forget the root
+
+        don't forget to do each word in 
+        addition to each phrase
+
+        don't forget to summarize each phrase at the end 
+        of each word for word, and to summarize the whole thing (all phrases) at end
+`
+
+promptInfo.innerText=prompt
 if(localStorage._awtsmoosApiToorgimawn) {
     if(!apiKey.value) {
         apiKey.value = localStorage._awtsmoosApiToorgimawn
@@ -80,52 +134,7 @@ function txt(choot, cb=()=>{}, er=()=>{}) {
                 {
                     role: "user",
                     content: `
-                        B"H
-
-                        Please translate the following Hebrew text into English, 
-
-                        providing a word-by-word translation with the root, 
-
-                        tense, prefixes/suffixes, 
-
-                        and any other relevant information for each word. 
-
-                        this word for word translation should be in list format, for example
-
-                        {Hebrew Word}: "meaning", first person etc.
-
-                        (replace with actual values^^)
-
-                        remember, after saying the meaning of the word in quotes like "meaning", say afterwards (in short hand if u need to) the tense, like "m pr. pl." for "masculine present plural", or use another system of abbreviations etc., and if there are any prefixes or suffixes, then say the hebrew letter of them followed by their meaning, like ל - to.
-
-                        After each general phrase (which is itself a collection of words), please provide a summary of the meaning of the phrase in natural language.
-
-                        Please first break up each paragraph into smaller phrases before providing a word-by-word translation for each phrase.
-
-                        In general you can decide when to break up the text, but if there is a paragraph break in the original, it should be broken there always.
-                        
-                        In a case when you are breaking up the text into smaller parts, then provide the natural language summary after each part (collection of words) rather than at the end of the entire translation etc..
-                        
-                        remember the steps are:
-
-                        break down into smaller sentences / phrases
-
-                        within each phrase:
-                            break each phrase into words
-
-                            within each word:
-                                give its "meaning", followed by
-                                other info as mentioned above^
-                                (root, tense, prefixes/suffixes/notes)
-
-                                don't forget the root
-
-                                don't forget to do each word in 
-                                addition to each phrase
-
-                                don't forget to summarize each phrase at the end 
-                                of each word for word, and to summarize the whole thing (all phrases) at end
-                        
+                        ${prompt}
                         
                         ${choot}
                     `
