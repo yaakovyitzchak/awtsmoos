@@ -280,3 +280,7 @@ color: #333;
 input[type="checkbox"] {
 appearance: none;
 }
+
+#works {
+    white-space:pre-wrap;
+}
