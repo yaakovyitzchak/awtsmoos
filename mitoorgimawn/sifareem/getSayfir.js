@@ -31,7 +31,8 @@ for(i = 0; i < chaptersNumbers; i++) {
                     r => {
                         r.forEach((q,i) => {
                             bod.innerHTML += "Halacha " + (i+1)
-                                +"<br>" + q
+                                +"<br>" + q.section + "<br><br>"
+                                +q.result+"<br><br>"
                         })
                     },
                     er => {
