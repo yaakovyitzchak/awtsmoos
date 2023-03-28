@@ -122,7 +122,7 @@ Remember the steps:
 
     don't label anything by number, just do it.
 
-    
+
 `
 roots.onchange = () => {
     titl.style.display="";
@@ -190,7 +190,7 @@ well.onclick = () => {
             if(isFinished()) {
                 prs.disabled = false;
                 prs.onclick = () => {
-                    out.innerHTML = JSON.stringify(
+                    out.innerText = JSON.stringify(
                         paragraphResults.map(q=>({
                             section: q.paragraph,
                             result: q.finishedResult
