@@ -7,12 +7,13 @@ B"H
     AWTSOOS
     Mitoorgimawn
 </h1></a>
+<h3>(translator)</h3>
 <a href="./sifareem"><h4>
     Awtsmoos Sifareem (translated books)
     in progress
 </h4></a>
-<h3>(translator)</h3>
-<a href="https://platform.openai.com/account/api-keys">
+
+<a target="_blank" href="https://platform.openai.com/account/api-keys">
 <h4>Your OpenAi API key:</h4></a>
 <p>(Will not be sent anywhere except the OpenAI api,
     check source code if u want to verify)
@@ -61,7 +62,7 @@ B"H
 <br>
 <button id="prs" disabled>Parse Output as JSON</button>
 
-<h3>(Or just use the OpenAI playground or ChatGPT etc.
+<h3 id="titl" style="display:none">(Or just use the OpenAI playground or ChatGPT etc.
     with the following prompt per paragraph (paste hebrew text after):
 </h3>
 <p id="promptInfo" contenteditable>
@@ -110,8 +111,10 @@ When you are breaking up the text into smaller parts, then provide the natural l
 After each general phrase (which is itself a collection of words), please provide a summary of the meaning of the phrase in natural language.
 
 `
-roots.onchange = () =>
+roots.onchange = () => {
+    titl.style.display="";
     promptInfo.innerText=prompt();
+}
 
 
 if(localStorage._awtsmoosApiToorgimawn) {
@@ -147,8 +150,52 @@ well.onclick = () => {
             out.innerHTML += prog
         })
     }
+    window.onmessage = msg;
 
+    function msg(e) {
+        var js = JSON.parse(e.data);
+        var par = paragraphResults[js.winNum];
+        if(!par) return;
+        onChawlonPoysayawch(par,js)
+    }
+
+    function onChawlonPoysayawch (par,info) {
+        if(!par.opened) {
+            par.opened=false;
+            par.window.blur();
+        }
+        if(info.progress) {
+            par.progress += info.progress
+            par.subParagraph.innerHTML += info.progress;
+        }
+
+        if(info.finishedResult) {
+
+            par.finishedResult = info.finishedResult;
+            par.window.close()
+
+            if(isFinished()) {
+                prs.disabled = false;
+                prs.onclick = () => {
+                    out.innerHTML = JSON.stringify(
+                        paragraphResults.map(q=>({
+                            section: q.paragraph,
+                            result: q.finishedResult
+                        }))
+                    )
+                };
+            }
+        }
+
+    }
+    
+
+    function isFinished() {
+        return !!!window.paragraphResults
+            .find(q=>!q.finishedResult)
+    }
     function doMany() {
+        out.innerHTML = "";
         var paragraphs = ok
             .value
             .split("\n\n").filter(w=>w);
@@ -158,47 +205,12 @@ well.onclick = () => {
             as this page
         */
 
-        var onChawlonPoysayawch = (par,info) => {
-            if(!par.opened) {
-                par.opened=false;
-                par.window.blur();
-            }
-            if(info.progress) {
-                par.progress += info.progress
-                par.subParagraph.innerHTML += info.progress;
-            }
+        
 
-            if(info.finishedResult) {
 
-                par.finishedResult = info.finishedResult;
-                par.window.close()
-
-                if(isFinished()) {
-                    prs.disabled = false;
-                    prs.onclick = () => {
-                        out.innerHTML = JSON.stringify(
-                            paragraphResults.map(q=>({
-                                section: q.paragraph,
-                                result: q.finishedResult
-                            }))
-                        )
-                    };
-                }
-            }
-
-        };
-
-        function isFinished() {
-            return !!!window.paragraphResults
-                .find(q=>!q.finishedResult)
-        }
         window.paragraphResults = []
 
-        window.addEventListener("message", e => {
-            var js = JSON.parse(e.data);
-            var par = paragraphResults[js.winNum];
-            onChawlonPoysayawch(par,js)
-        });
+        
 
         paragraphs.forEach((w,i)=> {
 
@@ -212,7 +224,12 @@ well.onclick = () => {
             subP.className="subP";
             subP.innerHTML = "Section "+(i+1)+":<br>";
             out.appendChild(subP);
-            var win=window.open(URL.createObjectURL(new Blob([/*html*/`
+            var win=window.open("",
+            "_blank",
+           // "height=400,width=600,status=yes,toolbar=no,scrollbars=yes,menubar=no,location=no"
+            
+            );
+            win.document.write(/*html*/`
             B"H
             <br>
             <meta charset="utf-8">
@@ -303,11 +320,10 @@ well.onclick = () => {
                 window.blur();
                 window.opener.postMessage("${i}", "*")
             </`+`script>
-            `],
-            {type:"text/html;charset=utf8"})),
-            "_blank",
-            "height=400,width=600,status=yes,toolbar=no,scrollbars=yes,menubar=no,location=no");
-            
+            `);
+
+
+            win.document.close();
 
             paragraphResults[i].window = win;
 
