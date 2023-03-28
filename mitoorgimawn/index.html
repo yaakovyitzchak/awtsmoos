@@ -25,6 +25,31 @@ B"H
     (can be cleared in cache)
 </label>
 <br>
+<br>
+<input type="checkbox" id="splitP">
+<label for="splitP">
+    Split text by paragraph (every 2 line breaks (\n))
+    and process each in separate popup
+</label>
+<br>
+<br>
+<input type="checkbox" id="custP">
+<label for="custP">
+    Make your own custom prompt instead of
+    relying on the default one
+    (note: wouldn't automatically translate text, just ChatGPT in general)
+</label>
+
+<br>
+<br>
+<input type="checkbox" id="roots">
+<label for="roots">
+   include roots/prefixes etc. in translation, 
+   as opposed to just word for word
+</label>
+<br>
+<br>
+<br>
 <h3>Content of Hebrew paragraph to translate word for word:</h3>
 <textarea id="ok" rows="15" cols="40"></textarea>
 <br>
@@ -32,6 +57,9 @@ B"H
 <p id="out" contenteditable>
 
 </p>
+<br>
+<br>
+<button id="prs" disabled>Parse Output as JSON</button>
 
 <h3>(Or just use the OpenAI playground or ChatGPT etc.
     with the following prompt per paragraph (paste hebrew text after):
@@ -39,35 +67,38 @@ B"H
 <p id="promptInfo" contenteditable>
 
 </p>
+<br>
 
 <script>
 
 
 //B"H
-var prompt = `B"H
+var prompt = ()=>`B"H
 
 Please translate the following Hebrew text into English, 
 
-providing a word-by-word translation with the root, 
-prefixes/suffixes, 
+providing a word-by-word translation
 
-and any other relevant information for each word. 
+${roots.checked ? `with the root, 
+prefixes/suffixes 
+and any other relevant information for each word` : ""}. 
 
 this word for word translation should be in list format, for example
 
-{Hebrew Word}: "meaning", root: {root}, prefixes/suffixes: ל - to 
+{Hebrew Word}: "meaning" ${roots.checked?`, root: {root}, prefixes/suffixes: ל - to`
+:""} 
 
+
+${roots.checked?`
 (replace with actual values^^, that's just an example)
 
-remember, after saying the meaning of the word in quotes like "meaning", say afterwards (in short hand if u need to) 
+remember, after saying the meaning of the word
+ in quotes like "meaning", say afterwards (in short hand if u need to) 
 
 then give me the root of the word
 
 then say the hebrew letter of them followed by their meaning, like ל - to.
-
-
-
-After each general phrase (which is itself a collection of words), please provide a summary of the meaning of the phrase in natural language.
+`:""}
 
 Please first break up each paragraph into smaller phrases before providing a word-by-word translation for each phrase.
 
@@ -75,30 +106,14 @@ In general you can decide when to break up the text, but if there is a paragraph
 
 When you are breaking up the text into smaller parts, then provide the natural language summary after each part (collection of words) rather than at the end of the entire translation etc..
 
-remember the steps are:
 
-break down into smaller sentences / phrases
+After each general phrase (which is itself a collection of words), please provide a summary of the meaning of the phrase in natural language.
 
-within each phrase:
-    break each phrase into words
-
-    within each word:
-        give its "meaning", followed by
-        other info as mentioned above^
-        (root, prefixes/suffixes/notes)
-
-        don't forget the root
-
-        don't forget to do each word in 
-        addition to each phrase
-
-        don't forget to summarize each phrase at the end 
-        of each word for word, and to summarize the whole thing (all phrases) at end
-
-do not do ALL word for word and summarize at end, break up into smaller phrases, as mentioned, and summarize each phrase in addition to each word, then summarize all phrases at end.
 `
+roots.onchange = () =>
+    promptInfo.innerText=prompt();
 
-promptInfo.innerText=prompt
+
 if(localStorage._awtsmoosApiToorgimawn) {
     if(!apiKey.value) {
         apiKey.value = localStorage._awtsmoosApiToorgimawn
@@ -119,17 +134,192 @@ well.onclick = () => {
         apiKey.value;
     }
     
+    function doOne() {
+        out.innerHTML = "<br>"
+        txt(ok.value, r => {
+            console.log("DONE!")
+            out.innerHTML = r.choices[0].message.content
+        }, e=>{
+            out.innerHTML += "{There was an error:}"+e
+        }, prog => {
+            prog = prog.split("\r").join("<br>")
+                .split("\n").join("<br>")
+            out.innerHTML += prog
+        })
+    }
 
-    out.innerHTML = "processing..<br>"
-    txt(ok.value, r => {
-        out.innerHTML = r.choices[0].message.content
-    }, e=>{
-        out.innerHTML += "{There was an error:}"+e
-    }, prog => {
-        prog = prog.split("\r").join("<br>")
-            .split("\n").join("<br>")
-        out.innerHTML += prog
-    })
+    function doMany() {
+        var paragraphs = ok
+            .value
+            .split("\n\n").filter(w=>w);
+        /*
+            first
+            get same styles 
+            as this page
+        */
+
+        var onChawlonPoysayawch = (par,info) => {
+            if(!par.opened) {
+                par.opened=false;
+                par.window.blur();
+            }
+            if(info.progress) {
+                par.progress += info.progress
+                par.subParagraph.innerHTML += info.progress;
+            }
+
+            if(info.finishedResult) {
+
+                par.finishedResult = info.finishedResult;
+                par.window.close()
+
+                if(isFinished()) {
+                    prs.disabled = false;
+                    prs.onclick = () => {
+                        out.innerHTML = JSON.stringify(
+                            paragraphResults.map(q=>({
+                                section: q.paragraph,
+                                result: q.finishedResult
+                            }))
+                        )
+                    };
+                }
+            }
+
+        };
+
+        function isFinished() {
+            return !!!window.paragraphResults
+                .find(q=>!q.finishedResult)
+        }
+        window.paragraphResults = []
+
+        window.addEventListener("message", e => {
+            var js = JSON.parse(e.data);
+            var par = paragraphResults[js.winNum];
+            onChawlonPoysayawch(par,js)
+        });
+
+        paragraphs.forEach((w,i)=> {
+
+            var subP = document.createElement("p")
+            
+            paragraphResults[i] = {
+                paragraph: w,
+                progress: "",
+                subParagraph:subP
+            }
+            subP.className="subP";
+            subP.innerHTML = "Section "+(i+1)+":<br>";
+            out.appendChild(subP);
+            var win=window.open(URL.createObjectURL(new Blob([/*html*/`
+            B"H
+            <br>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="${location.origin}/sifareem/toyareem.css">
+            <style>
+                .fixt {
+                    position:fixed;
+                    overflow:scroll;
+                    left:0;
+                    top:0;
+                    width:100%;
+                    height:15%;
+                }
+            </style>
+            <p class="fixt">
+            B"H
+
+            Hi! welcome to reality. 
+            Here we will attempt to generate
+            the paragraph you asked, while
+            others may be processing
+            in other windows at the same time.
+
+            Message this window is processing iy"H:
+
+            <p>
+                ${w}
+            
+            </p>
+            <br>
+            <h4>Output:</h4>
+            
+            <p contenteditable id="yoyts"></p>
+            <script>
+                var apiKey = {
+                    value: "${apiKey.value}"
+                };
+
+                var roots = {
+                    checked: ${roots.checked}
+                }
+                var prompt = ${prompt};
+
+                var msg = \`${w}\`
+
+                var custP = {
+                    checked: ${custP.checked}
+                }
+
+                ${txt}
+
+                txt(
+                    msg,
+                    done => {
+                        window
+                        .opener
+                        .postMessage(JSON.stringify({
+                            winNum: ${i},
+                            finishedResult: 
+                                done
+                        }), "*")
+                    },
+                    er => {
+                        yoyts.innerHTML += "{Error: "
+                        +er+"}"
+                    },
+                    progress => {
+                        yoyts.innerHTML += progress;
+
+                        window
+                        .scrollTo(0, document.body.scrollHeight);
+
+
+                        window
+                        .opener
+                        .postMessage(JSON.stringify({
+                            winNum: ${i},
+                            progress
+                        }), "*")
+                    }
+                );
+
+
+                onmessage = (e) => {
+                    yoyts.innerHTML += e.data;
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+                window.blur();
+                window.opener.postMessage("${i}", "*")
+            </`+`script>
+            `],
+            {type:"text/html;charset=utf8"})),
+            "_blank",
+            "height=400,width=600,status=yes,toolbar=no,scrollbars=yes,menubar=no,location=no");
+            
+
+            paragraphResults[i].window = win;
+
+        })
+    }
+
+    if(!splitP.checked) {
+        doOne()
+    } else {
+        doMany()
+    }
+   
 };
 
 function txt(choot, cb=()=>{}, er=()=>{}, prog=()=>{}) {
@@ -151,7 +341,7 @@ function txt(choot, cb=()=>{}, er=()=>{}, prog=()=>{}) {
                         role: "user",
                         content: `
                         B"H
-                        ${prompt}
+                        ${custP.checked ? "":prompt()}
 
 
                         ${choot}
@@ -163,11 +353,16 @@ function txt(choot, cb=()=>{}, er=()=>{}, prog=()=>{}) {
             console.log("HI!")
             var itt = await r.body.getReader()
             var dn,vl,txt,js;
-            
+            var allTxt = ""
             var te = new TextDecoder()
             while(!dn) {
                 var red = await itt.read()
                 vl = red.value
+                if(!vl)  {
+                    dn = true;
+                    return allTxt;
+                }
+
                 dn = vl.done;
                 txt = te.decode(vl)
                 var lines = txt.split("\n").filter(q=>q);
@@ -175,16 +370,34 @@ function txt(choot, cb=()=>{}, er=()=>{}, prog=()=>{}) {
                 lines.forEach(w => {
                     var newText = w.replace("data: ","")
                 try {
+                    if(newText == "[DONE]") {
+                        cb(allTxt)
+                        dn=true;
+                        return allTxt;
+                    }
                     js = JSON.parse(newText)
-                    prog(js.choices[0].delta.content)
-                    console.log(js.choices[0].delta.content)
+                    if(js.choices[0].finish_reason == "stop") {
+                        cb(allTxt)
+                        dn=true;
+                        return allTxt;
+                    }
+                    var cnt = js.choices[0].delta.content
+                        || ""
+                    cnt = cnt.split("\n")
+                        .join("<br>")
+                        .split("\r")
+                        .join("<br>");
+
+                    prog(cnt)
+                    allTxt+=cnt;
+                    console.log(cnt,js)
                 } catch(e) {
                     console.log("COuldn't parse",e,newText)
                 }
                 })
                 
             }
-            return r.text()
+            return allTxt;
             
         })
         .then(g=>{
