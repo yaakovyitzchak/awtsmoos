@@ -1,8 +1,5 @@
 /*B"H*/
-    #out {
-        white-space:pre-wrap;
-        padding:16px;
-    }
+
 
     buttona {
         font-size: 26px;
@@ -56,6 +53,9 @@
     line-height: 1.5;
     color: #333;
     margin-bottom: 2rem;
+
+white-space:pre-wrap;
+        padding:16px;
     }
 */
     /* Styles for h1 */
