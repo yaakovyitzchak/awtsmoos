@@ -1,0 +1,394 @@
+B"H
+
+<h2>Awtsmoos face tracker, and image morpher (in progress)</h2>
+
+<h4>Morpher:</h4>
+
+<div id="morph">
+<!-- B"H -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+<button id="sl">Select Image</button>
+<br>
+<button id="editMode">Enter point edit mode</button>
+<button id="point" disabled>Add warp point</button>
+<br>
+<canvas id="canvas"></canvas>
+<style>
+    .warpPoint {
+        display:inline-block;
+        border-radius:50%;
+        border:1px solid black;
+        background:gold;
+        position:absolute;
+        width: 10px;
+        height: 10px;
+    }
+
+    .warpPoint:hover {
+        cursor:pointer;
+    }
+</style>
+
+<script>
+let warpPoints = [];
+let warpPointsFlat = [];
+let warpPointCount = 0;
+let isAddingPoints = false;
+let img = new Image();
+let resolution = vec2.create();
+let canvas = document.getElementById('canvas');
+let warpPointCountLoc;
+let sl = document.getElementById('sl');
+let editMode = document.getElementById('editMode');
+let point = document.getElementById('point');
+let program, gl, imageLoc, resolutionLoc, texture;
+let warpPointsLocs = [];
+
+let imageSamplerLoc;
+console.log(888)
+
+// Initial resolution values
+resolution[0] = canvas.width;
+resolution[1] = canvas.height;
+
+// Warp point
+let warpPoint = vec2.create();
+
+// Functions
+function mouseMoveHandler(e, warpPoint, origX, origY, startX, startY) {
+    let newX = origX + e.clientX - startX;
+    let newY = origY + e.clientY - startY;
+
+    // Account for the canvas' offset from the top-left of the viewport
+    newX -= canvas.offsetLeft;
+    newY -= canvas.offsetTop;
+
+    warpPoint.setPosition(newX, newY);
+
+    var newX_gl;
+    var newY_gl;
+    newX_gl = newX / resolution[0]; // Convert to UV coordinates
+    newY_gl = 1 - newY / resolution[1]; // Convert to UV coordinates
+
+    warpPoints[warpPoint.index] = vec4.fromValues(newX_gl, newY_gl, 0.46, 0.2); // Use vec4 and include strength and radius
+
+    warpPointsFlat = updateWarpPointsFlat(warpPoints);
+    render();
+}
+
+
+
+function WarpPoint(index) {
+    this.index = index;
+    this.el = document.createElement("div");
+    this.el.className = "warpPoint";
+    // In the WarpPoint setPosition function:
+    // In the WarpPoint setPosition function:
+    this.setPosition = function(x, y) {
+        this.el.style.left = `${x + canvas.offsetLeft}px`;
+        this.el.style.top = `${y + canvas.offsetTop}px`;
+
+        this.x = x / resolution[0]; // Convert to UV coordinates
+        this.y = 1 - y / resolution[1];
+        warpPoints[this.index] = vec4.fromValues(this.x, this.y, 0.1, 0.1); // Use vec4 to include z (strength) and w (radius)
+
+        warpPointsFlat = updateWarpPointsFlat(warpPoints);
+        render(); // Make sure to rerender when a warp point is moved
+    };
+
+    document.body.appendChild(this.el);
+
+    this.el.onmousedown = (e) => {
+        var startX = e.clientX;
+        var startY = e.clientY;
+        var origX = this.el.offsetLeft;
+        var origY = this.el.offsetTop;
+
+        var mouseMoveHandlerBind = (e) => {
+            mouseMoveHandler(e, this, origX, origY, startX, startY);
+        };
+        var mouseUpHandler = () => {
+            document.removeEventListener('mousemove', mouseMoveHandlerBind);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        };
+
+        document.addEventListener('mousemove', mouseMoveHandlerBind);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+}
+
+
+editMode.onclick = () =>{
+    if(isAddingPoints) {
+        point.disabled = true;
+        isAddingPoints = false;
+        editMode.innerHTML = "entered WARP mode. Click again to edit"
+    } else {
+        point.disabled = false;
+        isAddingPoints = true;
+        editMode.innerHTML = "entered EDIT mode. Click again to warp"
+    }
+}
+
+
+function updateWarpPointsFlat(warpPoints) {
+    let warpPointsFlat = [];
+    for(let i = 0; i < warpPoints.length; i++) {
+        warpPointsFlat.push(warpPoints[i][0]);
+        warpPointsFlat.push(warpPoints[i][1]);
+        warpPointsFlat.push(warpPoints[i][2]); // Z
+        warpPointsFlat.push(warpPoints[i][3]); // W
+    }
+    return new Float32Array(warpPointsFlat);
+}
+point.onclick=addWarpPoint;
+function addWarpPoint() {
+    warpPoints.push(vec4.fromValues(0, 0, 0.1, 0.1));
+    var warpPoint = new WarpPoint(warpPoints.length - 1); // pass index
+    let x = (canvas.width / 2);
+    let y = (canvas.height / 2);
+
+    warpPoint.setPosition(x, y);
+
+    warpPointCount = warpPoints.length;
+    warpPointsFlat = updateWarpPointsFlat(warpPoints);
+
+    console.log("Warp point added. Current warp points: ", warpPoints);
+}
+
+function loadImage(url, callback) {
+    let image = new Image();
+    image.src = url;
+    image.onload = () => callback(image);
+}
+
+function createShader(type, source) {
+    let shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Error compiling shader:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+    return shader;
+}
+
+function createProgram(vertexShader, fragmentShader) {
+    let program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Error linking program:', gl.getProgramInfoLog(program));
+        gl.deleteProgram(program);
+        return null;
+    }
+    return program;
+}
+
+function createTexture(image) {
+    let texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return texture;
+}
+
+function resizeCanvas() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    resolution[0] = canvas.width;
+    resolution[1] = canvas.height;
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+}
+
+// In the render function:
+function render() {
+    // Clear the canvas
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(program);
+
+    // Update uniforms
+    gl.uniform2fv(resolutionLoc, resolution);
+
+    // Set up the viewport
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Update uniforms
+    let warpPointCountUniformLoc = gl.getUniformLocation(program, 'warpPointCount');
+    let warpPointsUniformLoc = [];
+    for(let i = 0; i < 32; i++) {
+        warpPointsUniformLoc[i] = gl.getUniformLocation(program, `warpPoints[${i}]`);
+    }
+
+    gl.uniform1i(warpPointCountUniformLoc, warpPointCount);
+
+    // If there are warp points, pass them to the shader
+    if(warpPointsFlat.length > 0) {
+        for(let i = 0; i < warpPointCount; i++) {
+            gl.uniform2fv(warpPointsUniformLoc[i], [warpPointsFlat[i * 4], warpPointsFlat[i * 4 + 1]]);
+        }
+    }
+
+    // Always bind texture and draw image, regardless of warp point count
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(imageSamplerLoc, 0);
+
+    // Draw primitives
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+}
+
+console.log("ok")
+window.onload = function() {
+    console.log("hi!")
+    let canvas = document.getElementById('canvas');
+    gl = canvas.getContext("webgl")
+    console.log(gl,22)
+    let vertexShader = createShader(gl.VERTEX_SHADER, `
+        attribute vec2 position;
+        varying vec2 uv;
+        void main() {
+            uv = position * 0.5 + 0.5;
+            gl_Position = vec4(position, 0.0, 1.0);
+        }
+    `);
+    let fragmentShader = createShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+
+    uniform vec2 resolution;
+    uniform sampler2D u_image;
+    uniform vec2 warpPoints[32];  
+    uniform int warpPointCount;  
+    uniform float alpha;
+
+    void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 pos = uv;
+
+    vec2 displacement = vec2(0.0);
+    float weightSum = 0.0;
+
+    for (int i = 0; i < 32; i += 2) {
+        if(i >= warpPointCount) break;
+
+        vec2 P = warpPoints[i].xy;
+        vec2 Q = warpPoints[i+1].xy;
+
+        float dist_PQ = distance(P, Q);
+        vec2 dir_PQ = normalize(Q - P);
+
+        vec2 X_P = uv - P;
+        float u = dot(X_P, dir_PQ);
+        float v = length(cross(vec3(dir_PQ, 0.0), vec3(X_P, 0.0)));
+
+        vec2 P_prime = P + u * dir_PQ;
+        vec2 Q_prime = Q + v * dir_PQ;
+
+        vec2 displacement_this_line = P_prime - uv;
+        float weight_this_line = pow(dist_PQ, alpha) / (0.001 + dot(X_P, X_P));
+
+        displacement += weight_this_line * displacement_this_line;
+        weightSum += weight_this_line;
+    }
+
+    if (weightSum != 0.0) {
+        displacement /= weightSum;
+    }
+
+    pos += displacement;
+
+    vec4 color = texture2D(u_image, clamp(pos, 0.0, 1.0));
+    gl_FragColor = color;
+    }
+
+    `);
+
+    program = createProgram(vertexShader, fragmentShader);
+    gl.useProgram(program);
+    gl.uniform2fv(resolutionLoc, resolution);
+
+    imageSamplerLoc = gl.getUniformLocation(program, 'u_image');
+
+    // Fetch warp point uniform locations
+    for(let i = 0; i < 10; i++) {
+        warpPointsLocs[i] = gl.getUniformLocation(program, `warpPoints[${i}]`);
+    }
+
+    
+
+    let positionLoc = gl.getAttribLocation(program, 'position');
+    resolutionLoc = gl.getUniformLocation(program, 'resolution');
+    warpPointCountLoc = gl.getUniformLocation(program, 'warpPointCount');
+    imageLoc = gl.getUniformLocation(program, 'image');
+
+    
+    let positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1.0, -1.0,
+        1.0, -1.0,
+        -1.0, 1.0,
+        -1.0, 1.0,
+        1.0, -1.0,
+        1.0, 1.0
+    ]), gl.STATIC_DRAW);
+
+
+    gl.enableVertexAttribArray(positionLoc);
+    gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
+    
+};
+
+window.addEventListener('resize', function() {
+    resizeCanvas();
+    render();
+});
+
+sl.onclick = () => {
+    console.log(2)
+    var inp = document.createElement("input")
+    inp.type="file"
+    inp.onchange=()=>{
+        var url = URL.createObjectURL(
+            inp.files[0]
+        )
+        img.src=url;
+        img.onload = () => {
+            texture = createTexture(img);
+            resizeCanvas();
+            render();
+        };
+    }
+    inp.click()
+}
+</script>
+
+
+</div>
+
+<h3>Face camera tracker:</h3>
+// B"H
+<!DOCTYPE html>
+<html>
+<body>
+    <br>
+    <button id="start">Start!</button>
+    <button id="track" disabled>Start tracking</button>
+<br>
+<video id="video" width="720" height="560" autoplay muted></video>
+<br>
+<canvas id="canvas" width="720" height="560"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh/dist/facemesh.min.js"></script>
+<script src="awtsmoosTracker.js"></script>
+
+</body>
+</html>
